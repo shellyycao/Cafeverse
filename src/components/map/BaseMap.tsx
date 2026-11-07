@@ -4,15 +4,14 @@ import { DURHAM, ROAD_HALF, ROAD_ORDER, type Poly, type RoadClass } from "@/data
 
 /** Flat, Google-Maps-style base map: roads, water, parks, building footprints, street names. */
 const C = {
-  land: "#f2ebdb",
-  building: "#e8dfca",
-  buildingEdge: "#d8cbb0",
-  park: "#d4e3b6",
-  water: "#b6d3df",
-  rail: "#b9ad98",
-  casing: "#d9cbae",
-  fill: { v: "#fffdf7", x: "#faf3e2", r: "#fffdf7", t: "#fffdf7", s: "#fff4d2", p: "#ffeab0", m: "#f8d594" } as Record<RoadClass, string>,
-  casingBy: { v: "#e2d6bc", x: "#e2d6bc", r: "#dccfb2", t: "#d9cbae", s: "#dcc99a", p: "#dcbf7a", m: "#d9a85a" } as Record<RoadClass, string>,
+  land: "#f5eddb",
+  building: "#d9c7a2",
+  buildingEdge: "#b9a272",
+  park: "#b9d68a",
+  water: "#86c0d9",
+  rail: "#8f8470",
+  fill: { v: "#fffdf7", x: "#faf3e2", r: "#ffffff", t: "#ffffff", s: "#ffe7a3", p: "#ffd270", m: "#f2b04e" } as Record<RoadClass, string>,
+  casingBy: { v: "#d3c6a8", x: "#d3c6a8", r: "#c5b48c", t: "#bba978", s: "#c9a84e", p: "#c9993a", m: "#b8782a" } as Record<RoadClass, string>,
 };
 
 const f = (x: number, y: number) => {
@@ -62,7 +61,7 @@ const roadPaths = (() => {
   const fill: Record<string, string> = {};
   for (const r of DURHAM.roads) {
     const h = ROAD_HALF[r.c];
-    casing[r.c] = (casing[r.c] || "") + strokeD(r.p, h + 3.2);
+    casing[r.c] = (casing[r.c] || "") + strokeD(r.p, h + 3.8);
     fill[r.c] = (fill[r.c] || "") + strokeD(r.p, h);
   }
   return { casing, fill };
@@ -85,16 +84,26 @@ const labelPaths = (() => {
   return [...seen.entries()].map(([k, v], i) => ({ id: `lbl${i}`, name: k.split(":")[0].replace(/^(North|South|East|West) /, (m) => m[0] + ". ").replace(/ Street$/, " St").replace(/ Avenue$/, " Ave").replace(/ Boulevard$/, " Blvd"), ...v }));
 })();
 
+const parkLabels = (() => {
+  const best = new Map<string, { n: string; c: [number, number]; a: number }>();
+  for (const p of DURHAM.parkNames) {
+    const name = p.n === "Central Park" ? "Durham Central Park" : p.n;
+    const cur = best.get(name);
+    if (!cur || cur.a < p.a) best.set(name, { ...p, n: name });
+  }
+  return [...best.values()].filter((p) => p.a > 7000);
+})();
+
 function BaseMapImpl() {
   return (
     <g>
       <rect x={-12000} y={-8000} width={24000} height={16000} fill={C.land} />
 
       {DURHAM.parks.map((p, i) => (
-        <path key={`pk${i}`} d={polyD(p)} fill={C.park} />
+        <path key={`pk${i}`} d={polyD(p)} fill={C.park} stroke="#9bbd6a" strokeWidth={1.2} />
       ))}
       {DURHAM.water.map((p, i) => (
-        <path key={`w${i}`} d={polyD(p)} fill={C.water} stroke="#9fc2d0" strokeWidth={1} />
+        <path key={`w${i}`} d={polyD(p)} fill={C.water} stroke="#6aa6c2" strokeWidth={1.4} />
       ))}
       <path d={DURHAM.buildings.map((b) => polyD(b.p)).join("")} fill={C.building} stroke={C.buildingEdge} strokeWidth={0.8} />
       {DURHAM.rails.map((p, i) => (
@@ -109,9 +118,9 @@ function BaseMapImpl() {
           <path key={l.id} id={l.id} d={l.d} />
         ))}
       </defs>
-      <g className="street-labels" fontFamily="var(--font-geist-sans), system-ui" fontWeight={600} fill="#7b6648" stroke="#fffaf0" strokeWidth={4} paintOrder="stroke" letterSpacing={0.6}>
+      <g className="street-labels" fontFamily="var(--font-geist-sans), system-ui" fontWeight={700} fill="#5d4a31" stroke="#fffaf0" strokeWidth={5} paintOrder="stroke" letterSpacing={0.7}>
         {labelPaths.map((l) => (
-          <text key={l.id} fontSize={l.c === "p" || l.c === "m" ? 19 : l.c === "r" ? 14 : 16.5}>
+          <text key={l.id} fontSize={l.c === "p" || l.c === "m" ? 27 : l.c === "s" ? 24 : l.c === "t" ? 21 : 16}>
             <textPath href={`#${l.id}`} startOffset="50%" textAnchor="middle" dominantBaseline="middle">
               {l.name}
             </textPath>

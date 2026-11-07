@@ -233,10 +233,35 @@ export function ScenePins({ onSelect, busStop = true, status = null, staff = tru
       <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" status={status} onClick={() => onSelect?.("cafe")} fadeOutAt="calc(0.5 * var(--zi))" />
       <Pin id="parking-pin" at={P(110, 210, 30)} kind="parking" onClick={() => onSelect?.("parking")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />
       {busStop && <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />}
+      <CafeLabel at={P(268, 192, 84)} name="Foster Street Coffee" />
       <g className="hints">
         {hints.filter(([id]) => staff || id !== "barista").map(([id, label]) => (
           <HintDot key={id} at={at(id)} label={label} onClick={() => onSelect?.(id)} />
         ))}
+      </g>
+    </g>
+  );
+}
+
+/** subtle hand-lettered name beside the pin + a quiet "zoom in" nudge; both fade as the miniature appears */
+function CafeLabel({ at, name }: { at: { x: number; y: number }; name: string }) {
+  return (
+    <g
+      className="cafe-label"
+      style={{
+        transform: `translate(${at.x}px, ${at.y}px) scale(calc(1 / var(--z)))`,
+        opacity: "min(clamp(0, calc((calc(0.5 * var(--zi)) - var(--z)) / 1.2), 1), 1)",
+        pointerEvents: "none",
+      }}
+    >
+      <text x={34} y={-44} fontSize={24} fontWeight={700} fill="#6a3f24" stroke="#fffaf0" strokeWidth={5} paintOrder="stroke" fontFamily="var(--font-hand), cursive">
+        {name}
+      </text>
+      <path d="M36 -38 q40 6 80 -1 t74 1" stroke="#b9805a" strokeWidth={1.6} fill="none" strokeLinecap="round" opacity={0.8} />
+      <g style={{ opacity: "clamp(0, calc((1.1 - var(--z)) / 0.5), 1)" }}>
+        <text x={36} y={-22} fontSize={12.5} fontWeight={600} fill="#7a6048" stroke="#fffaf0" strokeWidth={3.5} paintOrder="stroke" fontFamily="var(--font-geist-sans), system-ui">
+          zoom in to step inside
+        </text>
       </g>
     </g>
   );

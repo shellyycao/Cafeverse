@@ -32,6 +32,11 @@ export default function Defs() {
       <pattern id="hatch" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
         <line x1="0" y1="0" x2="0" y2="4.5" stroke="#6b4a2c" strokeWidth="0.75" opacity="0.5" />
       </pattern>
+      <radialGradient id="zoneGlow" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#ffd98a" stopOpacity="0.55" />
+        <stop offset="0.6" stopColor="#ffd98a" stopOpacity="0.16" />
+        <stop offset="1" stopColor="#ffd98a" stopOpacity="0" />
+      </radialGradient>
       <linearGradient id="faceShade" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#fff3d2" stopOpacity="0.28" />
         <stop offset="0.55" stopColor="#fff3d2" stopOpacity="0" />

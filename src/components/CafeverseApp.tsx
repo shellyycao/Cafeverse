@@ -5,6 +5,7 @@ import MapViewport, { type Camera, type MapHandle } from "./map/MapViewport";
 import BaseMap from "./map/BaseMap";
 import Neighborhood, { ANCHORS, ScenePins, type HotspotId } from "./scene/Neighborhood";
 import Defs from "./scene/Defs";
+import ZoneHint from "./scene/ZoneHint";
 import Popover from "./Popover";
 import Dock, { type Crowd } from "./Dock";
 import { useCafeStatus } from "@/lib/useCafeStatus";
@@ -180,6 +181,7 @@ export default function CafeverseApp() {
       <MapViewport initial={START} onCamera={onCamera} handleRef={map} cssVars={{ "--zi": zi }} maxZoomAt={maxZoomAt} onZoomBlocked={onZoomBlocked}>
         <Defs />
         <BaseMap />
+        <ZoneHint />
         <g className="mini" mask="url(#revealMask)">
           <g className="wobble-group" filter="url(#wobble)">
             <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} />

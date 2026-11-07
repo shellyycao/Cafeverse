@@ -2,7 +2,7 @@ import type { Pt } from "@/lib/iso";
 import { useMapGesture } from "@/components/map/MapViewport";
 
 const KIND = {
-  cafe: { fill: "#8a5a3a", glyph: "☕", size: 1.15 },
+  cafe: { fill: "#a2502f", glyph: "☕", size: 2.0 },
   parking: { fill: "#4b6ea5", glyph: "P", size: 0.85 },
   bus: { fill: "#4b6ea5", glyph: "🚌", size: 0.85 },
 };

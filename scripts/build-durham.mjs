@@ -52,7 +52,7 @@ function simplify(pts, tol) {
 
 const CLASS = { motorway: "m", motorway_link: "m", trunk: "m", trunk_link: "m", primary: "p", primary_link: "p", secondary: "s", tertiary: "t", tertiary_link: "t", residential: "r", unclassified: "r", living_street: "r", service: "v", pedestrian: "x" };
 
-const out = { roads: [], buildings: [], parks: [], water: [], rails: [] };
+const out = { roads: [], buildings: [], parks: [], water: [], rails: [], parkNames: [] };
 for (const w of osm.elements) {
   const t = w.tags || {};
   const pts = (w.geometry || []).map((p) => G(p.lon, p.lat));
@@ -68,7 +68,16 @@ for (const w of osm.elements) {
     if (cx > 26 && cx < 374 && cy > 26 && cy < 274) continue; // replaced by the hand-drawn café block
     const lv = parseFloat(t["building:levels"] || "") || (t.height ? parseFloat(t.height) / 3.4 : 0);
     out.buildings.push({ p: ring(pts, 1.2), l: lv ? Math.round(lv) : undefined });
-  } else if (t.leisure) out.parks.push(ring(pts, 2));
+  } else if (t.leisure) {
+    out.parks.push(ring(pts, 2));
+    if (t.name && /park|green|garden|plaza/i.test(t.name + " " + t.leisure)) {
+      const cx = Math.round(pts.reduce((a, p) => a + p[0], 0) / pts.length);
+      const cy = Math.round(pts.reduce((a, p) => a + p[1], 0) / pts.length);
+      let area = 0;
+      for (let i = 0; i < pts.length - 1; i++) area += pts[i][0] * pts[i + 1][1] - pts[i + 1][0] * pts[i][1];
+      out.parkNames.push({ n: t.name, c: [cx, cy], a: Math.round(Math.abs(area) / 2) });
+    }
+  }
   else if (t.natural === "water") out.water.push(ring(pts, 2));
   else if (t.railway) out.rails.push(simplify(pts, 2));
 }

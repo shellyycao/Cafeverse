@@ -21,7 +21,9 @@ button { font: inherit; color: inherit; }
 .map-svg { display: block; position: absolute; inset: 0; }
 
 /* miniature layer reveals itself as you zoom in */
-.mini { opacity: clamp(0, calc((var(--z) - 0.95) / 0.75), 1); pointer-events: none; }
+.mini { opacity: clamp(0, calc((var(--z) - 0.62) / 1.1), 1); pointer-events: none; }
+.zone-hint { opacity: clamp(0, calc((1.7 - var(--z)) / 0.9), 1); }
+.park-labels { opacity: clamp(0, calc((2.6 - var(--z)) / 1), 1); }
 /* roof + front walls fade away as you zoom in, revealing the interior */
 .cafe-shell { opacity: clamp(0, calc((0.95 * var(--zi) - var(--z)) / (0.3 * var(--zi))), 1); }
 .hints { opacity: clamp(0, calc((var(--z) - 0.82 * var(--zi)) / (0.12 * var(--zi))), 1); pointer-events: none; }

@@ -16,6 +16,7 @@ export const DURHAM = raw as unknown as {
   parks: Poly[];
   water: Poly[];
   rails: Poly[];
+  parkNames: Array<{ n: string; c: [number, number]; a: number }>;
 };
 
 /** road half-width in ground units, by class */
