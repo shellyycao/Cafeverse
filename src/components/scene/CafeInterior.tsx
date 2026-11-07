@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
-import { Person, RoundTable } from "./primitives";
+import { Bubble, Dog, Person, RoundTable } from "./primitives";
+import type { SceneSignals } from "@/lib/scene";
 
 const stroke = { stroke: INK, strokeOpacity: 0.5, strokeWidth: 0.7, strokeLinejoin: "round" as const };
 const WOOD = "#b98456";
@@ -61,7 +62,7 @@ function BackWall() {
   );
 }
 
-function SideWall() {
+function SideWall({ restroom }: { restroom: boolean }) {
   const H = F.h;
   return (
     <PlaneX x={F.x0} y={F.y1}>
@@ -77,6 +78,13 @@ function SideWall() {
           <rect x={u} y={-47} width={38} height={27} fill="url(#glassSheen)" opacity={0.5} />
         </g>
       ))}
+      {restroom && (
+        <g>
+          <rect x={104} y={-40} width={16} height={36} rx={1} fill="#8a6a4a" {...stroke} />
+          <rect x={107} y={-47} width={10} height={6} rx={1.2} fill="#fffaf0" {...stroke} />
+          <text x={112} y={-42.4} textAnchor="middle" fontSize={4.6} fontWeight={700} fill="#6a4a30">WC</text>
+        </g>
+      )}
       {/* hanging plant */}
       <path d="M116 -58 V-48" stroke="#6a4a30" strokeWidth={0.8} />
       <circle cx={116} cy={-44} r={5} fill="#7fa354" />
@@ -109,7 +117,7 @@ function Stool({ x, y }: { x: number; y: number }) {
   );
 }
 
-function PastryCase() {
+function PastryCase({ per }: { per: number }) {
   // glass front of the counter at y = counter y1, running along x
   const x0 = 262,
     x1 = 326,
@@ -130,7 +138,7 @@ function PastryCase() {
           return (
             <g key={r}>
               <rect x={1} y={-base} width={x1 - x0 - 2} height={1.1} fill="#fffaf0" opacity={0.9} />
-              {cakes[r].map((c, k) => (
+              {cakes[r].slice(0, per).map((c, k) => (
                 <g key={k}>
                   <ellipse cx={6 + k * 10.4} cy={-base - 2.4} rx={4.3} ry={2.6} fill={c} stroke={INK} strokeOpacity={0.45} strokeWidth={0.5} />
                   {c === "#e58b8b" && <circle cx={6 + k * 10.4} cy={-base - 4.6} r={1} fill="#b8433f" />}
@@ -149,13 +157,17 @@ export default function CafeInterior({
   level,
   onSelect,
   guard,
+  signals,
 }: {
+  signals: SceneSignals;
   level: number;
   onSelect?: (id: "barista" | "pastry" | "bar" | "social") => void;
   guard: (fn: () => void) => () => void;
 }) {
   const click = (id: "barista" | "pastry" | "bar" | "social") => guard(() => onSelect?.(id));
   const active = level >= 4;
+  const per = signals.pastryProminence === "high" ? 6 : signals.pastryProminence === "medium" ? 4 : 2;
+  const glow = signals.lighting === "warm" ? 1 : signals.lighting === "bright" ? 0.55 : 1.5;
   const counter = boxFaces(232, 142, 326, 166, 17);
   const counterTop = boxFaces(232, 142, 326, 166, 2, 17);
   const bar = boxFaces(202, 148, 214, 228, 19);
@@ -173,11 +185,13 @@ export default function CafeInterior({
       <polygon points={pts(Array.from({ length: 28 }, (_, k) => [262 + Math.cos((k / 28) * 6.283) * 44, 212 + Math.sin((k / 28) * 6.283) * 26] as [number, number]))} fill="#e3b4ac" opacity={0.6} />
 
       <BackWall />
-      <SideWall />
-      <Pendant x={250} y={150} />
-      <Pendant x={300} y={150} />
-      <Pendant x={262} y={206} z={52} drop={10} />
-      <Pendant x={226} y={176} z={52} drop={10} />
+      <SideWall restroom={signals.restroomSign} />
+      <g style={{ opacity: glow > 1 ? 1 : 0.75 + 0.25 * glow }}>
+        <Pendant x={250} y={150} />
+        <Pendant x={300} y={150} />
+        <Pendant x={262} y={206} z={52} drop={10} />
+        <Pendant x={226} y={176} z={52} drop={10} />
+      </g>
 
       {/* ----- barista (behind counter) ----- */}
       <g className={active ? "hotspot" : undefined} data-hotspot="barista" onClick={click("barista")} style={{ pointerEvents: active ? "auto" : "none" }}>
@@ -224,7 +238,7 @@ export default function CafeInterior({
       })()}
       {/* pastry glass front + top case */}
       <g className={active ? "hotspot" : undefined} data-hotspot="pastry" onClick={click("pastry")} style={{ pointerEvents: active ? "auto" : "none" }}>
-        <PastryCase />
+        <PastryCase per={per} />
         {(() => {
           const c = boxFaces(266, 148, 322, 164, 11, 19);
           return (
@@ -232,7 +246,7 @@ export default function CafeInterior({
               <polygon points={c.left} fill="#e9f1ee" opacity={0.55} {...stroke} />
               <polygon points={c.right} fill="#cfdedb" opacity={0.55} {...stroke} />
               <polygon points={c.top} fill="#f4faf7" opacity={0.7} {...stroke} />
-              {[0, 1, 2, 3].map((k) => {
+              {[0, 1, 2, 3].slice(0, signals.pastryProminence === "high" ? 4 : signals.pastryProminence === "medium" ? 2 : 0).map((k) => {
                 const p = P(274 + k * 12, 160, 22);
                 return <ellipse key={k} cx={p.x} cy={p.y} rx={4.2} ry={2.6} fill={["#d99a5b", "#f6ead2", "#e58b8b", "#c98f55"][k]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />;
               })}
@@ -249,8 +263,18 @@ export default function CafeInterior({
         <Stool key={y} x={228} y={y} />
       ))}
       <g className={active ? "hotspot" : undefined} data-hotspot="bar" onClick={click("bar")} style={{ pointerEvents: active ? "auto" : "none" }}>
-        <Person x={228} y={182} z={11} sitting shirt="#9bb08a" hair="#2e231c" laptop scale={1.3} />
-        <Person x={228} y={218} z={11} sitting shirt="#c9a27a" hair="#5a3a24" scale={1.3} />
+        {signals.laptopWorkers === 0 ? (
+          <Person x={228} y={218} z={11} sitting shirt="#c9a27a" hair="#5a3a24" scale={1.3} />
+        ) : (
+          [
+            [182, "#9bb08a", "#2e231c"],
+            [218, "#c9a27a", "#5a3a24"],
+            [162, "#8aa0b8", "#3c2c22"],
+            [202, "#d9a0a0", "#6a4326"],
+          ]
+            .slice(0, signals.laptopWorkers)
+            .map(([y, shirt, hair]) => <Person key={y as number} x={228} y={y as number} z={11} sitting shirt={shirt as string} hair={hair as string} laptop scale={1.3} />)
+        )}
         {(() => {
           const p = P(216, 190, 22);
           return (
@@ -267,15 +291,28 @@ export default function CafeInterior({
         <g transform={`translate(0 0)`}>
           <RoundTableScaled x={268} y={206} />
           <Person x={258} y={212} z={4} sitting shirt="#6d8a64" hair="#2e231c" scale={1.3} />
-          <Person x={279} y={199} z={4} sitting shirt="#d9a0a0" hair="#7a4a2c" scale={1.3} />
+          {signals.chattingGroups >= 1 && (
+            <>
+              <Person x={279} y={199} z={4} sitting shirt="#d9a0a0" hair="#7a4a2c" scale={1.3} />
+              <Bubble x={262} y={208} z={32} />
+              <Bubble x={276} y={198} z={34} />
+            </>
+          )}
         </g>
         <polygon points={rectPts(250, 192, 290, 222)} fill="transparent" />
       </g>
       <RoundTableScaled x={310} y={228} />
       <Person x={302} y={234} z={4} sitting shirt="#cfa163" hair="#3c2c22" scale={1.3} />
+      {signals.chattingGroups >= 2 && (
+        <>
+          <Person x={320} y={222} z={4} sitting shirt="#8aa0b8" hair="#2e231c" scale={1.3} />
+          <Bubble x={304} y={232} z={32} />
+        </>
+      )}
+      {signals.dogInside && <Dog x={246} y={236} scale={1.25} />}
 
       {/* plants */}
-      {[[330, 244], [214, 244], [318, 134]].map(([x, y], i) => {
+      {[[330, 244], [214, 244], [318, 134], [336, 190], [208, 134], [244, 246]].slice(0, signals.plants === "few" ? 1 : signals.plants === "some" ? 3 : 6).map(([x, y], i) => {
         const b = P(x, y);
         return (
           <g key={i} transform={`translate(${b.x} ${b.y})`}>
@@ -288,6 +325,12 @@ export default function CafeInterior({
         );
       })}
 
+      <polygon
+        points={rectPts(F.x0, F.y0, F.x1, F.y1)}
+        fill={signals.lighting === "dim" ? "#3a2616" : "#ffe3a0"}
+        opacity={signals.lighting === "dim" ? 0.22 : signals.lighting === "warm" ? 0.1 : 0}
+        style={{ pointerEvents: "none" }}
+      />
       {/* cutaway frame: low knee walls + corner pillar stay visible */}
       {(() => {
         const l = boxFaces(F.x0, F.y1 - 3, F.x1, F.y1, 8);

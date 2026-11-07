@@ -294,3 +294,34 @@ function Chair({ dx, dy, flip }: { dx: number; dy: number; flip?: boolean }) {
     </g>
   );
 }
+
+/* ---------- Dog (only rendered when the analysis supports it) ---------- */
+export function Dog({ x, y, z = 0, scale = 1 }: { x: number; y: number; z?: number; scale?: number }) {
+  const p = P(x, y, z);
+  return (
+    <g transform={`translate(${p.x} ${p.y}) scale(${scale})`}>
+      <ellipse cx={0} cy={1} rx={8} ry={2.6} fill="#6b5a3a" opacity={0.2} />
+      <path d="M5 -4 q7 -2 8 -9" stroke="#b98456" strokeWidth={2.4} strokeLinecap="round" fill="none" />
+      <ellipse cx={0} cy={-5} rx={7.6} ry={5} fill="#c99a68" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
+      <circle cx={-6.5} cy={-9.5} r={4} fill="#d4a674" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
+      <path d="M-9 -13 q-3 3 -1 6 z M-4.5 -13.5 q2 2 1 5 z" fill="#8c5f38" />
+      <circle cx={-7.6} cy={-10} r={0.7} fill="#2e231c" />
+      <ellipse cx={-9.6} cy={-8.6} rx={1.2} ry={0.9} fill="#2e231c" />
+      <rect x={-4} y={-2} width={2.4} height={4} rx={1} fill="#c99a68" />
+      <rect x={2.5} y={-2} width={2.4} height={4} rx={1} fill="#c99a68" />
+    </g>
+  );
+}
+
+export function Bubble({ x, y, z = 26 }: { x: number; y: number; z?: number }) {
+  const p = P(x, y, z);
+  return (
+    <g transform={`translate(${p.x} ${p.y})`} className="bubble">
+      <ellipse cx={0} cy={0} rx={7} ry={4.6} fill="#fffaf0" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
+      <path d="M-2 3.8 l-1.4 3 l4 -1.8z" fill="#fffaf0" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
+      <circle cx={-2.6} cy={0} r={0.8} fill="#8a7255" />
+      <circle cx={0} cy={0} r={0.8} fill="#8a7255" />
+      <circle cx={2.6} cy={0} r={0.8} fill="#8a7255" />
+    </g>
+  );
+}

@@ -1,0 +1,3 @@
+{
+  "functions": { "src/app/api/analyze-cafe/route.ts": { "maxDuration": 60 } }
+}

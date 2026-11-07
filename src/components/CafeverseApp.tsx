@@ -6,6 +6,9 @@ import BaseMap from "./map/BaseMap";
 import Neighborhood, { ANCHORS, ScenePins, type HotspotId } from "./scene/Neighborhood";
 import Defs from "./scene/Defs";
 import Popover from "./Popover";
+import AiPanel, { type AiState } from "./AiPanel";
+import { BASELINE_SIGNALS, describeChanges, type SceneSignals } from "@/lib/scene";
+import { CAFE } from "@/data/cafe";
 import { P } from "@/lib/iso";
 import { ZONES } from "@/data/durham";
 
@@ -40,6 +43,9 @@ export default function CafeverseApp() {
   const [pop, setPop] = useState<{ id: HotspotId } | null>(null);
   const popEl = useRef<HTMLDivElement>(null);
   const popWorld = useRef<{ x: number; y: number } | null>(null);
+  const [signals, setSignals] = useState<SceneSignals>(BASELINE_SIGNALS);
+  const signalsRef = useRef(signals);
+  const [ai, setAi] = useState<AiState>({ status: "idle", mode: "demo" });
   const [toast, setToast] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onZoomBlocked = useCallback(() => {
@@ -57,6 +63,35 @@ export default function CafeverseApp() {
     set();
     window.addEventListener("resize", set);
     return () => window.removeEventListener("resize", set);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/analyze-cafe")
+      .then((r) => r.json())
+      .then((d) => setAi((a) => ({ ...a, mode: d.mode === "live" ? "live" : "demo" })))
+      .catch(() => {});
+  }, []);
+
+  const analyze = useCallback(async () => {
+    setAi((a) => ({ ...a, status: "loading" }));
+    try {
+      const sources = [
+        { kind: "website", text: CAFE.tagline },
+        { kind: "website", text: CAFE.location },
+        { kind: "website", text: CAFE.parking.lines.join(" ") },
+        { kind: "website", text: `Services: ${CAFE.services.join("; ")}. Hours weekdays ${CAFE.hours.weekdays}, weekends ${CAFE.hours.weekends}.` },
+      ];
+      const res = await fetch("/api/analyze-cafe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ cafeName: CAFE.name, sources }) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "failed");
+      const next: SceneSignals = data.analysis.visualSignals;
+      const prev = signalsRef.current;
+      signalsRef.current = next;
+      setSignals(next);
+      setAi({ status: "done", mode: data.mode, analysis: data.analysis, note: data.note, changes: describeChanges(prev, next) });
+    } catch (e) {
+      setAi((a) => ({ ...a, status: "error", error: e instanceof Error ? e.message : "failed" }));
+    }
   }, []);
 
   const placePopover = useCallback(() => {
@@ -127,10 +162,10 @@ export default function CafeverseApp() {
         <BaseMap />
         <g className="mini" mask="url(#revealMask)">
           <g filter="url(#wobble)">
-            <Neighborhood onSelect={onSelect} level={level} />
+            <Neighborhood onSelect={onSelect} level={level} signals={signals} />
           </g>
         </g>
-        <ScenePins onSelect={onSelect} />
+        <ScenePins onSelect={onSelect} busStop={signals.busStop} />
       </MapViewport>
       <div className="paper" />
       <div className="vignette" />
@@ -147,6 +182,8 @@ export default function CafeverseApp() {
           />
         </label>
       </div>
+
+      <AiPanel state={ai} onAnalyze={analyze} />
 
       {level >= 3 && (
         <div className="chrome back-btn">
