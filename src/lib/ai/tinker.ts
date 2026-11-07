@@ -30,7 +30,14 @@ export class TinkerProvider implements InferenceProvider {
     const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${this.apiKey}` },
-      body: JSON.stringify({ model: this.model, messages, temperature: 0.2, max_tokens: 1800 }),
+      body: JSON.stringify({
+        model: this.model,
+        messages,
+        temperature: 0.2,
+        max_tokens: Number(process.env.TINKER_MAX_TOKENS) || 2500,
+        // Hybrid models reason by default; "none" turns that off (not every model accepts it — a 400 means unset it).
+        ...(process.env.TINKER_REASONING_EFFORT ? { reasoning_effort: process.env.TINKER_REASONING_EFFORT } : {}),
+      }),
       signal: AbortSignal.timeout(50_000),
     });
     if (!res.ok) throw new Error(`Tinker ${res.status}: ${(await res.text()).slice(0, 300)}`);

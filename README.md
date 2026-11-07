@@ -16,6 +16,8 @@ npm run build
 |---|---|
 | `TINKER_API_KEY` | Thinking Machines (Tinker) API key. Never sent to the browser. |
 | `TINKER_MODEL` | Model value for Tinker's OpenAI-compatible endpoint (a `tinker://…` sampler path per the docs). Not hardcoded. |
+| `TINKER_REASONING_EFFORT` | Optional, e.g. `none` to skip chain-of-thought on Hybrid models (400 = unsupported, unset it). |
+| `TINKER_MAX_TOKENS` | Optional completion budget (default 2500). |
 | `TINKER_BASE_URL` | Optional override. Default: `https://tinker.thinkingmachines.dev/services/tinker-prod/oai/api/v1` |
 
 Without `TINKER_API_KEY` + `TINKER_MODEL` the app runs in a clearly labelled **Demo mode** (keyword reading of the supplied text).
