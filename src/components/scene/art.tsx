@@ -356,6 +356,11 @@ export function GrabGoCase({ x, y, per = 5 }: { x: number; y: number; per?: numb
         {/* mint frame */}
         <rect x={0} y={-glassH} width={w} height={glassH} fill="none" stroke="#9fcfba" strokeWidth={1.3} />
         <rect x={0} y={-glassH} width={w} height={glassH} fill="url(#glassSheen)" opacity={0.5} />
+        <path d={`M${w * 0.08} ${-glassH} l${w * 0.16} 0 l${-w * 0.1} ${glassH} l${-w * 0.16} 0z`} fill="#ffffff" opacity={0.2} />
+        <path d={`M${w * 0.36} ${-glassH} l${w * 0.06} 0 l${-w * 0.1} ${glassH} l${-w * 0.06} 0z`} fill="#ffffff" opacity={0.16} />
+        {[0, 1, 2, 3, 4].map((k) => (
+          <rect key={`tag${k}`} x={3.6 + k * 7} y={-5.2} width={2.4} height={1.1} fill="#fffaf0" stroke={INK} strokeOpacity={0.3} strokeWidth={0.25} />
+        ))}
       </PlaneY>
       {/* glass top + mint right edge */}
       <polygon points={pts([[x + w, y + d, baseH], [x + w, y, baseH], [x + w, y, baseH + glassH], [x + w, y + d, baseH + glassH]])} fill="#cfe4de" opacity={0.4} stroke="#9fcfba" strokeWidth={1.1} />
@@ -562,13 +567,27 @@ export function BrownArmchair({ x, y, flip = false }: { x: number; y: number; fl
   const b = P(x, y);
   return (
     <g transform={`translate(${b.x} ${b.y}) ${flip ? "scale(-1 1)" : ""}`}>
-      <Shadow x={x} y={y} rx={12} ry={4.6} o={0.22} />
-      <path d="M-9.5 -3 q-0.8 -11 3.4 -14 h12 q4.2 3 3.4 14z" fill="#6d3f29" {...L} />
-      <rect x={-12} y={-11} width={5.6} height={10.6} rx={2.8} fill="#7a4630" {...L} />
-      <rect x={6.4} y={-11} width={5.6} height={10.6} rx={2.8} fill="#6a3b27" {...L} />
-      <rect x={-7} y={-9.4} width={14} height={8} rx={3} fill="#8c5638" {...L} />
-      <path d="M-5 -8 q5 -1.4 10 0" stroke="#b27a58" strokeWidth={0.7} fill="none" opacity={0.7} />
-      <path d="M-4 -15 l1 2.4 M2 -15.6 l-0.8 2.4" stroke="#4a2a1a" strokeWidth={0.5} opacity={0.6} />
+      <Shadow x={x} y={y} rx={13} ry={5} o={0.24} />
+      {/* back */}
+      <path d="M-9.5 -3 q-0.8 -11 3.4 -14.4 q5.6 -2.2 11.2 0 q4.2 3.4 3.4 14.4z" fill="#744229" {...L} />
+      <path d="M-7.4 -5 q-0.4 -7.6 2.4 -10 q4.4 -1.6 9 0 q2.8 2.4 2.4 10" fill="#8a5336" opacity={0.85} />
+      {/* tufting buttons + stitching on the back */}
+      {[[-3.2, -12], [0, -9.6], [3.2, -12], [-1.6, -6.4], [1.6, -6.4]].map(([cx, cy], i) => (
+        <g key={i}>
+          <circle cx={cx} cy={cy} r={0.55} fill="#4a2a1a" />
+          <path d={`M${cx} ${cy} l${i % 2 ? -1.6 : 1.6} 1.8`} stroke="#4a2a1a" strokeWidth={0.3} opacity={0.55} />
+        </g>
+      ))}
+      {/* arms */}
+      <rect x={-12.2} y={-11.4} width={5.8} height={11} rx={2.9} fill="#82492f" {...L} />
+      <rect x={6.4} y={-11.4} width={5.8} height={11} rx={2.9} fill="#6c3d27" {...L} />
+      <path d="M-11 -10 q1 -1 3 -0.6" stroke="#c88a64" strokeWidth={0.6} opacity={0.6} fill="none" strokeLinecap="round" />
+      {/* seat cushion with a leather sheen and a piped edge */}
+      <rect x={-7.2} y={-9.6} width={14.4} height={8.4} rx={3.2} fill="#965c3b" {...L} />
+      <path d="M-5.4 -8 q5.4 -1.8 10.8 0" stroke="#d29a74" strokeWidth={0.9} fill="none" opacity={0.55} strokeLinecap="round" />
+      <path d="M-6.4 -2.6 q6.4 1.2 12.8 0" stroke="#5e341f" strokeWidth={0.5} fill="none" opacity={0.7} />
+      {/* small mustard throw pillow */}
+      <rect x={-6} y={-12.4} width={5.4} height={5.2} rx={1.3} fill="#d9a441" stroke="#6b4a2c" strokeOpacity={0.3} strokeWidth={0.4} transform="rotate(-8 -3 -10)" />
     </g>
   );
 }
@@ -743,6 +762,36 @@ export function DoorPlanter({ x, y }: { x: number; y: number }) {
       ))}
       <path d="M-8 -14 h16 l-2 14 h-12z" fill="#f2efe6" {...L} />
       <path d="M-7.2 -11 h14.4 M-6.6 -7 h13.2" stroke="#dcd6c8" strokeWidth={0.7} />
+    </g>
+  );
+}
+
+/** a row of kraft coffee bags with blue labels, standing on a counter */
+export function CoffeeBags({ x, y, z, n = 3 }: { x: number; y: number; z: number; n?: number }) {
+  return (
+    <g>
+      {Array.from({ length: n }).map((_, i) => {
+        const p = P(x + i * 4.6, y - i * 1.6, z);
+        return (
+          <g key={i} transform={`translate(${p.x} ${p.y})`}>
+            <path d="M-3.2 0 l0.5 -8.2 h5.4 l0.5 8.2z" fill={["#c9a27a", "#d6b48a", "#bf9a6e"][i % 3]} {...L} />
+            <path d="M-2.6 -8.2 h5.2 l0.2 1.4 h-5.6z" fill="#a9825a" />
+            <rect x={-1.8} y={-6.2} width={3.6} height={3.4} rx={0.4} fill="#4a76ad" opacity={0.92} />
+            <path d="M-1.1 -4.6 h2.2 M-1.1 -3.8 h1.5" stroke="#f1efe6" strokeWidth={0.35} />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+export function Grinder({ x, y, z }: { x: number; y: number; z: number }) {
+  const p = P(x, y, z);
+  return (
+    <g transform={`translate(${p.x} ${p.y})`}>
+      <path d="M-3 0 v-7 q0 -1 1 -1 h4 q1 0 1 1 v7z" fill="#2f2e33" {...L} />
+      <path d="M-4 -8 l1.4 -5.4 h5.2 l1.4 5.4z" fill="#dcd8cc" stroke="#6b4a2c" strokeOpacity={0.3} strokeWidth={0.4} opacity={0.9} />
+      <circle cx={0} cy={-3.4} r={0.9} fill="#c9a24e" />
     </g>
   );
 }

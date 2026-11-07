@@ -5,6 +5,8 @@ import { CAFE_FOOTPRINT as F } from "@/data/durham";
 import { Wash } from "./primitives";
 import {
   BarStool,
+  CoffeeBags,
+  Grinder,
   BigPlant,
   BluePortrait,
   BrownArmchair,
@@ -244,6 +246,8 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
       <EspressoMachine x={X + 100} y={Y + 16} />
       <CupStack x={X + 82} y={Y + 24} z={19} />
       <PastryDome x={X + 76} y={Y + 21} z={19} n={4} />
+      <CoffeeBags x={X + 108} y={Y + 27} z={19} n={3} />
+      <Grinder x={X + 94} y={Y + 21} z={19} />
     </g>,
   );
   add(X + 80 + Y + 58, <GrabGoCase key="case" x={X + 80} y={Y + 44} per={5} />);
@@ -304,6 +308,11 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
 
   return (
     <g>
+      <defs>
+        <clipPath id="roomClip">
+          <polygon points={pts([[F.x0, F.y1, 0], [F.x0, F.y1, H], [F.x0, F.y0, H], [F.x1, F.y0, H], [F.x1, F.y0, 0], [F.x1, F.y1, 0]])} />
+        </clipPath>
+      </defs>
       {/* slab + large light grey-beige wood-look plank floor, joints staggered (as in the photos) */}
       <polygon points={slab.left} fill="#c2b496" {...ink} />
       <polygon points={slab.right} fill="#aa9b7c" {...ink} />
@@ -341,6 +350,22 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
         <Lantern key={i} x={x} y={y} z={z} r={r} />
       ))}
 
+      {/* ---- lighting & hierarchy (all static): corner shadow, warm window light, soft focus on the counter ---- */}
+      <g style={{ pointerEvents: "none" }} clipPath="url(#roomClip)">
+        {[14, 9, 5].map((d, i) => (
+          <g key={i} fill="#4a3626" opacity={0.07}>
+            <polygon points={rectPts(F.x0, F.y0, F.x1, F.y0 + d)} />
+            <polygon points={rectPts(F.x0, F.y0, F.x0 + d, F.y1)} />
+          </g>
+        ))}
+        {[44, 32, 22, 12].map((d, i) => (
+          <polygon key={i} points={rectPts(F.x0, F.y1 - d, F.x1, F.y1)} fill="#ffe2a0" opacity={lit ? 0.055 : 0} />
+        ))}
+        {[X + 30, X + 74, X + 118].map((x0, i) => (
+          <polygon key={i} points={pts([[x0, F.y1, 0], [x0 + 22, F.y1, 0], [x0 + 40, F.y1 - 84, 0], [x0 + 20, F.y1 - 84, 0]])} fill="url(#beamGrad)" opacity={lit ? 0.5 : 0} />
+        ))}
+        <polygon points={pts([[F.x0, F.y1, 0], [F.x0, F.y1, H], [F.x0, F.y0, H], [F.x1, F.y0, H], [F.x1, F.y0, 0], [F.x1, F.y1, 0]])} fill="url(#focusVignette)" />
+      </g>
       <polygon points={rectPts(F.x0, F.y0, F.x1, F.y1)} fill={lit ? "#ffe3a0" : "#1d2536"} opacity={lit ? 0.07 : 0.5} style={{ pointerEvents: "none" }} />
 
       {/* the storefront side of the cutaway: brick base, thin black mullions, a glass-door frame */}
