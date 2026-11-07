@@ -1,0 +1,232 @@
+{
+  "canvas": {
+    "width": 2040,
+    "height": 1620,
+    "aspect": "2040:1620 = 17:13.5 (1.2593)",
+    "worldUnitsToPx": 6
+  },
+  "note": "normalized = px / canvas size (0..1, origin top-left). Pivot for people = feet / bottom-centre.",
+  "anchors": [
+    {
+      "id": "barista",
+      "kind": "stand",
+      "note": "behind the service counter, facing the room",
+      "px": {
+        "x": 1464,
+        "y": 834
+      },
+      "normalized": {
+        "x": 0.7176,
+        "y": 0.5148
+      }
+    },
+    {
+      "id": "pastry-case",
+      "kind": "prop",
+      "note": "centre of the glass grab-and-go / pastry display",
+      "px": {
+        "x": 1248,
+        "y": 900
+      },
+      "normalized": {
+        "x": 0.6118,
+        "y": 0.5556
+      }
+    },
+    {
+      "id": "counter-front",
+      "kind": "stand",
+      "note": "where a customer stands at the counter",
+      "px": {
+        "x": 1284,
+        "y": 924
+      },
+      "normalized": {
+        "x": 0.6294,
+        "y": 0.5704
+      }
+    },
+    {
+      "id": "lounge-1",
+      "kind": "seat",
+      "note": "leather armchair by the photo wall (back)",
+      "px": {
+        "x": 672,
+        "y": 732
+      },
+      "normalized": {
+        "x": 0.3294,
+        "y": 0.4519
+      }
+    },
+    {
+      "id": "lounge-2",
+      "kind": "seat",
+      "note": "leather armchair by the photo wall (front)",
+      "px": {
+        "x": 528,
+        "y": 804
+      },
+      "normalized": {
+        "x": 0.2588,
+        "y": 0.4963
+      }
+    },
+    {
+      "id": "window-seat-1",
+      "kind": "seat",
+      "note": "window-bar stool, seated, facing the street glass",
+      "px": {
+        "x": 402,
+        "y": 915
+      },
+      "normalized": {
+        "x": 0.1971,
+        "y": 0.5648
+      }
+    },
+    {
+      "id": "window-seat-2",
+      "kind": "seat",
+      "note": "window-bar stool, seated, facing the street glass",
+      "px": {
+        "x": 546,
+        "y": 987
+      },
+      "normalized": {
+        "x": 0.2676,
+        "y": 0.6093
+      }
+    },
+    {
+      "id": "window-seat-3",
+      "kind": "seat",
+      "note": "window-bar stool, seated, facing the street glass",
+      "px": {
+        "x": 690,
+        "y": 1059
+      },
+      "normalized": {
+        "x": 0.3382,
+        "y": 0.6537
+      }
+    },
+    {
+      "id": "window-seat-4",
+      "kind": "seat",
+      "note": "window-bar stool, seated, facing the street glass",
+      "px": {
+        "x": 834,
+        "y": 1131
+      },
+      "normalized": {
+        "x": 0.4088,
+        "y": 0.6981
+      }
+    },
+    {
+      "id": "table1-back",
+      "kind": "seat",
+      "note": "table 1, back chair",
+      "px": {
+        "x": 1152,
+        "y": 990
+      },
+      "normalized": {
+        "x": 0.5647,
+        "y": 0.6111
+      }
+    },
+    {
+      "id": "table1-front",
+      "kind": "seat",
+      "note": "table 1, front chair",
+      "px": {
+        "x": 960,
+        "y": 1086
+      },
+      "normalized": {
+        "x": 0.4706,
+        "y": 0.6704
+      }
+    },
+    {
+      "id": "table1-right",
+      "kind": "seat",
+      "note": "table 1, right chair",
+      "px": {
+        "x": 1152,
+        "y": 1086
+      },
+      "normalized": {
+        "x": 0.5647,
+        "y": 0.6704
+      }
+    },
+    {
+      "id": "table2-back",
+      "kind": "seat",
+      "note": "table 2, back chair",
+      "px": {
+        "x": 1272,
+        "y": 1146
+      },
+      "normalized": {
+        "x": 0.6235,
+        "y": 0.7074
+      }
+    },
+    {
+      "id": "table2-front",
+      "kind": "seat",
+      "note": "table 2, front chair",
+      "px": {
+        "x": 1080,
+        "y": 1242
+      },
+      "normalized": {
+        "x": 0.5294,
+        "y": 0.7667
+      }
+    },
+    {
+      "id": "table3-front",
+      "kind": "seat",
+      "note": "table 3, front chair",
+      "px": {
+        "x": 708,
+        "y": 1068
+      },
+      "normalized": {
+        "x": 0.3471,
+        "y": 0.6593
+      }
+    },
+    {
+      "id": "table3-right",
+      "kind": "seat",
+      "note": "table 3, right chair",
+      "px": {
+        "x": 900,
+        "y": 1068
+      },
+      "normalized": {
+        "x": 0.4412,
+        "y": 0.6593
+      }
+    },
+    {
+      "id": "door",
+      "kind": "door",
+      "note": "glass entrance on the Foster St side",
+      "px": {
+        "x": 1170,
+        "y": 1389
+      },
+      "normalized": {
+        "x": 0.5735,
+        "y": 0.8574
+      }
+    }
+  ]
+}

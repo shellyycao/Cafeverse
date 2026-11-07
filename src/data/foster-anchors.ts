@@ -1,0 +1,53 @@
+import { P } from "@/lib/iso";
+import { CAFE_FOOTPRINT as F } from "@/data/durham";
+
+/**
+ * Registration for the illustrated interior. ONE canvas, shared by the reference screenshot, the alignment
+ * template and the final `interior-base.png`: 2040 × 1620 px = 340 × 270 world units at 6 px / unit.
+ */
+export const CANVAS = { x: -190, y: -290, w: 340, h: 270, px: 6, width: 2040, height: 1620 } as const;
+export const BASE_IMAGE = "/assets/foster/interior-base.png";
+export const canvasPx = (wx: number, wy: number) => ({ x: Math.round((wx - CANVAS.x) * CANVAS.px), y: Math.round((wy - CANVAS.y) * CANVAS.px) });
+
+const X = F.x0;
+const Y = F.y0;
+
+export type Anchor = { id: string; kind: "seat" | "stand" | "prop" | "door"; note: string; ground: [number, number, number] };
+
+/** Fixed furniture positions of the conceptual layout (same numbers as the SVG interior). */
+export const ANCHORS: Anchor[] = [
+  { id: "barista", kind: "stand", note: "behind the service counter, facing the room", ground: [X + 92, Y + 8, 0] },
+  { id: "pastry-case", kind: "prop", note: "centre of the glass grab-and-go / pastry display", ground: [X + 99, Y + 51, 14] },
+  { id: "counter-front", kind: "stand", note: "where a customer stands at the counter", ground: [X + 92, Y + 38, 0] },
+  { id: "lounge-1", kind: "seat", note: "leather armchair by the photo wall (back)", ground: [X + 14, Y + 62, 5] },
+  { id: "lounge-2", kind: "seat", note: "leather armchair by the photo wall (front)", ground: [X + 14, Y + 86, 5] },
+  ...[26, 50, 74, 98].map((dx, i): Anchor => ({ id: `window-seat-${i + 1}`, kind: "seat", note: "window-bar stool, seated, facing the street glass", ground: [X + dx, F.y1 - 25, 9] })),
+  { id: "table1-back", kind: "seat", note: "table 1, back chair", ground: [X + 96, Y + 64, 4] },
+  { id: "table1-front", kind: "seat", note: "table 1, front chair", ground: [X + 96, Y + 96, 4] },
+  { id: "table1-right", kind: "seat", note: "table 1, right chair", ground: [X + 112, Y + 80, 4] },
+  { id: "table2-back", kind: "seat", note: "table 2, back chair", ground: [X + 132, Y + 80, 4] },
+  { id: "table2-front", kind: "seat", note: "table 2, front chair", ground: [X + 132, Y + 112, 4] },
+  { id: "table3-front", kind: "seat", note: "table 3, front chair", ground: [X + 72, Y + 114, 4] },
+  { id: "table3-right", kind: "seat", note: "table 3, right chair", ground: [X + 88, Y + 98, 4] },
+  { id: "door", kind: "door", note: "glass entrance on the Foster St side", ground: [F.x1, F.y1 - 19, 0] },
+];
+
+export const anchorCanvas = (a: Anchor) => {
+  const p = P(a.ground[0], a.ground[1], a.ground[2]);
+  const c = canvasPx(p.x, p.y);
+  return { ...c, nx: +(c.x / CANVAS.width).toFixed(4), ny: +(c.y / CANVAS.height).toFixed(4), world: { x: p.x, y: p.y } };
+};
+
+/** Footprints of the main fixed objects (ground rectangles), for the alignment template. */
+export const OBJECTS: Array<{ id: string; label: string; rect: [number, number, number, number]; h: number }> = [
+  { id: "counter", label: "service counter", rect: [X + 68, Y + 14, X + 126, Y + 31], h: 17 },
+  { id: "case", label: "glass pastry display", rect: [X + 80, Y + 44, X + 118, Y + 59], h: 30 },
+  { id: "retail", label: "retail table", rect: [X + 44, Y + 46, X + 66, Y + 57], h: 14 },
+  { id: "fridge", label: "fridge", rect: [X + 4, Y + 2, X + 20, Y + 13], h: 42 },
+  { id: "window-bar", label: "window bar + stools", rect: [X + 12, F.y1 - 11, X + 118, F.y1 - 3], h: 16 },
+  { id: "divider", label: "wood divider w/ plants", rect: [X + 6, Y + 99, X + 66, Y + 106], h: 19 },
+  { id: "lounge", label: "lounge (2 armchairs + coffee table)", rect: [X + 4, Y + 54, X + 36, Y + 94], h: 0 },
+  { id: "table1", label: "table 1", rect: [X + 88, Y + 72, X + 104, Y + 88], h: 13 },
+  { id: "table2", label: "table 2", rect: [X + 124, Y + 88, X + 140, Y + 104], h: 13 },
+  { id: "table3", label: "table 3", rect: [X + 64, Y + 90, X + 80, Y + 106], h: 13 },
+];

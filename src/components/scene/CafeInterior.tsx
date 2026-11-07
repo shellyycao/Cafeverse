@@ -1,6 +1,6 @@
 import type { SceneSignals } from "@/lib/scene";
 import type { Phase } from "@/lib/hours";
-import InteriorBase from "./InteriorBase";
+import InteriorStage from "./InteriorStage";
 
 /**
  * Gate 1: the interior is the empty, hand-drawn base scene only. Actors, hotspots, crowd and
@@ -16,9 +16,5 @@ export default function CafeInterior({
   onSelect?: (id: "barista" | "pastry" | "bar" | "social") => void;
   guard?: (fn: () => void) => () => void;
 }) {
-  return (
-    <g className="paint-group" filter="url(#paint)">
-      <InteriorBase lit={phase !== "closed"} />
-    </g>
-  );
+  return <InteriorStage lit={phase !== "closed"} />;
 }

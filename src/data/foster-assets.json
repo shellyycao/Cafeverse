@@ -1,0 +1,15 @@
+{
+  "_note": "Drop public/assets/foster/interior-base.png (2040x1620 PNG) and reload: it replaces the SVG interior automatically. Anything else here is for later.",
+  "canvas": {
+    "x": -190,
+    "y": -290,
+    "w": 340,
+    "h": 270,
+    "px": 6,
+    "width": 2040,
+    "height": 1620
+  },
+  "base": {
+    "file": "interior-base.png"
+  }
+}
