@@ -238,12 +238,12 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
   add(X + 4 + Y + 2 + 12, <SteelFridge key="fridge" x={X + 4} y={Y + 2} />);
   add(X + 150 + Y + 26, <Scaled key="plantR" x={X + 150} y={Y + 26} s={1}><BigPlant x={X + 150} y={Y + 26} s={1.05} /></Scaled>);
   add(
-    X + 44 + Y + 38,
+    X + 66 + Y + 32,
     <g key="counter">
-      <SlatBox x0={X + 44} y0={Y + 14} x1={X + 128} y1={Y + 38} h={17} />
-      <EspressoMachine x={X + 104} y={Y + 18} />
-      <CupStack x={X + 70} y={Y + 28} z={19} />
-      <PastryDome x={X + 56} y={Y + 26} z={19} n={4} />
+      <SlatBox x0={X + 68} y0={Y + 14} x1={X + 126} y1={Y + 31} h={17} />
+      <EspressoMachine x={X + 100} y={Y + 16} />
+      <CupStack x={X + 82} y={Y + 24} z={19} />
+      <PastryDome x={X + 76} y={Y + 21} z={19} n={4} />
     </g>,
   );
   add(X + 80 + Y + 58, <GrabGoCase key="case" x={X + 80} y={Y + 44} per={5} />);
@@ -319,7 +319,7 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
         }),
       )}
       {/* darker floor band along the counter, as in the counter photo */}
-      <polygon points={rectPts(X + 40, Y + 38, X + 132, Y + 43)} fill="#aea28a" opacity={0.4} />
+      <polygon points={rectPts(X + 62, Y + 32, X + 130, Y + 36)} fill="#aea28a" opacity={0.4} />
       {/* soft, static pools of daylight from the street windows */}
       {[[X + 24, Y + 112], [X + 60, Y + 90], [X + 100, Y + 60], [X + 130, Y + 110], [X + 80, Y + 130], [X + 50, Y + 70], [X + 120, Y + 64]].map(([x, y], i) => {
         const pp = P(x, y);
