@@ -20,8 +20,20 @@ export const rightQuad = (x1: number, y1: number, u0: number, u1: number, v0: nu
     [x, y1 - u0, v1],
   ]);
 
+/** painted texture over a flat shape: watercolor wash + pencil grain + soft top-lit shading */
+export function Wash({ points, hatch = false, shade: sh = true, o = 0.6 }: { points: string; hatch?: boolean; shade?: boolean; o?: number }) {
+  return (
+    <g style={{ pointerEvents: "none" }} opacity={o}>
+      <polygon points={points} fill="url(#washPat)" />
+      <polygon points={points} fill="url(#grainPat)" opacity={0.5} />
+      {sh && <polygon points={points} fill="url(#faceShade)" />}
+      {hatch && <polygon points={points} fill="url(#hatch)" opacity={0.55} />}
+    </g>
+  );
+}
+
 /* ---------- Extruded polygon building (real OSM footprint) ---------- */
-export function PolyBuilding({ poly, h, wall, roof, shop = false }: { poly: Poly; h: number; wall: string; roof: string; shop?: boolean }) {
+export function PolyBuilding({ poly, h, wall, roof, shop = false, textured = true }: { poly: Poly; h: number; wall: string; roof: string; shop?: boolean; textured?: boolean }) {
   const n = poly.length;
   const cx = poly.reduce((a, p) => a + p[0], 0) / n;
   const cy = poly.reduce((a, p) => a + p[1], 0) / n;
@@ -54,6 +66,7 @@ export function PolyBuilding({ poly, h, wall, roof, shop = false }: { poly: Poly
         return (
           <g key={i}>
             <polygon points={`${pa.x},${pa.y} ${pb.x},${pb.y} ${pb.x},${pb.y - h} ${pa.x},${pa.y - h}`} fill={col} {...OUT} />
+            {textured && <Wash points={`${pa.x},${pa.y} ${pb.x},${pb.y} ${pb.x},${pb.y - h} ${pa.x},${pa.y - h}`} hatch={side} />}
             {cells > 0 && (
               <g transform={`matrix(${ux} ${uy} 0 1 ${pa.x} ${pa.y})`}>
                 {Array.from({ length: floors }).map((_, fl) =>
@@ -72,6 +85,7 @@ export function PolyBuilding({ poly, h, wall, roof, shop = false }: { poly: Poly
         );
       })}
       <polygon points={poly.map(([x, y]) => { const q = P(x, y, h); return `${q.x},${q.y}`; }).join(" ")} fill={roof} {...OUT} />
+      {textured && <Wash points={poly.map(([x, y]) => { const q = P(x, y, h); return `${q.x},${q.y}`; }).join(" ")} shade={false} />}
       {polyArea(poly) === 0 && null}
     </g>
   );
@@ -145,6 +159,11 @@ export function Tree({ x, y, s = 1, kind = "round", rich = false }: { x: number;
           <>
             <circle cx={-6 * s} cy={-6 * s} r={5 * s} fill="#ffffff" opacity={0.16} />
             <circle cx={9 * s} cy={7 * s} r={6 * s} fill="#6b7f3a" opacity={0.18} />
+            {/* leaf clusters + painted rim light */}
+            {[[-9, -9], [2, -14], [11, -3], [-14, 3], [5, 9], [-4, 2], [13, 8], [-8, 11]].map(([dx, dy], i) => (
+              <circle key={`lf${i}`} cx={dx * s} cy={dy * s} r={(2.4 + (i % 3)) * s} fill={kind === "bloom" ? "#fde3e8" : "#d8e39a"} opacity={0.55} />
+            ))}
+            <circle cx={0} cy={-2 * s} r={22 * s} fill="url(#treeRim)" />
           </>
         )}
       </g>
@@ -211,11 +230,13 @@ export function Person({
   return (
     <g transform={`translate(${p.x} ${p.y}) scale(${scale})`}>
       {!sitting && <ellipse cx={0} cy={0.5} rx={4.5} ry={1.8} fill="#6b5a3a" opacity={0.22} />}
+      <g className="bob" style={{ animationDelay: `${-((Math.abs(x * 7 + y * 3) % 30) / 10).toFixed(1)}s` }}>
       {!sitting && <rect x={-2.6} y={-4} width={5.2} height={4.2} rx={1} fill="#6d5d4d" />}
       <rect x={-3.2} y={-4 - bh} width={6.4} height={bh + 1} rx={2.4} fill={shirt} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
       <circle cx={0} cy={-4 - bh - 3.2} r={3.4} fill={skin} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
       <path d={`M-3.5 ${-4 - bh - 3.6} a3.5 3.3 0 0 1 7 0 q-3.4 -1.2 -7 0z`} fill={hair} />
       {laptop && <rect x={-1} y={-4 - bh + 3} width={7} height={4.4} rx={0.6} fill="#e9e6df" stroke={INK} strokeOpacity={0.5} strokeWidth={0.5} />}
+      </g>
     </g>
   );
 }

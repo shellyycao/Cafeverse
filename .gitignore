@@ -43,3 +43,4 @@ next-env.d.ts
 # private reference photos / review text (not for redistribution)
 ref_pic/
 data-raw/reviews/
+Cafeverse_References/

@@ -6,6 +6,30 @@ export default function Defs() {
         <stop offset="0" stopColor="#ffeab8" />
         <stop offset="1" stopColor="#f0b36a" />
       </linearGradient>
+      {/* watercolor wash + paper grain, hatching and soft face shading (art direction: watercolor & colored pencil) */}
+      <pattern id="washPat" width="640" height="640" patternUnits="userSpaceOnUse">
+        <image href="/textures/wash.png" width="640" height="640" />
+      </pattern>
+      <pattern id="grainPat" width="150" height="150" patternUnits="userSpaceOnUse">
+        <image href="/textures/grain.png" width="150" height="150" />
+      </pattern>
+      <pattern id="hatch" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
+        <line x1="0" y1="0" x2="0" y2="4.5" stroke="#6b4a2c" strokeWidth="0.75" opacity="0.5" />
+      </pattern>
+      <linearGradient id="faceShade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#fff3d2" stopOpacity="0.28" />
+        <stop offset="0.55" stopColor="#fff3d2" stopOpacity="0" />
+        <stop offset="1" stopColor="#4a2f18" stopOpacity="0.24" />
+      </linearGradient>
+      <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#fff2bf" stopOpacity="0.62" />
+        <stop offset="1" stopColor="#fff2bf" stopOpacity="0" />
+      </linearGradient>
+      <radialGradient id="treeRim" cx="0.4" cy="0.35" r="0.75">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="0.2" />
+        <stop offset="0.7" stopColor="#ffffff" stopOpacity="0" />
+        <stop offset="1" stopColor="#2f4a1c" stopOpacity="0.28" />
+      </radialGradient>
       <linearGradient id="glassDark" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#566277" />
         <stop offset="1" stopColor="#2c3446" />

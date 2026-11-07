@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
-import { Armchair, Bubble, Dog, Person, RoundTable, SweepingStaff } from "./primitives";
+import { Armchair, Bubble, Dog, Person, RoundTable, SweepingStaff, Wash } from "./primitives";
 import type { Phase } from "@/lib/hours";
 import type { SceneSignals } from "@/lib/scene";
 
@@ -32,6 +32,8 @@ function BackWall() {
   return (
     <PlaneY x={F.x0} y={F.y0}>
       <rect x={0} y={-H} width={BACK_LEN} height={H} fill={WALL} {...stroke} />
+      <rect x={0} y={-H} width={BACK_LEN} height={H} fill="url(#washPat)" style={{ pointerEvents: "none" }} />
+      <rect x={0} y={-H} width={BACK_LEN} height={H} fill="url(#faceShade)" style={{ pointerEvents: "none" }} />
       <rect x={0} y={-17} width={BACK_LEN} height={17} fill="#dcd5c8" {...stroke} />
       {/* black track light with spots */}
       <path d={`M6 ${-H + 3} H${BACK_LEN - 6}`} stroke="#2b2b2e" strokeWidth={1.2} />
@@ -71,6 +73,8 @@ function SideWall({ restroom }: { restroom: boolean }) {
   return (
     <PlaneX x={F.x0} y={F.y1}>
       <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="#34475d" {...stroke} />
+      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="url(#washPat)" opacity={0.7} style={{ pointerEvents: "none" }} />
+      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="url(#hatch)" opacity={0.25} style={{ pointerEvents: "none" }} />
       <rect x={0} y={-17} width={SIDE_LEN} height={17} fill="#2b3b4e" {...stroke} />
       {/* framed seascapes */}
       {[
@@ -120,6 +124,64 @@ function Stool({ x, y }: { x: number; y: number }) {
   );
 }
 
+/** tiny hand-painted pastry: color picks the type */
+function Treat({ c, cx, cy }: { c: string; cx: number; cy: number }) {
+  const ink = { stroke: INK, strokeOpacity: 0.45, strokeWidth: 0.5 };
+  if (c === "#c98f55")
+    return (
+      <g>
+        <ellipse cx={cx} cy={cy} rx={5} ry={2.9} fill="#d79a55" {...ink} />
+        <path d={`M${cx - 2.6} ${cy - 1.8} l1.6 3 M${cx} ${cy - 2.4} l1.6 3.2 M${cx + 2.6} ${cy - 1.8} l1.4 2.8`} stroke="#f2cf91" strokeWidth={0.8} strokeLinecap="round" />
+      </g>
+    );
+  if (c === "#e58b8b")
+    return (
+      <g>
+        <rect x={cx - 3.6} y={cy - 2.4} width={7.2} height={4} rx={1} fill="#f2c9cb" {...ink} />
+        <ellipse cx={cx} cy={cy - 2.4} rx={3.8} ry={1.6} fill="#fffaf0" {...ink} />
+        <circle cx={cx} cy={cy - 3.9} r={1.25} fill="#c7433f" />
+        <path d={`M${cx - 3.6} ${cy - 0.6} h7.2`} stroke="#e58b8b" strokeWidth={0.7} />
+      </g>
+    );
+  if (c === "#f6ead2")
+    return (
+      <g>
+        <path d={`M${cx - 3.8} ${cy + 1.2} q0 -5.2 3.8 -5.2 q3.8 0 3.8 5.2z`} fill="#fbf1de" {...ink} />
+        <circle cx={cx - 1} cy={cy - 1.6} r={0.45} fill="#d99a5b" />
+        <circle cx={cx + 1.4} cy={cy - 0.4} r={0.45} fill="#d99a5b" />
+      </g>
+    );
+  return (
+    <g>
+      <ellipse cx={cx} cy={cy} rx={4.6} ry={2.7} fill="#e0a85f" {...ink} />
+      <path d={`M${cx - 3} ${cy - 1.4} l6 2.8 M${cx} ${cy - 2.2} l3.4 3.2 M${cx - 3.4} ${cy + 0.4} l3.4 -2.6`} stroke="#b8793a" strokeWidth={0.6} opacity={0.8} />
+    </g>
+  );
+}
+
+function Steam({ x, y, z = 0, d = 0 }: { x: number; y: number; z?: number; d?: number }) {
+  const p = P(x, y, z);
+  return (
+    <g transform={`translate(${p.x} ${p.y})`} style={{ pointerEvents: "none" }}>
+      {[0, 1, 2].map((k) => (
+        <path key={k} className="steam" style={{ animationDelay: `${d - k * 0.9}s` }} d={`M${k * 2.6 - 2.6} 0 q-2 -3 0 -6 t0 -6`} stroke="#fffaf0" strokeWidth={1.2} strokeLinecap="round" fill="none" />
+      ))}
+    </g>
+  );
+}
+
+function Motes() {
+  const pts: Array<[number, number, number]> = [[220, 200, 30], [252, 176, 40], [284, 214, 26], [310, 190, 36], [236, 236, 22], [268, 150, 46], [328, 226, 30], [208, 160, 34]];
+  return (
+    <g style={{ pointerEvents: "none" }}>
+      {pts.map(([x, y, z], i) => {
+        const p = P(x, y, z);
+        return <circle key={i} className="mote" style={{ animationDelay: `${-i * 0.9}s` }} cx={p.x} cy={p.y} r={0.9 + (i % 3) * 0.3} fill="#fff6d8" />;
+      })}
+    </g>
+  );
+}
+
 function PastryCase({ per }: { per: number }) {
   // glass front of the counter at y = counter y1, running along x
   const x0 = 262,
@@ -142,10 +204,7 @@ function PastryCase({ per }: { per: number }) {
             <g key={r}>
               <rect x={1} y={-base} width={x1 - x0 - 2} height={1.1} fill="#fffaf0" opacity={0.9} />
               {cakes[r].slice(0, per).map((c, k) => (
-                <g key={k}>
-                  <ellipse cx={6 + k * 10.4} cy={-base - 2.4} rx={4.3} ry={2.6} fill={c} stroke={INK} strokeOpacity={0.45} strokeWidth={0.5} />
-                  {c === "#e58b8b" && <circle cx={6 + k * 10.4} cy={-base - 4.6} r={1} fill="#b8433f" />}
-                </g>
+                <Treat key={k} c={c} cx={6 + k * 10.4} cy={-base - 2.4} />
               ))}
             </g>
           );
@@ -189,12 +248,20 @@ export default function CafeInterior({
       <polygon points={slab.left} fill="#b9a58a" {...stroke} />
       <polygon points={slab.right} fill="#a8967a" {...stroke} />
       <polygon points={rectPts(F.x0, F.y0, F.x1, F.y1)} fill="#dad3c6" {...stroke} />
+      <Wash points={rectPts(F.x0, F.y0, F.x1, F.y1)} shade={false} o={0.9} />
       {Array.from({ length: 13 }).map((_, k) => (
         <polyline key={k} points={pts([[F.x0 + 4, F.y0 + k * 10], [F.x1, F.y0 + k * 10]])} stroke="#bdb5a6" strokeWidth={0.6} opacity={0.6} />
       ))}
 
       <BackWall />
       <SideWall restroom={signals.restroomSign} />
+      {lightsOn && signals.lighting !== "dim" && (
+        <g className="beams" style={{ pointerEvents: "none" }}>
+          {[214, 250, 292].map((x, i) => (
+            <polygon key={x} className="beam" style={{ animationDelay: `${-i * 2.3}s` }} points={pts([[x, F.y1, 0], [x + 24, F.y1, 0], [x + 46, F.y1 - 70, 0], [x + 22, F.y1 - 70, 0]])} fill="url(#beamGrad)" />
+          ))}
+        </g>
+      )}
       <g style={{ opacity: !lightsOn ? 0.2 : phase === "opening" ? 0.6 : glow > 1 ? 1 : 0.75 + 0.25 * glow }}>
         <Pendant x={250} y={150} />
         <Pendant x={300} y={150} />
@@ -225,6 +292,9 @@ export default function CafeInterior({
       )}
       {phase === "closing" && <SweepingStaff x={262} y={224} />}
 
+      {lightsOn && <Motes />}
+      {staff && <Steam x={246} y={152} z={33} />}
+      {patrons && <Steam x={268} y={206} z={12} d={1.2} />}
       {/* ----- counter ----- */}
       <polygon points={counter.left} fill={COUNTER} {...stroke} />
       <polygon points={counter.right} fill={shade(COUNTER, -0.14)} {...stroke} />
@@ -260,7 +330,7 @@ export default function CafeInterior({
               <polygon points={c.top} fill="#f4faf7" opacity={0.7} {...stroke} />
               {[0, 1, 2, 3].slice(0, signals.pastryProminence === "high" ? 4 : signals.pastryProminence === "medium" ? 2 : 0).map((k) => {
                 const p = P(274 + k * 12, 160, 22);
-                return <ellipse key={k} cx={p.x} cy={p.y} rx={4.2} ry={2.6} fill={["#d99a5b", "#f6ead2", "#e58b8b", "#c98f55"][k]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />;
+                return <Treat key={k} c={["#d99a5b", "#f6ead2", "#e58b8b", "#c98f55"][k]} cx={p.x} cy={p.y} />;
               })}
             </g>
           );

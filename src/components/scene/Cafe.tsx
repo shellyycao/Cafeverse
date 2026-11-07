@@ -1,7 +1,7 @@
 import { P, boxFaces, pts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
-import { Awning } from "./primitives";
+import { Awning, Wash } from "./primitives";
 
 const BRICK = "#b05a45";
 const CREAM = "#e6d9c2";
@@ -55,6 +55,9 @@ export default function CafeExterior({
       <polygon points={f.left} fill={BRICK} {...stroke} />
       <polygon points={f.right} fill={shade(BRICK, -0.12)} {...stroke} />
       <polygon points={f.top} fill="#d8c7a6" {...stroke} />
+      <Wash points={f.left} />
+      <Wash points={f.right} hatch />
+      <Wash points={f.top} shade={false} />
       {/* brick texture hint */}
       <Face side="left">
         <rect x={0} y={-F.h} width={LEFT_LEN} height={F.h} fill="url(#brickTex)" opacity={0.5} />

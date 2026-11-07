@@ -181,7 +181,7 @@ export default function CafeverseApp() {
         <Defs />
         <BaseMap />
         <g className="mini" mask="url(#revealMask)">
-          <g filter="url(#wobble)">
+          <g className="wobble-group" filter="url(#wobble)">
             <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} />
           </g>
         </g>

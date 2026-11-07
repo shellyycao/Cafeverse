@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
-import { Bench, PolyBuilding, Car, Dog, ParkingMeter, Rail, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
+import { Wash, Bench, PolyBuilding, Car, Dog, ParkingMeter, Rail, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
@@ -30,6 +30,7 @@ function GroundPatch() {
     <g>
       {/* paved plaza (café block) */}
       <polygon points={rectPts(30, 30, 370, 270)} fill={PAVE} />
+      <Wash points={rectPts(30, 30, 370, 270)} shade={false} o={0.85} />
       {/* tile lines */}
       {Array.from({ length: 17 }).map((_, k) => (
         <polyline key={`tx${k}`} points={pts([[30 + k * 20, 30], [30 + k * 20, 270]])} stroke="#d9c6a0" strokeWidth={0.5} opacity={0.6} />
@@ -68,6 +69,16 @@ function GroundPatch() {
       <polyline points={pts([[372, 56], [372, 120]])} stroke="#e0b94f" strokeWidth={2.4} />
     </g>
   );
+}
+
+/** soft cast shadows (light from the lower-left of the screen → shadows fall back and to the right) */
+function CastShadows({ shapes }: { shapes: Array<{ poly: Array<[number, number]>; h: number }> }) {
+  const d = shapes
+    .map(({ poly, h }) =>
+      [0.3, 0.55, 0.8, 1].map((t) => "M" + poly.map(([x, y]) => { const q = P(x + h * 0.22 * t, y - h * 0.78 * t); return `${q.x.toFixed(1)} ${q.y.toFixed(1)}`; }).join("L") + "Z").join(""),
+    )
+    .join("");
+  return <path d={d} fill="#5a3f22" opacity={0.15} style={{ pointerEvents: "none" }} />;
 }
 
 function BusStop({ onClick }: { onClick?: () => void }) {
@@ -121,7 +132,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     const h = b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17);
     push(
       b.c[0] + b.c[1],
-      <PolyBuilding key={`nb${b.id}`} poly={b.p} h={h} wall={WALLS[b.id % WALLS.length]} roof={ROOFS[(b.id * 3) % ROOFS.length]} shop={b.id % 3 === 0} />,
+      <PolyBuilding key={`nb${b.id}`} textured={Math.hypot(b.c[0] - 200, b.c[1] - 150) < 420} poly={b.p} h={h} wall={WALLS[b.id % WALLS.length]} roof={ROOFS[(b.id * 3) % ROOFS.length]} shop={b.id % 3 === 0} />,
     );
   }
   // Liberty Warehouse apartments: the café sits at the foot of this brick building (per the café's website)
@@ -193,6 +204,13 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   return (
     <g>
       <GroundPatch />
+      <CastShadows
+        shapes={[
+          { poly: [[196, 128], [340, 128], [340, 256], [196, 256]], h: 58 },
+          { poly: [[96, 36], [372, 36], [372, 112], [96, 112]], h: 86 },
+          ...NEAR_BUILDINGS.map((b) => ({ poly: b.p, h: b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17) })),
+        ]}
+      />
       {/* cars on the street layer are separate hotspot for parking */}
       <g className="hotspot" data-hotspot="parking" onClick={sel("parking")}>
         {streetCars.map((c) => c.el)}

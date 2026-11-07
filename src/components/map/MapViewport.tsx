@@ -65,6 +65,18 @@ export default function MapViewport({
   const dragged = useRef(false);
   const [, force] = useState(0);
 
+  const movingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** lets CSS drop expensive filters while the camera is in motion */
+  const markMoving = useCallback(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    el.dataset.moving = "1";
+    if (movingTimer.current) clearTimeout(movingTimer.current);
+    movingTimer.current = setTimeout(() => {
+      if (rootRef.current) rootRef.current.dataset.moving = "0";
+    }, 160);
+  }, []);
+
   const apply = useCallback(() => {
     const { w, h } = size.current;
     const c = cur.current;
@@ -73,8 +85,9 @@ export default function MapViewport({
       `translate(${w / 2 - c.x * c.z} ${h / 2 - c.y * c.z}) scale(${c.z})`,
     );
     rootRef.current?.style.setProperty("--z", String(c.z));
+    markMoving();
     onCamera?.(c);
-  }, [onCamera]);
+  }, [onCamera, markMoving]);
 
   const loop = useCallback(() => {
     raf.current = null;
