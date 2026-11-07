@@ -159,11 +159,11 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
 
   /* window bar along the street glass: light wood top, stools, plants in bowls */
   add(
-    204 + 244,
+    700, // nearest to the camera: the bar sits at the street glass, stools are on the room side behind it
     <g key="winbar">
-      <SlatBox x0={204} y0={244} x1={302} y1={254} h={19} front="#e3cc9c" topc="#e8d2a6" />
+      <SlatBox x0={204} y0={246} x1={302} y1={254} h={16} front="#e3cc9c" topc="#e8d2a6" />
       {[222, 262].map((x) => {
-        const p = P(x, 249, 19);
+        const p = P(x, 250, 16);
         return (
           <g key={x} transform={`translate(${p.x} ${p.y})`}>
             <path d="M-4 0 q0 -3 4 -3 q4 0 4 3z" fill="#f2efe6" stroke="#6b4a2c" strokeOpacity={0.34} strokeWidth={0.5} />
@@ -175,7 +175,7 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
       })}
     </g>,
   );
-  [214, 236, 258, 280].forEach((x) => add(x + 236, <BarStool key={`st${x}`} x={x} y={236} />));
+  [214, 236, 258, 280].forEach((x) => add(x + 226, <BarStool key={`st${x}`} x={x} y={223} />));
 
   items.sort((a, b) => a.d - b.d);
 
