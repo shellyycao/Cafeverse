@@ -7,7 +7,7 @@ import { INK, shade } from "@/lib/color";
  * (oak tables + black cross-back chairs, grey slatted counter, mint-framed glass case, paper lanterns,
  * navy art wall, brown leather armchairs, black retail table with kraft coffee bags…).
  */
-const L = { stroke: INK, strokeOpacity: 0.55, strokeWidth: 0.7, strokeLinejoin: "round" as const };
+const L = { stroke: "#6b4a2c", strokeOpacity: 0.34, strokeWidth: 0.55, strokeLinejoin: "round" as const };
 
 /* ---------- planes ---------- */
 export function PlaneY({ x, y, z = 0, children }: { x: number; y: number; z?: number; children: ReactNode }) {
@@ -185,8 +185,8 @@ export function OakTable({ x, y, items = [], r = 9 }: { x: number; y: number; it
   return (
     <g transform={`translate(${b.x} ${b.y})`}>
       <Shadow x={x} y={y} rx={r + 2} ry={4.6} o={0.18} />
-      <path d="M-1.4 0 l-0.4 -9 h3.6 l-0.4 9z" fill="#2b2724" />
-      <ellipse cx={0} cy={0.4} rx={4.6} ry={1.5} fill="#2b2724" />
+      <path d="M-1.4 0 l-0.4 -9 h3.6 l-0.4 9z" fill="#403a36" />
+      <ellipse cx={0} cy={0.4} rx={4.6} ry={1.5} fill="#403a36" />
       <ellipse cx={0} cy={-8} rx={r} ry={r * 0.5} fill="#8a6a40" opacity={0.5} />
       <ellipse cx={0} cy={-9} rx={r} ry={r * 0.5} fill="#dcb987" {...L} />
       <ellipse cx={0} cy={-9} rx={r} ry={r * 0.5} fill="url(#woodGrain)" opacity={0.8} />
@@ -212,15 +212,17 @@ export function OakTable({ x, y, items = [], r = 9 }: { x: number; y: number; it
 }
 
 export function CrossChair({ x, y, flip = false }: { x: number; y: number; flip?: boolean }) {
+  // spindle-back (Windsor-style) black chair, as in the café
   const b = P(x, y);
   return (
     <g transform={`translate(${b.x} ${b.y}) ${flip ? "scale(-1 1)" : ""}`}>
       <Shadow x={x} y={y} rx={4.6} ry={1.8} o={0.16} />
-      <path d="M-3.2 -1 L-3.4 -6 M3.2 -1 L3.4 -6" stroke="#2b2724" strokeWidth={1.1} strokeLinecap="round" />
+      <path d="M-3.2 -1 L-3.4 -6 M3.2 -1 L3.4 -6" stroke="#403a36" strokeWidth={1.1} strokeLinecap="round" />
       <ellipse cx={0} cy={-6.4} rx={4.4} ry={2} fill="#3a3532" {...L} />
-      <path d="M-3.6 -6.6 L-3.6 -14.4 M3.6 -6.6 L3.6 -14.4" stroke="#2b2724" strokeWidth={1.1} strokeLinecap="round" />
-      <path d="M-3.6 -14.4 h7.2 M-3.6 -10.4 h7.2" stroke="#2b2724" strokeWidth={1} />
-      <path d="M-3.4 -14 L3.4 -10.8 M3.4 -14 L-3.4 -10.8" stroke="#2b2724" strokeWidth={0.7} />
+      {[-3.2, -1.6, 0, 1.6, 3.2].map((dx) => (
+        <path key={dx} d={`M${dx} -6.8 L${dx} -14.6`} stroke="#403a36" strokeWidth={0.7} strokeLinecap="round" />
+      ))}
+      <path d="M-4 -14.8 q4 -1.6 8 0" stroke="#403a36" strokeWidth={1.4} fill="none" strokeLinecap="round" />
     </g>
   );
 }
@@ -230,10 +232,11 @@ export function BarStool({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${b.x} ${b.y})`}>
       <Shadow x={x} y={y} rx={5.5} ry={2.2} o={0.2} />
-      <path d="M-3.6 0.4 L-2.4 -11 M3.6 0.4 L2.4 -11" stroke="#2b2724" strokeWidth={1.1} strokeLinecap="round" />
-      <ellipse cx={0} cy={-5} rx={3.8} ry={1.2} fill="none" stroke="#2b2724" strokeWidth={0.7} />
+      <path d="M-3.6 0.4 L-2.4 -11 M3.6 0.4 L2.4 -11" stroke="#403a36" strokeWidth={1.1} strokeLinecap="round" />
+      <ellipse cx={0} cy={-5} rx={3.8} ry={1.2} fill="none" stroke="#403a36" strokeWidth={0.7} />
       <ellipse cx={0} cy={-11.6} rx={5} ry={2.4} fill="#e2d2b2" {...L} />
       <ellipse cx={-0.8} cy={-12} rx={2.6} ry={1} fill="#f1e6cc" opacity={0.8} />
+      <path d="M-4.4 -12 q0 -6.4 4.4 -6.6 q4.4 0.2 4.4 6.6" stroke="#d6bf92" strokeWidth={1.8} fill="none" strokeLinecap="round" />
     </g>
   );
 }
@@ -328,14 +331,20 @@ export function GrabGoCase({ x, y, per = 5 }: { x: number; y: number; per?: numb
         {/* cold drinks on the bottom shelf */}
         {Array.from({ length: 10 }).map((_, k) => (
           <g key={k}>
-            <rect x={2.2 + k * 3.6} y={-5.6} width={2.3} height={5.4} rx={0.7} fill={["#c7433f", "#4e9a6a", "#e8a23a", "#7aa6c8", "#f1e7d2"][k % 5]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.35} />
+            <rect x={2.2 + k * 3.6} y={-5.6} width={2.3} height={5.4} rx={0.7} fill={["#d94f45", "#58b07a", "#f0ac3a", "#6aa6d8", "#d88ac0", "#f4d24a"][k % 6]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.35} />
             <rect x={2.2 + k * 3.6} y={-6.5} width={2.3} height={1} fill="#c9c6bd" />
           </g>
         ))}
         <rect x={0.8} y={-6.6} width={w - 1.6} height={0.9} fill="#fffaf0" opacity={0.9} />
         {/* wrapped pastries on the upper shelves */}
         {[0, 1].map((r) =>
-          Array.from({ length: per }).map((_, k) => (
+          Array.from({ length: per }).map((_, k) => r === 1 ? (
+            <g key={`${r}-${k}`}>
+              <path d={`M${3 + k * 7} ${-13.2 - r * 6.6} l0.6 -2.6 h3.8 l0.6 2.6z`} fill="#f4ead2" stroke={INK} strokeOpacity={0.4} strokeWidth={0.35} />
+              <path d={`M${2.6 + k * 7} ${-15.6 - r * 6.6} q3.4 -4.2 6.8 0z`} fill="#e0a85f" stroke={INK} strokeOpacity={0.45} strokeWidth={0.4} />
+              <circle cx={4.6 + k * 7} cy={-18.4 - r * 6.6 + 2.4} r={0.5} fill="#b8793a" />
+            </g>
+          ) : (
             <g key={`${r}-${k}`}>
               <rect x={2.4 + k * 7} y={-12.4 - r * 6.6} width={5.4} height={3.6} rx={0.9} fill={["#f7ecd6", "#f2d9b4", "#fbe3e0", "#e8d6b0", "#f6f1e6"][(k + r) % 5]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.4} />
               <path d={`M${3.4 + k * 7} ${-11.2 - r * 6.6} h3.4`} stroke="#c78a52" strokeWidth={0.5} />
@@ -377,7 +386,7 @@ export function RetailTable({ x, y }: { x: number; y: number }) {
   const leg = (lx: number, ly: number) => {
     const a = P(lx, ly, 0);
     const b = P(lx, ly, h - 1.6);
-    return <line key={`${lx}${ly}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#2b2724" strokeWidth={1.2} />;
+    return <line key={`${lx}${ly}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#403a36" strokeWidth={1.2} />;
   };
   const bags = [
     [x + 3, y + 4],
@@ -488,7 +497,6 @@ export function Lantern({ x, y, z, r = 5.8 }: { x: number; y: number; z: number;
   return (
     <g>
       <line x1={top.x} y1={top.y} x2={l.x} y2={l.y - r} stroke="#3f3a36" strokeWidth={0.5} />
-      <circle cx={l.x} cy={l.y} r={r * 2.6} fill="#fff1c4" opacity={0.16} />
       <circle cx={l.x} cy={l.y} r={r} fill="#fffaf0" {...L} />
       <circle cx={l.x - r * 0.3} cy={l.y - r * 0.3} r={r * 0.55} fill="#ffffff" opacity={0.6} />
       <path d={`M${l.x - r} ${l.y} q${r} ${r * 0.55} ${2 * r} 0 M${l.x - r * 0.8} ${l.y - r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0 M${l.x - r * 0.8} ${l.y + r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0`} stroke="#d8cdb6" strokeWidth={0.5} fill="none" />
@@ -534,7 +542,7 @@ export function CoffeeTable({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${b.x} ${b.y})`}>
       <Shadow x={x} y={y} rx={9} ry={3.6} o={0.18} />
-      <path d="M-5.4 0 L-4.4 -5.6 M5.4 0 L4.4 -5.6 M0 1 V-5.4" stroke="#2b2724" strokeWidth={1} />
+      <path d="M-5.4 0 L-4.4 -5.6 M5.4 0 L4.4 -5.6 M0 1 V-5.4" stroke="#403a36" strokeWidth={1} />
       <ellipse cx={0} cy={-6} rx={8.4} ry={3.9} fill="#26231f" {...L} />
       <ellipse cx={0} cy={-6.2} rx={7.4} ry={3.2} fill="none" stroke="#5b544a" strokeWidth={0.4} />
       <path d="M-0.7 -6.4 h1.4 l0.4 -3 h-2.2z" fill="#f6f4ee" {...L} />
@@ -549,8 +557,8 @@ export function FloorLamp({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${b.x} ${b.y})`}>
       <Shadow x={x} y={y} rx={4} ry={1.6} o={0.2} />
-      <path d="M0 0 V-32" stroke="#2b2724" strokeWidth={1.1} />
-      <ellipse cx={0} cy={0} rx={3.2} ry={1.1} fill="#2b2724" />
+      <path d="M0 0 V-32" stroke="#403a36" strokeWidth={1.1} />
+      <ellipse cx={0} cy={0} rx={3.2} ry={1.1} fill="#403a36" />
       <path d="M-5.4 -32 l1 -8 h8.8 l1 8z" fill="#fbf4e2" {...L} />
       <circle cx={0} cy={-36} r={11} fill="#fff1c4" opacity={0.13} />
     </g>
@@ -606,6 +614,99 @@ export function PastryDome({ x, y, z, n = 4 }: { x: number; y: number; z: number
       <path d="M-8.6 0 q0 -9 8.6 -9 q8.6 0 8.6 9z" fill="#e6f1ee" opacity={0.45} stroke="#9fcfba" strokeWidth={0.9} />
       <path d="M-5 -6 q2 -2 5 -2.2" stroke="#fff" strokeWidth={0.8} opacity={0.8} fill="none" strokeLinecap="round" />
       <circle cx={0} cy={-9.6} r={0.9} fill="#bdbab0" />
+    </g>
+  );
+}
+
+/** square oak table with a black pedestal — the café's actual tables (items sit on top) */
+export function SquareTable({ x, y, items = [], s = 17 }: { x: number; y: number; items?: Array<"cup" | "plant" | "paper" | "plate" | "laptop">; s?: number }) {
+  const h = 13;
+  const f = boxFaces(x - s / 2, y - s / 2, x + s / 2, y + s / 2, 1.8, h);
+  const base = P(x, y, 0);
+  const top = P(x, y, h);
+  const on = (dx: number, dy: number) => P(x + dx, y + dy, h + 1.8);
+  return (
+    <g>
+      <Shadow x={x} y={y} rx={s * 0.9} ry={s * 0.42} o={0.18} />
+      <ellipse cx={base.x} cy={base.y} rx={5.4} ry={1.8} fill="#403a36" />
+      <line x1={base.x} y1={base.y} x2={top.x} y2={top.y} stroke="#403a36" strokeWidth={2.2} strokeLinecap="round" />
+      <polygon points={f.left} fill="#c9a066" {...L} />
+      <polygon points={f.right} fill="#a9814d" {...L} />
+      <polygon points={f.top} fill="#dcb987" {...L} />
+      <polygon points={f.top} fill="url(#woodGrain)" opacity={0.85} />
+      <polygon points={f.top} fill="url(#faceShade)" opacity={0.5} />
+      {items.includes("cup") && (() => {
+        const p = on(4, -3);
+        return (
+          <g transform={`translate(${p.x} ${p.y})`}>
+            <path d="M-2 -4 h4 l-0.5 4 h-3z" fill="#fffaf0" {...L} />
+            <path d="M2 -3.2 q2 0.4 0.4 2.2" stroke="#e8e1d2" strokeWidth={0.8} fill="none" />
+          </g>
+        );
+      })()}
+      {items.includes("plant") && (() => {
+        const p = on(-5, 4);
+        return (
+          <g transform={`translate(${p.x} ${p.y})`}>
+            <path d="M-2.4 -3.4 h4.8 l-0.6 3.4 h-3.6z" fill="#f6f4ee" {...L} />
+            <circle cx={-1.2} cy={-5.4} r={2.1} fill="#6a9048" />
+            <circle cx={1.4} cy={-5.8} r={2.3} fill="#7fa354" />
+            <circle cx={0} cy={-7.4} r={1.8} fill="#8fae5a" />
+          </g>
+        );
+      })()}
+      {items.includes("plate") && (() => {
+        const p = on(-3, -4);
+        return (
+          <g transform={`translate(${p.x} ${p.y})`}>
+            <ellipse cx={0} cy={0} rx={3.2} ry={1.5} fill="#fffaf0" {...L} />
+            <ellipse cx={0} cy={-0.7} rx={1.8} ry={0.9} fill="#e0a85f" />
+          </g>
+        );
+      })()}
+      {items.includes("paper") && (() => {
+        const p = on(-2, 1);
+        return <path transform={`translate(${p.x} ${p.y})`} d="M-5 0 l5 -1.6 l5 1.4 l-5 1.8z" fill="#f1ede2" {...L} />;
+      })()}
+    </g>
+  );
+}
+
+/** the pay-by-space kiosk with its sign, as in the street photos */
+export function ParkingKiosk({ x, y }: { x: number; y: number }) {
+  const b = P(x, y);
+  return (
+    <g transform={`translate(${b.x} ${b.y})`}>
+      <Shadow x={x} y={y} rx={5} ry={2} o={0.25} />
+      <path d="M-4.6 0 v-21 q0 -2 2 -2.4 l5.2 -1.2 q2.4 0.2 2.4 2.6 v22z" fill="#2f2c2a" {...L} />
+      <rect x={-3.4} y={-19.6} width={7.4} height={8.4} rx={1.6} fill="#2f5fa0" />
+      <text x={0.3} y={-13.2} textAnchor="middle" fontSize={7} fontWeight={800} fill="#fff" fontFamily="system-ui">P</text>
+      <rect x={-3.4} y={-10.4} width={7.4} height={7.4} rx={0.8} fill="#e9e6df" />
+      <text x={0.3} y={-7.8} textAnchor="middle" fontSize={1.9} fontWeight={700} fill="#2f2c2a" fontFamily="system-ui">PAID</text>
+      <text x={0.3} y={-5.8} textAnchor="middle" fontSize={1.9} fontWeight={700} fill="#2f2c2a" fontFamily="system-ui">STREET</text>
+      <text x={0.3} y={-3.8} textAnchor="middle" fontSize={1.9} fontWeight={700} fill="#2f2c2a" fontFamily="system-ui">PARKING</text>
+    </g>
+  );
+}
+
+/** door-side planter: ficus + red-leaf cordyline in a big white pot (as in the street photo) */
+export function DoorPlanter({ x, y }: { x: number; y: number }) {
+  const b = P(x, y);
+  return (
+    <g transform={`translate(${b.x} ${b.y})`}>
+      <Shadow x={x} y={y} rx={11} ry={4.2} o={0.22} />
+      {[-18, -6, 8, 20].map((a, i) => (
+        <g key={i} transform={`rotate(${a} 0 -14)`}>
+          <path d={`M0 -14 C-3.6 -22 -3 -32 0 -${36 + (i % 2) * 3} C3 -32 3.6 -22 0 -14z`} fill={["#8a3a4a", "#9a4a56", "#7a3040", "#a85660"][i]} {...L} />
+        </g>
+      ))}
+      {[-34, -20, 0, 18, 32].map((a, i) => (
+        <g key={`f${i}`} transform={`rotate(${a} 0 -12)`}>
+          <ellipse cx={0} cy={-20} rx={4.4} ry={7.4} fill={["#7aa84c", "#8fbd5a", "#6a9a40", "#9ac468", "#7aa84c"][i]} {...L} />
+        </g>
+      ))}
+      <path d="M-8 -14 h16 l-2 14 h-12z" fill="#f2efe6" {...L} />
+      <path d="M-7.2 -11 h14.4 M-6.6 -7 h13.2" stroke="#dcd6c8" strokeWidth={0.7} />
     </g>
   );
 }

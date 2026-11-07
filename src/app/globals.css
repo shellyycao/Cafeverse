@@ -159,4 +159,4 @@ button { font: inherit; color: inherit; }
 @keyframes mote { 0% { opacity: 0; transform: translate(0, 4px); } 30% { opacity: 0.85; } 100% { opacity: 0; transform: translate(5px, -9px); } }
 @media (prefers-reduced-motion: reduce) { .bob, .steam, .beam, .mote { animation: none; } .steam, .mote { opacity: 0; } }
 
-.map-root[data-moving="1"] .wobble-group { filter: none; }
+.map-root[data-moving="1"] .wobble-group, .map-root[data-moving="1"] .paint-group { filter: none; }

@@ -13,6 +13,16 @@ export default function Defs() {
       <pattern id="grainPat" width="150" height="150" patternUnits="userSpaceOnUse">
         <image href="/textures/grain.png" width="150" height="150" />
       </pattern>
+      <pattern id="leafShade" width="64" height="48" patternUnits="userSpaceOnUse">
+        <g fill="#6b5a2a" opacity="0.16">
+          <ellipse cx="10" cy="9" rx="5" ry="2.6" transform="rotate(-24 10 9)" />
+          <ellipse cx="34" cy="14" rx="6" ry="2.8" transform="rotate(18 34 14)" />
+          <ellipse cx="52" cy="6" rx="4" ry="2.2" transform="rotate(-8 52 6)" />
+          <ellipse cx="20" cy="30" rx="6" ry="3" transform="rotate(30 20 30)" />
+          <ellipse cx="46" cy="34" rx="5" ry="2.6" transform="rotate(-20 46 34)" />
+          <ellipse cx="6" cy="42" rx="4" ry="2" />
+        </g>
+      </pattern>
       <pattern id="woodGrain" width="40" height="10" patternUnits="userSpaceOnUse">
         <path d="M0 2 q10 -2 20 0 t20 0 M0 6.5 q8 2 16 0 t24 0 M0 9.5 q12 -1.5 22 0 t18 0" stroke="#8a5a2e" strokeWidth="0.5" fill="none" opacity="0.45" />
       </pattern>
@@ -53,6 +63,15 @@ export default function Defs() {
       <pattern id="grassTex" width="9" height="9" patternUnits="userSpaceOnUse">
         <path d="M1 7l1-3 1 3 M5 4l1-3 1 3" stroke="#8fae5a" strokeWidth="0.6" fill="none" />
       </pattern>
+      {/* watercolor pass for the interior: irregular outlines + pigment granulation (multiply) */}
+      <filter id="paint" filterUnits="userSpaceOnUse" x="-230" y="-330" width="620" height="460" colorInterpolationFilters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="5" result="warp" />
+        <feDisplacementMap in="SourceGraphic" in2="warp" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="wob" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.16" numOctaves="3" seed="11" result="grain" />
+        <feColorMatrix in="grain" type="matrix" values="-0.26 0 0 0 1.12  -0.26 0 0 0 1.11  -0.26 0 0 0 1.08  0 0 0 0 1" result="mult" />
+        <feBlend in="wob" in2="mult" mode="multiply" result="granulated" />
+        <feComposite in="granulated" in2="wob" operator="in" />
+      </filter>
       {/* subtle pencil-wobble for the miniature layer */}
       <filter id="wobble" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="7" result="n" />
