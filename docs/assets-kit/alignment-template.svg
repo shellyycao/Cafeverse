@@ -27,22 +27,21 @@
 <polygon points="1320,546 1776,774 1776,618 1320,390" fill="#2f8a5a" fill-opacity=".12" stroke="#2f8a5a" stroke-width="4"/><text x="1548" y="488" text-anchor="middle" font-size="26" font-family="system-ui" fill="#14573a" stroke="#fff" stroke-width="5" paint-order="stroke">3 menu boards</text>
 <polygon points="1164,612 1296,678 1296,426 1164,360" fill="#8a5f36" fill-opacity=".14" stroke="#8a5f36" stroke-width="4"/>
 <polygon points="1788,828 1908,888 1908,732 1788,672" fill="#2f6aa8" fill-opacity=".14" stroke="#2f6aa8" stroke-width="4"/>
-<circle cx="1401" cy="832" r="13" fill="#c4566b"/><text x="1421" y="840" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">barista</text>
-<circle cx="1346" cy="938" r="13" fill="#c4566b"/><text x="1366" y="946" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">counter-front</text>
-<circle cx="1231" cy="836" r="13" fill="#c4566b"/><text x="1251" y="844" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">pastry-case</text>
-<circle cx="707" cy="707" r="13" fill="#c4566b"/><text x="727" y="715" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">lounge-1</text>
-<circle cx="568" cy="745" r="13" fill="#c4566b"/><text x="588" y="753" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">lounge-2</text>
-<circle cx="313" cy="1050" r="13" fill="#c4566b"/><text x="333" y="1058" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-1</text>
-<circle cx="422" cy="1099" r="13" fill="#c4566b"/><text x="442" y="1107" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-2</text>
-<circle cx="537" cy="1149" r="13" fill="#c4566b"/><text x="557" y="1157" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-3</text>
-<circle cx="636" cy="1197" r="13" fill="#c4566b"/><text x="656" y="1205" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-4</text>
-<circle cx="755" cy="1258" r="13" fill="#c4566b"/><text x="775" y="1266" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-5</text>
-<circle cx="415" cy="968" r="13" fill="#c4566b"/><text x="435" y="976" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableA-back</text>
-<circle cx="537" cy="990" r="13" fill="#c4566b"/><text x="557" y="998" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableA-front</text>
-<circle cx="789" cy="982" r="13" fill="#c4566b"/><text x="809" y="990" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableB-back</text>
-<circle cx="891" cy="1006" r="13" fill="#c4566b"/><text x="911" y="1014" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableB-front</text>
-<circle cx="782" cy="1163" r="13" fill="#c4566b"/><text x="802" y="1171" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableC-back</text>
-<circle cx="884" cy="1183" r="13" fill="#c4566b"/><text x="904" y="1191" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableC-front</text>
-<circle cx="1170" cy="1278" r="13" fill="#c4566b"/><text x="1190" y="1286" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">door</text>
+<circle cx="1440" cy="792" r="13" fill="#c4566b"/><text x="1460" y="800" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">barista</text>
+<circle cx="1380" cy="940" r="13" fill="#c4566b"/><text x="1400" y="948" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">counter-front</text>
+<circle cx="1240" cy="830" r="13" fill="#c4566b"/><text x="1260" y="838" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">pastry-case</text>
+<circle cx="640" cy="750" r="13" fill="#c4566b"/><text x="660" y="758" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">lounge-sofa-1</text>
+<circle cx="730" cy="720" r="13" fill="#c4566b"/><text x="750" y="728" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">lounge-sofa-2</text>
+<circle cx="880" cy="790" r="13" fill="#c4566b"/><text x="900" y="798" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">lounge-armchair</text>
+<circle cx="366" cy="1020" r="13" fill="#c4566b"/><text x="386" y="1028" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-1</text>
+<circle cx="452" cy="1054" r="13" fill="#c4566b"/><text x="472" y="1062" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-2</text>
+<circle cx="534" cy="1096" r="13" fill="#c4566b"/><text x="554" y="1104" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-3</text>
+<circle cx="616" cy="1140" r="13" fill="#c4566b"/><text x="636" y="1148" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-4</text>
+<circle cx="704" cy="1190" r="13" fill="#c4566b"/><text x="724" y="1198" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">window-seat-5</text>
+<circle cx="932" cy="690" r="13" fill="#c4566b"/><text x="952" y="698" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableA-left</text>
+<circle cx="1076" cy="776" r="13" fill="#c4566b"/><text x="1096" y="784" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableA-right</text>
+<circle cx="834" cy="1030" r="13" fill="#c4566b"/><text x="854" y="1038" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableB-left</text>
+<circle cx="1024" cy="900" r="13" fill="#c4566b"/><text x="1044" y="908" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">tableB-back</text>
+<circle cx="1200" cy="1280" r="13" fill="#c4566b"/><text x="1220" y="1288" font-size="24" font-family="system-ui" fill="#5b2230" stroke="#fff" stroke-width="5" paint-order="stroke">door</text>
 <text x="40" y="60" font-size="34" font-family="system-ui" fill="#6a5338" stroke="#fff" stroke-width="6" paint-order="stroke">2040×1620px · orange = floor · blue = photo wall · brown = service wall · green = street glass / door</text>
 </svg>

@@ -37,6 +37,11 @@ export default function Defs() {
         <stop offset="0.45" stopColor="#ffe8b0" stopOpacity="0" />
         <stop offset="1" stopColor="#4a3626" stopOpacity="0.26" />
       </radialGradient>
+      <radialGradient id="nightGlow" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#ffd98a" stopOpacity="0.75" />
+        <stop offset="0.5" stopColor="#ffd98a" stopOpacity="0.22" />
+        <stop offset="1" stopColor="#ffd98a" stopOpacity="0" />
+      </radialGradient>
       <radialGradient id="zoneGlow" cx="0.5" cy="0.5" r="0.5">
         <stop offset="0" stopColor="#ffd98a" stopOpacity="0.55" />
         <stop offset="0.6" stopColor="#ffd98a" stopOpacity="0.16" />

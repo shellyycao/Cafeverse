@@ -10,14 +10,14 @@
     {
       "id": "barista",
       "kind": "stand",
-      "note": "behind the service counter, near the espresso machine",
+      "note": "behind the service counter, between the two coffee machines",
       "px": {
-        "x": 1401,
-        "y": 832
+        "x": 1440,
+        "y": 792
       },
       "normalized": {
-        "x": 0.6868,
-        "y": 0.5136
+        "x": 0.7059,
+        "y": 0.4889
       }
     },
     {
@@ -25,64 +25,77 @@
       "kind": "stand",
       "note": "where a customer stands at the counter",
       "px": {
-        "x": 1346,
-        "y": 938
+        "x": 1380,
+        "y": 940
       },
       "normalized": {
-        "x": 0.6598,
-        "y": 0.579
+        "x": 0.6765,
+        "y": 0.5802
       }
     },
     {
       "id": "pastry-case",
       "kind": "prop",
-      "note": "centre of the glass pastry display",
+      "note": "centre of the curved glass pastry display",
       "px": {
-        "x": 1231,
-        "y": 836
+        "x": 1240,
+        "y": 830
       },
       "normalized": {
-        "x": 0.6034,
-        "y": 0.516
+        "x": 0.6078,
+        "y": 0.5123
       }
     },
     {
-      "id": "lounge-1",
+      "id": "lounge-sofa-1",
       "kind": "seat",
-      "note": "leather armchair (right)",
+      "note": "sofa, left seat",
       "px": {
-        "x": 707,
-        "y": 707
+        "x": 640,
+        "y": 750
       },
       "normalized": {
-        "x": 0.3466,
-        "y": 0.4364
+        "x": 0.3137,
+        "y": 0.463
       }
     },
     {
-      "id": "lounge-2",
+      "id": "lounge-sofa-2",
       "kind": "seat",
-      "note": "leather armchair (left)",
+      "note": "sofa, right seat",
       "px": {
-        "x": 568,
-        "y": 745
+        "x": 730,
+        "y": 720
       },
       "normalized": {
-        "x": 0.2784,
-        "y": 0.4599
+        "x": 0.3578,
+        "y": 0.4444
+      }
+    },
+    {
+      "id": "lounge-armchair",
+      "kind": "seat",
+      "note": "cream armchair",
+      "px": {
+        "x": 880,
+        "y": 790
+      },
+      "normalized": {
+        "x": 0.4314,
+        "y": 0.4877
       }
     },
     {
       "id": "window-seat-1",
       "kind": "seat",
-      "note": "window-bar stool 1 (left end)",
+      "note": "window-bar stool 1 (far end)",
       "px": {
-        "x": 313,
-        "y": 1050
+        "x": 366,
+        "y": 1020
       },
       "normalized": {
-        "x": 0.1534,
-        "y": 0.6481
+        "x": 0.1794,
+        "y": 0.6296
       }
     },
     {
@@ -90,12 +103,12 @@
       "kind": "seat",
       "note": "window-bar stool 2",
       "px": {
-        "x": 422,
-        "y": 1099
+        "x": 452,
+        "y": 1054
       },
       "normalized": {
-        "x": 0.2069,
-        "y": 0.6784
+        "x": 0.2216,
+        "y": 0.6506
       }
     },
     {
@@ -103,12 +116,12 @@
       "kind": "seat",
       "note": "window-bar stool 3",
       "px": {
-        "x": 537,
-        "y": 1149
+        "x": 534,
+        "y": 1096
       },
       "normalized": {
-        "x": 0.2632,
-        "y": 0.7093
+        "x": 0.2618,
+        "y": 0.6765
       }
     },
     {
@@ -116,12 +129,12 @@
       "kind": "seat",
       "note": "window-bar stool 4",
       "px": {
-        "x": 636,
-        "y": 1197
+        "x": 616,
+        "y": 1140
       },
       "normalized": {
-        "x": 0.3118,
-        "y": 0.7389
+        "x": 0.302,
+        "y": 0.7037
       }
     },
     {
@@ -129,90 +142,64 @@
       "kind": "seat",
       "note": "window-bar stool 5 (door end)",
       "px": {
-        "x": 755,
-        "y": 1258
+        "x": 704,
+        "y": 1190
       },
       "normalized": {
-        "x": 0.3701,
-        "y": 0.7765
+        "x": 0.3451,
+        "y": 0.7346
       }
     },
     {
-      "id": "tableA-back",
+      "id": "tableA-left",
       "kind": "seat",
-      "note": "left table, back chair",
+      "note": "back table, left chair",
       "px": {
-        "x": 415,
-        "y": 968
+        "x": 932,
+        "y": 690
       },
       "normalized": {
-        "x": 0.2034,
-        "y": 0.5975
+        "x": 0.4569,
+        "y": 0.4259
       }
     },
     {
-      "id": "tableA-front",
+      "id": "tableA-right",
       "kind": "seat",
-      "note": "left table, front chair",
+      "note": "back table, right chair",
       "px": {
-        "x": 537,
-        "y": 990
+        "x": 1076,
+        "y": 776
       },
       "normalized": {
-        "x": 0.2632,
-        "y": 0.6111
+        "x": 0.5275,
+        "y": 0.479
+      }
+    },
+    {
+      "id": "tableB-left",
+      "kind": "seat",
+      "note": "front table, left chair",
+      "px": {
+        "x": 834,
+        "y": 1030
+      },
+      "normalized": {
+        "x": 0.4088,
+        "y": 0.6358
       }
     },
     {
       "id": "tableB-back",
       "kind": "seat",
-      "note": "middle table, back chair",
-      "px": {
-        "x": 789,
-        "y": 982
-      },
-      "normalized": {
-        "x": 0.3868,
-        "y": 0.6062
-      }
-    },
-    {
-      "id": "tableB-front",
-      "kind": "seat",
-      "note": "middle table, front chair",
-      "px": {
-        "x": 891,
-        "y": 1006
-      },
-      "normalized": {
-        "x": 0.4368,
-        "y": 0.621
-      }
-    },
-    {
-      "id": "tableC-back",
-      "kind": "seat",
       "note": "front table, back chair",
       "px": {
-        "x": 782,
-        "y": 1163
+        "x": 1024,
+        "y": 900
       },
       "normalized": {
-        "x": 0.3833,
-        "y": 0.7179
-      }
-    },
-    {
-      "id": "tableC-front",
-      "kind": "seat",
-      "note": "front table, front chair",
-      "px": {
-        "x": 884,
-        "y": 1183
-      },
-      "normalized": {
-        "x": 0.4333,
-        "y": 0.7302
+        "x": 0.502,
+        "y": 0.5556
       }
     },
     {
@@ -220,12 +207,12 @@
       "kind": "door",
       "note": "glass entrance",
       "px": {
-        "x": 1170,
-        "y": 1278
+        "x": 1200,
+        "y": 1280
       },
       "normalized": {
-        "x": 0.5735,
-        "y": 0.7889
+        "x": 0.5882,
+        "y": 0.7901
       }
     }
   ]
