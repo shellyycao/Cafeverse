@@ -9,8 +9,10 @@ import Popover from "./Popover";
 import Dock, { type Crowd } from "./Dock";
 import { useCafeStatus } from "@/lib/useCafeStatus";
 import AiPanel, { type AiState } from "./AiPanel";
+import { durhamNow, phaseAt, type Clock } from "@/lib/hours";
 import { BASELINE_SIGNALS, describeChanges, type SceneSignals } from "@/lib/scene";
 import { CAFE } from "@/data/cafe";
+import { fosterSources } from "@/data/foster-sources";
 import { P } from "@/lib/iso";
 import { ZONES } from "@/data/durham";
 
@@ -49,6 +51,16 @@ export default function CafeverseApp() {
   const signalsRef = useRef(signals);
   const [ai, setAi] = useState<AiState>({ status: "idle", mode: "demo" });
   const [crowd, setCrowd] = useState<Crowd>(1);
+  const [now, setNow] = useState<Clock | null>(null);
+  const [simMin, setSimMin] = useState<number | null>(null);
+  useEffect(() => {
+    const tick = () => setNow(durhamNow());
+    tick();
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, []);
+  const clock = now ? { minutes: simMin ?? now.minutes, weekend: now.weekend, dayLabel: now.label } : null;
+  const phase = clock ? phaseAt(clock.minutes, clock.weekend) : "open";
   const { status: cafeStatus, toggle: toggleStatus } = useCafeStatus(CAFE.id);
   const [toast, setToast] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -79,12 +91,7 @@ export default function CafeverseApp() {
   const analyze = useCallback(async () => {
     setAi((a) => ({ ...a, status: "loading" }));
     try {
-      const sources = [
-        { kind: "website", text: CAFE.tagline },
-        { kind: "website", text: CAFE.location },
-        { kind: "website", text: CAFE.parking.lines.join(" ") },
-        { kind: "website", text: `Services: ${CAFE.services.join("; ")}. Hours weekdays ${CAFE.hours.weekdays}, weekends ${CAFE.hours.weekends}.` },
-      ];
+      const sources = fosterSources();
       const res = await fetch("/api/analyze-cafe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ cafeName: CAFE.name, sources }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "failed");
@@ -154,6 +161,15 @@ export default function CafeverseApp() {
     setPop({ id });
   };
 
+  // outside opening hours the scene empties; near closing a few stragglers remain and staff tidy up
+  const sceneSignals: SceneSignals =
+    phase === "open"
+      ? signals
+      : phase === "closing"
+        ? { ...signals, laptopWorkers: Math.min(1, signals.laptopWorkers), chattingGroups: 0, dogOnPatio: false, dogInside: false }
+        : { ...signals, laptopWorkers: 0, chattingGroups: 0, dogOnPatio: false, dogInside: false };
+  const sceneCrowd: Crowd = phase === "open" ? crowd : 0;
+
   return (
     <div
       className="app"
@@ -166,10 +182,10 @@ export default function CafeverseApp() {
         <BaseMap />
         <g className="mini" mask="url(#revealMask)">
           <g filter="url(#wobble)">
-            <Neighborhood onSelect={onSelect} level={level} signals={signals} crowd={crowd} />
+            <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} />
           </g>
         </g>
-        <ScenePins onSelect={onSelect} busStop={signals.busStop} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />
+        <ScenePins onSelect={onSelect} staff={phase !== "closed"} busStop={signals.busStop} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />
       </MapViewport>
       <div className="paper" />
       <div className="vignette" />
@@ -188,7 +204,7 @@ export default function CafeverseApp() {
       </div>
 
       <AiPanel state={ai} onAnalyze={analyze} />
-      {level >= 2 && <Dock name={CAFE.name} status={cafeStatus} onToggle={toggleStatus} crowd={crowd} onCrowd={setCrowd} />}
+      {level >= 2 && <Dock name={CAFE.name} status={cafeStatus} onToggle={toggleStatus} crowd={crowd} onCrowd={setCrowd} time={clock ? { ...clock, live: simMin === null, phase, onScrub: setSimMin, onLive: () => setSimMin(null) } : null} />}
 
       {level >= 3 && (
         <div className="chrome back-btn">
@@ -212,7 +228,7 @@ export default function CafeverseApp() {
       <div className="chrome credit">Map data © OpenStreetMap contributors · illustrated demo</div>
       {toast && <div className="chrome toast">Only café neighborhoods zoom in closer — more coming soon</div>}
 
-      {pop && <Popover ref={popEl} id={pop.id} onClose={() => setPop(null)} />}
+      {pop && <Popover ref={popEl} id={pop.id} analysis={ai.analysis} onClose={() => setPop(null)} />}
     </div>
   );
 }

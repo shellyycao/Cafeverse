@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
-import { Armchair, Bubble, Dog, Person, RoundTable } from "./primitives";
+import { Armchair, Bubble, Dog, Person, RoundTable, SweepingStaff } from "./primitives";
+import type { Phase } from "@/lib/hours";
 import type { SceneSignals } from "@/lib/scene";
 
 const stroke = { stroke: INK, strokeOpacity: 0.5, strokeWidth: 0.7, strokeLinejoin: "round" as const };
@@ -161,15 +162,20 @@ export default function CafeInterior({
   guard,
   signals,
   crowd = 1,
+  phase = "open",
 }: {
   signals: SceneSignals;
   crowd?: 0 | 1 | 2;
+  phase?: Phase;
   level: number;
   onSelect?: (id: "barista" | "pastry" | "bar" | "social") => void;
   guard: (fn: () => void) => () => void;
 }) {
   const click = (id: "barista" | "pastry" | "bar" | "social") => guard(() => onSelect?.(id));
   const active = level >= 4;
+  const patrons = phase === "open";
+  const staff = phase !== "closed";
+  const lightsOn = phase !== "closed";
   const per = signals.pastryProminence === "high" ? 6 : signals.pastryProminence === "medium" ? 4 : 2;
   const glow = signals.lighting === "warm" ? 1 : signals.lighting === "bright" ? 0.55 : 1.5;
   const counter = boxFaces(232, 142, 326, 166, 17);
@@ -189,7 +195,7 @@ export default function CafeInterior({
 
       <BackWall />
       <SideWall restroom={signals.restroomSign} />
-      <g style={{ opacity: glow > 1 ? 1 : 0.75 + 0.25 * glow }}>
+      <g style={{ opacity: !lightsOn ? 0.2 : phase === "opening" ? 0.6 : glow > 1 ? 1 : 0.75 + 0.25 * glow }}>
         <Pendant x={250} y={150} />
         <Pendant x={300} y={150} />
         <Pendant x={262} y={206} z={52} drop={10} />
@@ -197,6 +203,7 @@ export default function CafeInterior({
       </g>
 
       {/* ----- barista (behind counter) ----- */}
+      {staff && (
       <g className={active ? "hotspot" : undefined} data-hotspot="barista" onClick={click("barista")} style={{ pointerEvents: active ? "auto" : "none" }}>
         <rect x={0} y={0} width={0} height={0} />
         <g transform="translate(0 0)">
@@ -215,6 +222,8 @@ export default function CafeInterior({
         <polygon points={rectPts(244, 130, 258, 142)} fill="transparent" />
         <circle cx={P(250, 136).x} cy={P(250, 136).y - 14} r={14} fill="transparent" />
       </g>
+      )}
+      {phase === "closing" && <SweepingStaff x={262} y={224} />}
 
       {/* ----- counter ----- */}
       <polygon points={counter.left} fill={COUNTER} {...stroke} />
@@ -293,7 +302,7 @@ export default function CafeInterior({
       <g className={active ? "hotspot" : undefined} data-hotspot="social" onClick={click("social")} style={{ pointerEvents: active ? "auto" : "none" }}>
         <g transform={`translate(0 0)`}>
           <RoundTableScaled x={268} y={206} />
-          <Person x={258} y={212} z={4} sitting shirt="#6d8a64" hair="#2e231c" scale={1.3} />
+          {patrons && <Person x={258} y={212} z={4} sitting shirt="#6d8a64" hair="#2e231c" scale={1.3} />}
           {signals.chattingGroups >= 1 && (
             <>
               <Person x={279} y={199} z={4} sitting shirt="#d9a0a0" hair="#7a4a2c" scale={1.3} />
@@ -341,8 +350,8 @@ export default function CafeInterior({
 
       <polygon
         points={rectPts(F.x0, F.y0, F.x1, F.y1)}
-        fill={signals.lighting === "dim" ? "#3a2616" : "#ffe3a0"}
-        opacity={signals.lighting === "dim" ? 0.22 : signals.lighting === "warm" ? 0.1 : 0}
+        fill={!lightsOn || signals.lighting === "dim" ? "#1d2536" : "#ffe3a0"}
+        opacity={!lightsOn ? 0.5 : phase === "opening" ? 0.18 : signals.lighting === "dim" ? 0.22 : signals.lighting === "warm" ? 0.1 : 0}
         style={{ pointerEvents: "none" }}
       />
       {/* cutaway frame: low knee walls + corner pillar stay visible */}

@@ -372,3 +372,23 @@ export function Armchair({ x, y }: { x: number; y: number }) {
     </g>
   );
 }
+
+/** Staff member sweeping the floor at closing time (gentle looping sway via CSS). */
+export function SweepingStaff({ x, y }: { x: number; y: number }) {
+  const p = P(x, y);
+  return (
+    <g transform={`translate(${p.x} ${p.y})`}>
+      <g className="sweep">
+        <ellipse cx={0} cy={1} rx={5.5} ry={2.2} fill="#6b5a3a" opacity={0.22} />
+        <rect x={-2.8} y={-4.6} width={5.6} height={4.6} rx={1} fill="#4a4540" />
+        <rect x={-3.6} y={-17} width={7.2} height={13.4} rx={2.8} fill="#f1e7d4" stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
+        <path d="M-3 -13 h6 v9 h-6z" fill="#6f8a6e" opacity={0.95} />
+        <circle cx={0} cy={-20.5} r={3.8} fill="#e8bd9a" stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
+        <path d="M-4 -21.4 a4 3.6 0 0 1 8 0 q-3.8 -1.4 -8 0z" fill="#3c2c22" />
+        {/* broom */}
+        <path d="M3.4 -13 L10 1.2" stroke="#9a6a3a" strokeWidth={1.2} strokeLinecap="round" />
+        <path d="M8 -0.2 l5.4 1.4 l-1.2 2.4 l-5.6 -1.2z" fill="#d9b25f" stroke={INK} strokeOpacity={0.45} strokeWidth={0.5} />
+      </g>
+    </g>
+  );
+}

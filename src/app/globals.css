@@ -130,3 +130,20 @@ button { font: inherit; color: inherit; }
 .dock-label { font-size: 10.5px; color: #8a6a1e; background: #f6e3b3; border-radius: 999px; padding: 5px 9px; margin-right: 2px; font-weight: 700; white-space: nowrap; }
 @media (max-width: 900px) { .dock { bottom: 52px; max-width: calc(100vw - 28px); } }
 @media (max-width: 640px) { .dock { bottom: 88px; } .dock-label { display: none; } .dock-seg.crowd::before { content: "Demo crowd"; font-size: 10.5px; color: #8a6a1e; background: #f6e3b3; border-radius: 999px; padding: 5px 8px; font-weight: 700; } }
+
+/* closing-time sweeping */
+.sweep { animation: sweep 2.2s ease-in-out infinite alternate; }
+@keyframes sweep { from { transform: translate(-7px, 3px); } to { transform: translate(7px, -3px); } }
+@media (prefers-reduced-motion: reduce) { .sweep, .hint-ring { animation: none; } }
+
+/* time control */
+.dock-time { display: inline-flex; align-items: center; gap: 8px; background: rgba(252,247,236,.95); border: 1px solid rgba(160,125,80,.28); border-radius: 999px; box-shadow: var(--shadow); padding: 4px 12px 4px 6px; font-size: 12.5px; }
+.dock-time .phase { font-weight: 700; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+.dock-time .phase.open { background: #dbe8cc; color: #44602d; }
+.dock-time .phase.closing, .dock-time .phase.opening { background: #f6e3b3; color: #7a5a1e; }
+.dock-time .phase.closed { background: #e4d9d6; color: #6a4a46; }
+.dock-time input[type="range"] { width: 110px; accent-color: var(--wood); }
+.dock-time button { border: 0; background: transparent; color: var(--wood); text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0 2px; }
+@media (max-width: 640px) { .dock-time input[type="range"] { width: 84px; } }
+.dock-seg.crowd.off { opacity: .55; }
+.dock-seg button:disabled { cursor: not-allowed; }

@@ -6,6 +6,10 @@ export default function Defs() {
         <stop offset="0" stopColor="#ffeab8" />
         <stop offset="1" stopColor="#f0b36a" />
       </linearGradient>
+      <linearGradient id="glassDark" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#566277" />
+        <stop offset="1" stopColor="#2c3446" />
+      </linearGradient>
       <linearGradient id="glassSheen" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
         <stop offset="0.35" stopColor="#ffffff" stopOpacity="0" />

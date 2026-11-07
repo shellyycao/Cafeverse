@@ -18,16 +18,16 @@ function Face({ side, children }: { side: "left" | "right"; children: React.Reac
 
 const stroke = { stroke: INK, strokeOpacity: 0.55, strokeWidth: 0.8, strokeLinejoin: "round" as const };
 
-function Glass({ u0, u1, v0 = 9, v1 = 40, id }: { u0: number; u1: number; v0?: number; v1?: number; id: string }) {
+function Glass({ u0, u1, v0 = 9, v1 = 40, id, dark = false }: { u0: number; u1: number; v0?: number; v1?: number; id: string; dark?: boolean }) {
   return (
     <g>
       <rect x={u0 - 2} y={-v1 - 2} width={u1 - u0 + 4} height={v1 - v0 + 4} rx={1} fill={GREEN} {...stroke} />
-      <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} fill="url(#glassWarm)" />
+      <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} fill={dark ? "url(#glassDark)" : "url(#glassWarm)"} />
       {/* mullions */}
       <path d={`M${(u0 + u1) / 2} ${-v1} V${-v0} M${u0} ${-(v0 + v1) / 2 - 3} H${u1}`} stroke={GREEN} strokeWidth={1.1} opacity={0.85} />
       {/* pendant lamps seen through the glass */}
-      <circle cx={u0 + (u1 - u0) * 0.25} cy={-v1 + 6} r={2.2} fill="#fff1c4" />
-      <circle cx={u0 + (u1 - u0) * 0.75} cy={-v1 + 6} r={2.2} fill="#fff1c4" />
+      <circle cx={u0 + (u1 - u0) * 0.25} cy={-v1 + 6} r={2.2} fill={dark ? "#8a93a6" : "#fff1c4"} />
+      <circle cx={u0 + (u1 - u0) * 0.75} cy={-v1 + 6} r={2.2} fill={dark ? "#8a93a6" : "#fff1c4"} />
       <clipPath id={`clip-${id}`}>
         <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} />
       </clipPath>
@@ -39,9 +39,12 @@ function Glass({ u0, u1, v0 = 9, v1 = 40, id }: { u0: number; u1: number; v0?: n
 export default function CafeExterior({
   onClick,
   interactive = true,
+  lit = true,
 }: {
   onClick?: () => void;
   interactive?: boolean;
+  /** lights on (open / about to open / closing) */
+  lit?: boolean;
 }) {
   const f = boxFaces(F.x0, F.y0, F.x1, F.y1, F.h);
   const cornice = boxFaces(F.x0 - 2, F.y0 - 2, F.x1 + 2, F.y1 + 2, 4, F.h - 2);
@@ -63,14 +66,20 @@ export default function CafeExterior({
       {/* ---- left face ---- */}
       <Face side="left">
         <rect x={0} y={-9} width={LEFT_LEN} height={9} fill="#bba88c" {...stroke} />
-        <Glass u0={10} u1={62} id="l1" />
-        <Glass u0={104} u1={136} id="l3" />
+        <Glass u0={10} u1={62} id="l1" dark={!lit} />
+        <Glass u0={104} u1={136} id="l3" dark={!lit} />
         {/* door */}
         <rect x={70} y={-38} width={28} height={38} rx={1} fill={GREEN} {...stroke} />
-        <rect x={73} y={-35} width={22} height={33} fill="url(#glassWarm)" />
+        <rect x={73} y={-35} width={22} height={33} fill={lit ? "url(#glassWarm)" : "url(#glassDark)"} />
         <path d="M84 -35 V-2" stroke={GREEN} strokeWidth={1.2} />
         <circle cx={80.5} cy={-18} r={1.1} fill="#d9b25f" />
         <circle cx={87.5} cy={-18} r={1.1} fill="#d9b25f" />
+        {!lit && (
+          <g>
+            <rect x={78} y={-26} width={12} height={7} rx={1} fill="#f1e8d6" stroke="#2b2b2e" strokeWidth={0.7} />
+            <text x={84} y={-21} textAnchor="middle" fontSize={4} fontWeight={700} fill="#8a3a32" fontFamily="var(--font-geist-sans), system-ui">CLOSED</text>
+          </g>
+        )}
         {/* fascia + oval blade sign (black, like the real one) */}
         <rect x={6} y={-56} width={LEFT_LEN - 12} height={11} rx={1.2} fill="#3a3a3e" {...stroke} />
         <text x={LEFT_LEN / 2} y={-48} textAnchor="middle" fontSize={7.2} fill="#f1e8d6" fontFamily="var(--font-geist-sans), system-ui" letterSpacing={1.4} fontWeight={600}>
@@ -81,11 +90,11 @@ export default function CafeExterior({
       {/* ---- right face (glass-heavy side) ---- */}
       <Face side="right">
         <rect x={0} y={-9} width={RIGHT_LEN} height={9} fill="#a8967a" {...stroke} />
-        <Glass u0={10} u1={42} id="r1" v1={42} />
-        <Glass u0={48} u1={80} id="r2" v1={42} />
-        <Glass u0={86} u1={118} id="r3" v1={42} />
+        <Glass u0={10} u1={42} id="r1" dark={!lit} v1={42} />
+        <Glass u0={48} u1={80} id="r2" dark={!lit} v1={42} />
+        <Glass u0={86} u1={118} id="r3" dark={!lit} v1={42} />
         {/* patrons visible through glass */}
-        <g opacity={0.9}>
+        <g opacity={lit ? 0.9 : 0}>
           {[
             [22, "#a2574f"],
             [60, "#6d8a64"],
