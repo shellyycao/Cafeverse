@@ -38,15 +38,6 @@ function GroundPatch() {
       {Array.from({ length: 12 }).map((_, k) => (
         <polyline key={`ty${k}`} points={pts([[30, 30 + k * 20], [370, 30 + k * 20]])} stroke="#d9c6a0" strokeWidth={0.5} opacity={0.6} />
       ))}
-      {/* garden / lawn behind the café */}
-      <polygon points={rectPts(40, 40, 140, 140)} fill="#cfdca0" />
-      <polygon points={rectPts(40, 40, 140, 140)} fill="url(#grassTex)" opacity={0.6} />
-      {/* parking lot */}
-      <polygon points={rectPts(42, 196, 176, 268)} fill="#a39a8a" stroke="#8b8273" strokeWidth={1} />
-      {bays.map((x) => (
-        <polyline key={x} points={pts([[x, 228], [x, 266]])} stroke="#f6efe0" strokeWidth={1.3} />
-      ))}
-      <polyline points={pts([[48, 228], [176, 228]])} stroke="#f6efe0" strokeWidth={0.8} opacity={0.5} strokeDasharray="4 3" />
       {/* curb highlight */}
       <polyline points={pts([[30, 270], [372, 270], [372, 30]])} stroke="#fff8e8" strokeWidth={2} fill="none" opacity={0.8} />
       <polyline points={pts([[28, 273], [374, 273], [374, 28]])} stroke="#d4bf94" strokeWidth={1.2} fill="none" />
@@ -99,27 +90,36 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
       <PolyBuilding key={`nb${b.id}`} textured={Math.hypot(b.c[0] - 200, b.c[1] - 150) < 420} poly={b.p} h={h} wall={WALLS[b.id % WALLS.length]} roof={ROOFS[(b.id * 3) % ROOFS.length]} shop={b.id % 3 === 0} />,
     );
   }
-  // Liberty Warehouse apartments: the café sits at the foot of this brick building (per the café's website)
-  if (!exterior) push(
-    110,
-    <PolyBuilding key="liberty" poly={[[96, 36], [372, 36], [372, 112], [96, 112]]} h={86} wall="#b98c6a" roof="#c8b898" />,
-  );
+  // The café is the GROUND FLOOR of a long multi-storey brick mixed-use building (massing = docs/exterior-kit):
+  // two-storey brick podium wings either side of the café, taller residential volumes behind and at the left end.
+  if (!exterior) {
+    const brick = "#b4604a";
+    const roofC = "#cdbb99";
+    push(100, <PolyBuilding key="tower-back" poly={[[96, 36], [372, 36], [372, 108], [96, 108]]} h={96} wall="#c3a58a" roof="#d6cbb8" />);
+    push(160, <PolyBuilding key="tower-left" poly={[[40, 108], [128, 108], [128, 200], [40, 200]]} h={96} wall="#c3a58a" roof="#d6cbb8" />);
+    push(220, <PolyBuilding key="wing-left" poly={[[40, 200], [184, 200], [184, 258], [40, 258]]} h={70} wall={brick} roof={roofC} shop />);
+    push(352, <PolyBuilding key="wing-left-b" poly={[[128, 108], [184, 108], [184, 200], [128, 200]]} h={70} wall={brick} roof={roofC} />);
+    push(400, <PolyBuilding key="wing-right" poly={[[344, 108], [372, 108], [372, 258], [344, 258]]} h={70} wall={brick} roof={roofC} />);
+    // garage entrance at the left end (website: "Liberty Warehouse Garage — enter on Corporation Street")
+    push(300, (
+      <g key="garage">
+        <polygon points={pts([[66, 258.4, 0], [104, 258.4, 0], [104, 258.4, 30], [66, 258.4, 30]])} fill="#3a3430" stroke="#2a2420" strokeWidth={0.8} />
+        <polygon points={pts([[66, 258.4, 30], [104, 258.4, 30], [104, 258.4, 34], [66, 258.4, 34]])} fill="#554c46" />
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <polyline key={i} points={pts([[66, 258.4, 5 + i * 4.6], [104, 258.4, 5 + i * 4.6]])} stroke="#6a5f56" strokeWidth={0.6} />
+        ))}
+      </g>
+    ));
+  }
   NEAR_TREES.forEach((t, i) => push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />));
   // café + its surroundings
-  push(196 + 127, <CafeInterior key="interior" signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
+  push(196 + 127, <g key="interior" className={exterior ? "interior-reveal" : undefined}><CafeInterior signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} /></g>);
   if (exterior) push(250, <ExteriorLayer key="ext" />);
   if (!exterior) push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
 
   // big pink blossom tree + trees around the lot
   if (!exterior) push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
   if (!exterior) push(372 + 270, <Tree key="rt" x={380} y={150} s={1.1} rich />);
-
-  // parked cars in the lot
-  [
-    [50, "#8fa7b3"],
-    [90, "#efe6cf"],
-    [130, "#a7b88d"],
-  ].forEach(([x, c], i) => !exterior && push((x as number) + 230, <Car key={`lc${i}`} x={(x as number) + 1} y={229} dir="y" color={c as string} />));
 
   // street parking (clickable group)
   const allStreetCars: Item[] = [
@@ -142,7 +142,6 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   if (!exterior) push(364 + 262, <LampPost key="lamp1" x={366} y={262} />);
   if (!exterior) push(60 + 262, <LampPost key="lamp2" x={60} y={262} />);
   if (!exterior) push(366 + 126, <LampPost key="lamp3" x={366} y={126} />);
-  if (!exterior) push(60 + 160, <Bench key="bench" x={66} y={176} dir="x" />);
   if (!exterior) push(180 + 266, <Planter key="pl1" x={190} y={266} flowers="#e9a0b4" />);
   if (!exterior) push(260 + 264, <Planter key="pl2" x={252} y={266} flowers="#f1c36b" size={0.9} />);
   if (!exterior) push(330 + 266, <Planter key="pl3" x={336} y={266} flowers="#e9a0b4" />);
@@ -159,7 +158,14 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
       {!exterior && <GroundPatch />}
       <CastShadows
         shapes={[
-          ...(exterior ? [] : [{ poly: [[184, 114], [344, 114], [344, 258], [184, 258]] as Array<[number, number]>, h: 60 }, { poly: [[96, 36], [372, 36], [372, 112], [96, 112]] as Array<[number, number]>, h: 86 }]),
+          ...(exterior
+            ? []
+            : ([
+                { poly: [[184, 114], [344, 114], [344, 258], [184, 258]], h: 70 },
+                { poly: [[40, 200], [184, 200], [184, 258], [40, 258]], h: 70 },
+                { poly: [[96, 36], [372, 36], [372, 108], [96, 108]], h: 96 },
+                { poly: [[40, 108], [128, 108], [128, 200], [40, 200]], h: 96 },
+              ] as Array<{ poly: Array<[number, number]>; h: number }>)),
           ...NEAR_BUILDINGS.map((b) => ({ poly: b.p, h: b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17) })),
         ]}
       />

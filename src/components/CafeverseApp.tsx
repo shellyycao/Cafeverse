@@ -148,8 +148,9 @@ export default function CafeverseApp() {
     if (to === "map") map.current?.flyTo(START, ms);
     if (to === "hood") map.current?.flyTo({ x: cafe.x, y: cafe.y + 10, z: Math.max(1.5, 0.3 * ziRef.current) }, ms);
     if (to === "exterior") {
-      const c = P(290, 215, 10);
-      map.current?.flyTo({ x: c.x, y: c.y, z: 0.62 * ziRef.current }, ms);
+      // with the authored illustration the building sits left of the old SVG box: centre on it
+      const c = hasExterior ? { x: -117, y: -154 } : P(290, 215, 10);
+      map.current?.flyTo({ x: c.x, y: c.y, z: 0.6 * ziRef.current }, ms);
     }
     if (to === "inside") {
       const c = P(268, 192, 22);
