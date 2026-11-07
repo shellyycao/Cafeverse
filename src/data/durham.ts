@@ -120,4 +120,4 @@ export const NEAR_TREES: Array<{ x: number; y: number; s: number; kind: "round" 
   return out;
 })();
 
-export const CAFE_FOOTPRINT = { x0: 196, y0: 128, x1: 340, y1: 256, h: 58 };
+export const CAFE_FOOTPRINT = { x0: 184, y0: 114, x1: 344, y1: 258, h: 60 };

@@ -95,11 +95,11 @@ export default function CafeExterior({
       {/* ---- left face ---- */}
       <Face side="left">
         <rect x={0} y={-9} width={LEFT_LEN} height={9} fill="#bba88c" {...stroke} />
-        <Glass u0={10} u1={62} id="l1" dark={!lit} />
-        <Glass u0={104} u1={136} id="l3" dark={!lit} />
+        <Glass u0={10} u1={64} id="l1" dark={!lit} />
+        <Glass u0={112} u1={150} id="l3" dark={!lit} />
         {/* door */}
-        <rect x={70} y={-38} width={28} height={38} rx={1} fill={GREEN} {...stroke} />
-        <rect x={73} y={-35} width={22} height={33} fill={lit ? "url(#glassWarm)" : "url(#glassDark)"} />
+        <rect x={74} y={-38} width={28} height={38} rx={1} fill={GREEN} {...stroke} />
+        <rect x={77} y={-35} width={22} height={33} fill={lit ? "url(#glassWarm)" : "url(#glassDark)"} />
         <path d="M84 -35 V-2" stroke={GREEN} strokeWidth={1.2} />
         <circle cx={80.5} cy={-18} r={1.1} fill="#d9b25f" />
         <circle cx={87.5} cy={-18} r={1.1} fill="#d9b25f" />

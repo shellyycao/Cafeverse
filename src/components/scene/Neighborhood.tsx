@@ -42,11 +42,11 @@ function GroundPatch() {
       <polygon points={rectPts(40, 40, 140, 140)} fill="#cfdca0" />
       <polygon points={rectPts(40, 40, 140, 140)} fill="url(#grassTex)" opacity={0.6} />
       {/* parking lot */}
-      <polygon points={rectPts(42, 196, 188, 268)} fill="#a39a8a" stroke="#8b8273" strokeWidth={1} />
+      <polygon points={rectPts(42, 196, 176, 268)} fill="#a39a8a" stroke="#8b8273" strokeWidth={1} />
       {bays.map((x) => (
         <polyline key={x} points={pts([[x, 228], [x, 266]])} stroke="#f6efe0" strokeWidth={1.3} />
       ))}
-      <polyline points={pts([[48, 228], [188, 228]])} stroke="#f6efe0" strokeWidth={0.8} opacity={0.5} strokeDasharray="4 3" />
+      <polyline points={pts([[48, 228], [176, 228]])} stroke="#f6efe0" strokeWidth={0.8} opacity={0.5} strokeDasharray="4 3" />
       {/* curb highlight */}
       <polyline points={pts([[30, 270], [372, 270], [372, 30]])} stroke="#fff8e8" strokeWidth={2} fill="none" opacity={0.8} />
       <polyline points={pts([[28, 273], [374, 273], [374, 28]])} stroke="#d4bf94" strokeWidth={1.2} fill="none" />
@@ -206,7 +206,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
       <GroundPatch />
       <CastShadows
         shapes={[
-          { poly: [[196, 128], [340, 128], [340, 256], [196, 256]], h: 58 },
+          { poly: [[184, 114], [344, 114], [344, 258], [184, 258]], h: 60 },
           { poly: [[96, 36], [372, 36], [372, 112], [96, 112]], h: 86 },
           ...NEAR_BUILDINGS.map((b) => ({ poly: b.p, h: b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17) })),
         ]}
@@ -235,7 +235,7 @@ export function ScenePins({ onSelect, busStop = true, status = null, staff = tru
       {busStop && <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />}
       <CafeLabel at={P(268, 192, 84)} name="Foster Street Coffee" />
       <g className="hints">
-        {hints.filter(([id]) => staff || id !== "barista").map(([id, label]) => (
+        {hints.filter(([id]) => false && (staff || id !== "barista")).map(([id, label]) => (
           <HintDot key={id} at={at(id)} label={label} onClick={() => onSelect?.(id)} />
         ))}
       </g>

@@ -472,21 +472,54 @@ export function PlanterDivider({ x0, y0, x1, y1 }: { x0: number; y0: number; x1:
   );
 }
 
-/** big-leaf floor plant in a white pot (calathea) */
+/**
+ * Striped-leaf floor plant (calathea) in a round white ceramic pot, as in the photos:
+ * long oval leaves on thin stems, dark green with pale cross-stripes, fanning out unevenly.
+ */
 export function BigPlant({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
   const b = P(x, y);
-  const leaves = [-26, -14, -3, 8, 19, 30];
+  // [angle, length, width, shade]
+  const leaves: Array<[number, number, number, number]> = [
+    [-52, 20, 5.2, 1],
+    [-34, 27, 5.6, 0],
+    [-16, 33, 6, 2],
+    [-3, 36, 6.2, 1],
+    [11, 31, 5.8, 0],
+    [27, 28, 5.6, 2],
+    [46, 21, 5.2, 1],
+    [-24, 22, 5, 0],
+    [20, 24, 5, 1],
+  ];
+  const greens = ["#4f7d44", "#5d8c4c", "#3f6b3a"];
   return (
     <g transform={`translate(${b.x} ${b.y}) scale(${s})`}>
-      <Shadow x={x} y={y} rx={9} ry={3.6} o={0.2} />
-      {leaves.map((a, i) => (
-        <g key={i} transform={`rotate(${a} 0 -9)`}>
-          <path d={`M0 -9 C-5 -18 -4 -28 0 -${30 + (i % 2) * 4} C4 -28 5 -18 0 -9z`} fill={["#4e7a42", "#5f8a40", "#456f3a"][i % 3]} {...L} />
-          <path d={`M0 -11 L0 -${27 + (i % 2) * 3} M0 -16 l-2.4 -3.4 M0 -20 l2.6 -3.4 M0 -24 l-2 -2.6`} stroke="#b9d79a" strokeWidth={0.5} fill="none" opacity={0.8} />
-        </g>
-      ))}
-      <path d="M-6 -9 h12 l-1.4 9 h-9.2z" fill="#f6f4ee" {...L} />
-      <path d="M-5.6 -7.4 h11.2" stroke="#d9d4c8" strokeWidth={0.7} />
+      <Shadow x={x} y={y} rx={10} ry={3.8} o={0.22} />
+      {leaves.map(([ang, len, w, c], i) => {
+        const stem = len * 0.28;
+        return (
+          <g key={i} transform={`translate(0 -11) rotate(${ang})`}>
+            <path d={`M0 0 L0 ${-stem}`} stroke="#6b8f4a" strokeWidth={0.9} strokeLinecap="round" />
+            <g transform={`translate(0 ${-stem})`}>
+              {/* oval blade */}
+              <path d={`M0 0 C${-w} ${-len * 0.22} ${-w} ${-len * 0.62} 0 ${-len * 0.78} C${w} ${-len * 0.62} ${w} ${-len * 0.22} 0 0z`} fill={greens[c]} stroke="#2f5230" strokeOpacity={0.45} strokeWidth={0.5} />
+              {/* pale midrib + the alternating cross-stripes of a calathea */}
+              <path d={`M0 -1 L0 ${-len * 0.74}`} stroke="#bcd9a0" strokeWidth={0.7} opacity={0.9} />
+              {[0.14, 0.26, 0.38, 0.5, 0.62].map((t) => (
+                <g key={t} stroke="#a9cf8d" strokeWidth={0.55} opacity={0.75} strokeLinecap="round">
+                  <path d={`M0 ${-len * t} L${-w * 0.78} ${-len * (t + 0.07)}`} />
+                  <path d={`M0 ${-len * t} L${w * 0.78} ${-len * (t + 0.07)}`} />
+                </g>
+              ))}
+              <path d={`M${-w * 0.9} ${-len * 0.3} C${-w * 0.7} ${-len * 0.55} ${-w * 0.4} ${-len * 0.7} 0 ${-len * 0.78}`} stroke="#ffffff" strokeWidth={0.5} opacity={0.18} fill="none" />
+            </g>
+          </g>
+        );
+      })}
+      {/* round white ceramic pot */}
+      <ellipse cx={0} cy={-11.4} rx={7.6} ry={2.6} fill="#ece8dc" stroke="#6b4a2c" strokeOpacity={0.34} strokeWidth={0.5} />
+      <path d="M-7.6 -11.2 C-8 -4 -5.6 -0.4 0 -0.4 C5.6 -0.4 8 -4 7.6 -11.2 C4 -9.2 -4 -9.2 -7.6 -11.2z" fill="#f6f3ea" stroke="#6b4a2c" strokeOpacity={0.34} strokeWidth={0.55} />
+      <path d="M-5.6 -5 C-3 -3.2 3 -3.2 5.6 -5" stroke="#d9d3c3" strokeWidth={0.6} fill="none" />
+      <ellipse cx={-2.6} cy={-8} rx={1.2} ry={2.4} fill="#ffffff" opacity={0.5} />
     </g>
   );
 }
@@ -494,13 +527,16 @@ export function BigPlant({ x, y, s = 1 }: { x: number; y: number; s?: number }) 
 export function Lantern({ x, y, z, r = 5.8 }: { x: number; y: number; z: number; r?: number }) {
   const top = P(x, y, 58);
   const l = P(x, y, z);
+  // semi-transparent paper: whatever hangs behind a lantern stays readable through it
   return (
-    <g>
-      <line x1={top.x} y1={top.y} x2={l.x} y2={l.y - r} stroke="#3f3a36" strokeWidth={0.5} />
-      <circle cx={l.x} cy={l.y} r={r} fill="#fffaf0" {...L} />
-      <circle cx={l.x - r * 0.3} cy={l.y - r * 0.3} r={r * 0.55} fill="#ffffff" opacity={0.6} />
-      <path d={`M${l.x - r} ${l.y} q${r} ${r * 0.55} ${2 * r} 0 M${l.x - r * 0.8} ${l.y - r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0 M${l.x - r * 0.8} ${l.y + r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0`} stroke="#d8cdb6" strokeWidth={0.5} fill="none" />
-      <path d={`M${l.x} ${l.y - r} V${l.y + r}`} stroke="#e3d8c0" strokeWidth={0.4} />
+    <g style={{ pointerEvents: "none" }}>
+      <line x1={top.x} y1={top.y} x2={l.x} y2={l.y - r} stroke="#3f3a36" strokeWidth={0.5} opacity={0.7} />
+      <g opacity={0.52}>
+        <circle cx={l.x} cy={l.y} r={r} fill="#fffaf0" {...L} />
+        <circle cx={l.x - r * 0.3} cy={l.y - r * 0.3} r={r * 0.55} fill="#ffffff" opacity={0.6} />
+      </g>
+      <path d={`M${l.x - r} ${l.y} q${r} ${r * 0.55} ${2 * r} 0 M${l.x - r * 0.8} ${l.y - r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0 M${l.x - r * 0.8} ${l.y + r * 0.55} q${r * 0.8} ${r * 0.45} ${r * 1.6} 0`} stroke="#c9bda3" strokeWidth={0.5} fill="none" opacity={0.7} />
+      <path d={`M${l.x} ${l.y - r} V${l.y + r}`} stroke="#d9cfb6" strokeWidth={0.4} opacity={0.7} />
     </g>
   );
 }
@@ -576,8 +612,8 @@ export function MenuBoard({ u, w, kind, lines }: { u: number; w: number; kind: "
         {kind === "eat" ? "EAT" : kind === "sip" ? "SIP" : "SPECIALS"}
       </text>
       {kind === "special" && <path d={`M${u + w / 2 - 7} -44.8 q3.5 -2 7 0 q3.5 2 7 0`} stroke="#c9d6a0" strokeWidth={0.45} fill="none" />}
-      {lines.slice(0, 6).map((t, i) => (
-        <text key={i} x={u + 2.4} y={-42 + i * 3.7} fontSize={2.5} fill={dark ? "#f1e7cf" : "#6a5338"} fontFamily={dark ? "var(--font-hand), cursive" : "var(--font-geist-sans), system-ui"} fontWeight={dark ? 700 : 500}>
+      {lines.slice(0, 6).map((t, i, all) => (
+        <text key={i} x={u + 2.4} y={-43 + i * (all.length > 4 ? 2.9 : 3.8)} fontSize={all.length > 4 ? 2.3 : 2.5} fill={dark ? "#f1e7cf" : "#6a5338"} fontFamily={dark ? "var(--font-hand), cursive" : "var(--font-geist-sans), system-ui"} fontWeight={dark ? 700 : 500}>
           {t}
         </text>
       ))}
