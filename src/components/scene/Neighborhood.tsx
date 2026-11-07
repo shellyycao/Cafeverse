@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
-import { Wash, Bench, PolyBuilding, Car, Dog, ParkingMeter, Rail, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
+import { Wash, Bench, PolyBuilding, Car, ParkingMeter, Rail, LampPost, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
@@ -92,7 +92,6 @@ function BusStop({ onClick }: { onClick?: () => void }) {
     <g className="hotspot" onClick={onClick} data-hotspot="bus">
       <polygon points={pts([[349, 65, 2], [349, 109, 2], [349, 109, 28], [349, 65, 28]])} fill="#cfe3e6" opacity={0.55} stroke="#8aa5ab" strokeWidth={0.7} />
       <Bench x={351} y={74} dir="y" />
-      <Person x={354} y={86} z={5} sitting shirt="#6f8fa8" hair="#3c2c22" scale={0.95} />
       {post(369, 65)}
       {post(369, 109)}
       <polygon points={roof.left} fill="#4f6670" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
@@ -145,7 +144,6 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   push(196 + 127, <CafeInterior key="interior" signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
   push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
   if (signals.busStop) push(450, <BusStop key="bus" onClick={sel("bus")} />);
-  if (signals.dogOnPatio) push(358 + 224, <Dog key="dog" x={350} y={226} scale={1.2} />);
 
   // big pink blossom tree + trees around the lot
   push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
@@ -187,17 +185,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   push(216 + 266, <RoundTable key="t1" x={222} y={266} />);
   push(300 + 266, <RoundTable key="t2" x={296} y={266} />);
   push(358 + 210, <RoundTable key="t3" x={358} y={212} />);
-  if (day) push(300 + 266 + 1, <Person key="p1" x={296} y={262} sitting shirt="#9bb08a" laptop />);
-  if (day && crowd >= 1) push(358 + 212 + 1, <Person key="p2" x={362} y={208} sitting shirt="#d9a0a0" />);
-  if (day) push(280 + 296, <Person key="w1" x={282} y={284} shirt="#d1a057" scale={1.05} />);
-  if (day && crowd >= 2) {
-    push(222 + 262, <Person key="p3" x={216} y={268} sitting shirt="#8aa0b8" hair="#2e231c" />);
-    push(330 + 284, <Person key="w3" x={332} y={286} shirt="#c9a27a" hair="#5a3a24" scale={1.05} />);
-    push(200 + 284, <Person key="w4" x={206} y={284} shirt="#9bb08a" hair="#3c2c22" scale={1.05} />);
-    push(370 + 160, <Person key="w5" x={372} y={160} shirt="#d9a0a0" hair="#6a4326" scale={1.05} />);
-  }
   push(240 + 262, <ChalkSign key="chalk" x={262} y={270} />);
-  if (day && crowd >= 1) push(380 + 40, <Person key="w2" x={344} y={44} shirt="#6f8fa8" hair="#2e231c" scale={1.05} />);
 
   items.sort((a, b) => a.d - b.d);
 

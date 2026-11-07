@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import InteriorBase from "./InteriorBase";
 import { AnchorDots } from "./LayeredInterior";
 import { CANVAS } from "@/data/foster-anchors";
@@ -13,7 +13,7 @@ import { BASE_IMAGE } from "@/data/foster-anchors";
 /** lantern positions on the illustration (canvas px) and glow radius (world units) */
 const NIGHT_GLOWS: Array<[number, number, number]> = [[1090, 520, 20], [1540, 620, 18], [1170, 760, 20], [520, 660, 18], [760, 500, 20], [1470, 700, 14]];
 
-export default function InteriorStage({ lit = true, showAnchors = false }: { lit?: boolean; showAnchors?: boolean }) {
+export default function InteriorStage({ lit = true, showAnchors = false, children }: { lit?: boolean; showAnchors?: boolean; children?: ReactNode }) {
   const [state, setState] = useState<"checking" | "image" | "svg">("checking");
   useEffect(() => {
     let alive = true;
@@ -42,6 +42,7 @@ export default function InteriorStage({ lit = true, showAnchors = false }: { lit
             ))}
           </g>
         )}
+        {children}
         {showAnchors && <AnchorDots />}
       </g>
     );
