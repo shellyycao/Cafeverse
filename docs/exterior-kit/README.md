@@ -33,17 +33,17 @@ public/assets/foster/exterior-base.png
 - 街区边缘要自然收口（人行道缘石），不要画成一张方形卡片、不要白边、不要阴影框。
 
 **必须有：**
-- 街角的咖啡馆：底层红砖、黑色窗框的大玻璃、黑色金属百叶雨篷、黑色椭圆吊牌（FOSTER STREET COFFEE）、玻璃门、人行道扶手。
-- 咖啡馆后面更高的红砖公寓楼（一层是咖啡馆，上面是住宅）。
+- **一栋多层红砖混合用途建筑，咖啡馆在它的底层**（不是独立的小盒子）：长长的临街立面，底层是黑色窗框的大玻璃、黑色金属百叶雨篷、玻璃门、黑色椭圆吊牌（FOSTER STREET COFFEE）、露天座椅位置、人行道扶手；上面几层是住宅（阳台、白色和红砖相间的体块），屋顶有空调设备。
+- 街角（Foster St × W Corporation St）一侧是一个小公交站亭。
 - 一小块**空**的地面停车场（只有划线）、人行道铺装、少量路灯、花盆、街边计费桩、小公交站亭。
 - 少量街树，笔触和室内插画一致。
 
-**绝对不要：** 人物、动物、车辆（车和人以后单独做）、文字水印、UI 标记、道路。
+**绝对不要：** 人物、动物、车辆（车和人以后单独做）、文字水印、UI 标记、道路和斑马线。
 
 ## 4. 风格
 暖色水彩 + 彩铅的故事书风格，和 `interior-base.png` 保持一致：轻微不规则的轮廓、柔和投影、纸张颗粒、克制的奶油/赤陶/鼠尾草绿配色。不要光滑 3D，不要扁平矢量。
 
-> 你之前发来的那张**正对街面的红砖立面插画**可以当"建筑长相"的参考（砖墙、黑框玻璃、金属雨篷、露天座椅的感觉），但最终要画成等距视角。
+> **参考图：** 你发来的两张图都很合适——**正对街面的红砖立面图**，以及**斜俯视的"周围景物"图**（多层红砖混合建筑、底层咖啡馆、街树、公交站）。它们可以当"建筑长相和风格"的参考，**但不能直接用**：斜俯视那张是透视图、不透明、画了道路和车，和我们的**严格 2:1 等距 + 透明背景 + 只画街区**不一样。生成时请把它们作为风格参考，再附上 `reference-layout.png`（构图）和 `alignment-template.png`（位置）。
 
 ## 5. 推荐提示词（英文）
 
@@ -51,11 +51,12 @@ public/assets/foster/exterior-base.png
 Isometric miniature of a street-corner café block, 2:1 isometric view from the lower right, hand-painted
 watercolor and colored pencil storybook illustration, soft paper grain, slightly imperfect organic outlines,
 warm afternoon light, gentle shadows, muted palette of cream, terracotta brick, sage green.
-A one-storey red-brick café on the corner with large black-framed glass windows, a black metal slatted canopy,
-a black oval hanging sign reading "FOSTER STREET COFFEE", a glass double door, black metal railings along the
-sidewalk. Directly behind it a taller red-brick apartment building. Beside the café a small EMPTY surface parking
-lot with painted bays, paved sidewalk, two street lamps, planters, pay-by-space kiosks, a tiny bus shelter,
-a few street trees. Only the block itself: no roads, no cars, no people, no animals, no text other than the sign,
+A multi-storey red-brick mixed-use building on the street corner whose GROUND FLOOR is the café: large
+black-framed glass windows glowing warm inside, black metal slatted canopies, a black oval hanging sign reading
+"FOSTER STREET COFFEE", glass double doors, black metal railings and small outdoor tables on the sidewalk;
+four storeys of apartments above with balconies, white and brick volumes, rooftop air-conditioning units.
+Paved sidewalk with street trees, bike racks, a pay-by-space kiosk, a small bus shelter at the corner,
+a small EMPTY surface parking lot with painted bays beside the building. Only the block itself: no roads, no cars, no people, no animals, no text other than the sign,
 no UI. Transparent background outside the block, the block edge ending in a neat curb.
 ```
 
