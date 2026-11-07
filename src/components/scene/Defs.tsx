@@ -13,6 +13,12 @@ export default function Defs() {
       <pattern id="grainPat" width="150" height="150" patternUnits="userSpaceOnUse">
         <image href="/textures/grain.png" width="150" height="150" />
       </pattern>
+      <pattern id="woodGrain" width="40" height="10" patternUnits="userSpaceOnUse">
+        <path d="M0 2 q10 -2 20 0 t20 0 M0 6.5 q8 2 16 0 t24 0 M0 9.5 q12 -1.5 22 0 t18 0" stroke="#8a5a2e" strokeWidth="0.5" fill="none" opacity="0.45" />
+      </pattern>
+      <pattern id="slats" width="3.2" height="10" patternUnits="userSpaceOnUse">
+        <path d="M0 0 V10" stroke="#4a3a2a" strokeWidth="0.45" opacity="0.5" />
+      </pattern>
       <pattern id="hatch" width="4.5" height="4.5" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
         <line x1="0" y1="0" x2="0" y2="4.5" stroke="#6b4a2c" strokeWidth="0.75" opacity="0.5" />
       </pattern>

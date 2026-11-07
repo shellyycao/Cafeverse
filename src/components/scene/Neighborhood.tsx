@@ -16,7 +16,7 @@ export const ANCHORS: Record<HotspotId, [number, number, number]> = {
   parking: [150, 292, 14],
   bus: [360, 88, 36],
   barista: [250, 136, 34],
-  pastry: [294, 166, 24],
+  pastry: [289, 180, 34],
   bar: [228, 182, 26],
   social: [268, 206, 22],
 };
