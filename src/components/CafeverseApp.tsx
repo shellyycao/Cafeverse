@@ -31,7 +31,7 @@ const LEVELS = ["City map", "Neighborhood", "Café exterior", "Inside"];
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 /** zoom at which the café interior fills the screen; scales with viewport width */
-const interiorZoom = (vw: number) => clamp((vw * 0.9) / 272, 2.6, 4.6);
+const interiorZoom = (vw: number) => clamp((vw * 0.66) / 272, 2.0, 3.4);
 const levelOf = (z: number, zi: number): Level => (z < 1.2 ? 1 : z < 0.45 * zi ? 2 : z < 0.9 * zi ? 3 : 4);
 
 const sitePt = (id: string, dx = 268, dy = 192, z = 0) => {

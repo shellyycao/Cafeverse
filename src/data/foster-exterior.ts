@@ -49,5 +49,7 @@ export const EXT_ZONES: Array<{ id: string; label: string; poly: Array<[number, 
   { id: "tower-left", label: "taller residential volume at the left end", poly: [[40, 108], [128, 108], [128, 200], [40, 200]], color: "#6b4a3a", h: 96 },
 ];
 
+/** height (world units) of the hole cut for the interior — about the height of the cutaway box, so the building above it stays */
+const CUT_H = 60;
 /** silhouette of the café building (walls + roof) used to cut a hole when you zoom inside */
-export const CAFE_CUTOUT = pts([[F.x0 - 6, F.y1 + 16, 0], [F.x0 - 6, F.y1 + 16, PODIUM.h + 14], [F.x0 - 6, F.y0 - 8, PODIUM.h + 14], [F.x1 + 6, F.y0 - 8, PODIUM.h + 14], [F.x1 + 6, F.y0 - 8, 0], [F.x1 + 16, F.y1 + 16, 0]]);
+export const CAFE_CUTOUT = pts([[F.x0 - 6, F.y1 + 16, 0], [F.x0 - 6, F.y1 + 16, CUT_H], [F.x0 - 6, F.y0 - 8, CUT_H], [F.x1 + 6, F.y0 - 8, CUT_H], [F.x1 + 6, F.y0 - 8, 0], [F.x1 + 16, F.y1 + 16, 0]]);

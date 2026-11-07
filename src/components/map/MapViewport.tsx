@@ -270,6 +270,7 @@ export default function MapViewport({
       window.removeEventListener("pointercancel", onUp);
       el.removeEventListener("dblclick", onDbl);
       if (raf.current != null) cancelAnimationFrame(raf.current);
+      raf.current = null;
     };
   }, [apply, zoomAt]);
 

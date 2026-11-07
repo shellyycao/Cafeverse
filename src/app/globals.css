@@ -226,3 +226,18 @@ button { font: inherit; color: inherit; }
 @media (max-width: 640px) { .results { top: 112px; } .results .why { display: none; } }
 
 .splash-wrap.leaving-wrap .splash { opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+
+/* ---- interior figures: gentle motion ---- */
+.act-type { animation: actType 0.55s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 0 50%; }
+@keyframes actType { from { transform: translateY(0); } to { transform: translateY(-0.7px); } }
+.act-gesture { animation: actGesture 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: 0 100%; }
+@keyframes actGesture { 0%,100% { transform: rotate(0deg); } 40% { transform: rotate(-14deg); } 70% { transform: rotate(6deg); } }
+.act-sip { animation: actSip 5.5s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+@keyframes actSip { 0%,70%,100% { transform: translate(0,0); } 80%,90% { transform: translate(1.2px,-1.8px); } }
+.act-barista-arm { animation: actBar 3.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 0 0; }
+@keyframes actBar { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-12deg); } }
+.act-steam { animation: actSteam 2.8s ease-in-out infinite; }
+@keyframes actSteam { 0% { opacity: 0; transform: translateY(1.5px); } 40% { opacity: 0.85; } 100% { opacity: 0; transform: translateY(-2.2px); } }
+.act-sweep { animation: actSweep 2.4s ease-in-out infinite alternate; }
+@keyframes actSweep { from { transform: translateX(-9px); } to { transform: translateX(9px); } }
+@media (prefers-reduced-motion: reduce) { .act-type,.act-gesture,.act-sip,.act-barista-arm,.act-steam,.act-sweep { animation: none; } }
