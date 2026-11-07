@@ -9,7 +9,6 @@ import {
   BluePortrait,
   BrownArmchair,
   CoffeeTable,
-  ConcreteColumn,
   CrossChair,
   CupStack,
   EspressoMachine,
@@ -35,7 +34,7 @@ import {
  *   · white-based, mint-framed glass grab-and-go case; black-framed retail table with kraft coffee bags and newspapers
  *   · light wood window bar with stools along the street glass; square oak tables with black spindle-back chairs
  *   · deep-blue accent wall with hung seascapes and floating shelves; brown leather lounge chairs, black coffee table,
- *     white planter boxes with greenery; exposed concrete columns; round white paper lanterns; black track lighting
+ *     white planter boxes with greenery; round white paper lanterns; black track lighting
  * The photographs show different viewpoints and do NOT establish a floor plan — positions are a conceptual
  * reconstruction (uncertain areas omitted: no restroom, no exact seat counts, no dimensions).
  */
@@ -149,10 +148,6 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
   add(210 + 192, <BrownArmchair key="ch2" x={210} y={192} />);
   add(221 + 180, <CoffeeTable key="ct" x={222} y={180} />);
   add(200 + 206, <PlanterDivider key="plant-div" x0={200} y0={203} x1={242} y1={209} />);
-
-  /* concrete columns (exposed, as in the photos) */
-  add(240 + 224, <ConcreteColumn key="col1" x={240} y={222} />);
-  add(330 + 172, <ConcreteColumn key="col2" x={330} y={172} />);
 
   /* oak square tables + black spindle-back chairs */
   const table = (key: string, x: number, y: number, items: Array<"cup" | "plant" | "paper" | "plate">, chairs: Array<[number, number, boolean]>) => {
