@@ -25,7 +25,11 @@ export const ROAD_ORDER: RoadClass[] = ["v", "x", "r", "t", "s", "p", "m"];
 
 /** Zones where zooming in reveals the hand-drawn miniature. Everything else stays a plain map. */
 export type Zone = { id: string; cx: number; cy: number; label: string };
-export const ZONES: Zone[] = [{ id: "foster", cx: 200, cy: 150, label: "Foster Street Coffee" }];
+import { SITES } from "./sites";
+export const ZONES: Zone[] = SITES.map((x) => ({ id: x.id, cx: x.zone[0], cy: x.zone[1], label: x.name }));
+/** ground rectangles that carry a hand-drawn café block (OSM footprints inside them are hidden) */
+export const PAVINGS = SITES.map((x) => x.paving);
+const inPaving = (x: number, y: number, pad = 0) => PAVINGS.some(([a, b, c, d]) => x > a - pad && x < c + pad && y > b - pad && y < d + pad);
 
 /** radius (ground units) around a zone that gets extruded miniature neighbours */
 export const MINI_RADIUS = 760;
@@ -43,7 +47,8 @@ function centroid(p: Poly): [number, number] {
 export const NEAR_BUILDINGS = DURHAM.buildings
   .map((b, i) => ({ ...b, id: i, c: centroid(b.p) }))
   .filter((b) => ZONES.some((z) => Math.hypot(b.c[0] - z.cx, b.c[1] - z.cy) < MINI_RADIUS))
-  .filter((b) => polyArea(b.p) > 160);
+  .filter((b) => polyArea(b.p) > 160)
+  .filter((b) => !inPaving(b.c[0], b.c[1]));
 
 export function polyArea(p: Poly): number {
   let a = 0;
@@ -86,10 +91,10 @@ function distToRoads(x: number, y: number): number {
 export const NEAR_TREES: Array<{ x: number; y: number; s: number; kind: "round" | "bloom" }> = (() => {
   const rnd = mulberry32(4242);
   const out: Array<{ x: number; y: number; s: number; kind: "round" | "bloom" }> = [];
-  const cafeBlock = (x: number, y: number) => x > 20 && x < 380 && y > 20 && y < 280;
+  const cafeBlock = (x: number, y: number) => inPaving(x, y, 8);
   const ok = (x: number, y: number) =>
     !cafeBlock(x, y) &&
-    Math.hypot(x - ZONES[0].cx, y - ZONES[0].cy) < MINI_RADIUS &&
+    ZONES.some((z) => Math.hypot(x - z.cx, y - z.cy) < MINI_RADIUS) &&
     distToRoads(x, y) > 6 &&
     !NEAR_BUILDINGS.some((b) => pointInPoly(x, y, b.p));
   for (const b of NEAR_BUILDINGS) {
@@ -108,7 +113,7 @@ export const NEAR_TREES: Array<{ x: number; y: number; s: number; kind: "round" 
   }
   for (const park of DURHAM.parks) {
     const [cx, cy] = centroid(park);
-    if (Math.hypot(cx - ZONES[0].cx, cy - ZONES[0].cy) > MINI_RADIUS + 200) continue;
+    if (!ZONES.some((z) => Math.hypot(cx - z.cx, cy - z.cy) < MINI_RADIUS + 200)) continue;
     const xs = park.map((p) => p[0]);
     const ys = park.map((p) => p[1]);
     for (let k = 0; k < 40; k++) {

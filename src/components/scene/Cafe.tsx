@@ -2,6 +2,7 @@ import { P, boxFaces, pts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
 import { Awning, Wash } from "./primitives";
+import type { Theme } from "@/data/sites";
 
 const BRICK = "#b05a45";
 const CREAM = "#e6d9c2";
@@ -66,20 +67,25 @@ export default function CafeExterior({
   onClick,
   interactive = true,
   lit = true,
+  theme,
 }: {
+  theme?: Theme;
   onClick?: () => void;
   interactive?: boolean;
   /** lights on (open / about to open / closing) */
   lit?: boolean;
 }) {
+  const brick = theme?.brick ?? BRICK;
+  const title = theme?.title ?? "FOSTER STREET COFFEE";
+  const subtitle = theme?.subtitle ?? "COFFEE · TEA";
   const f = boxFaces(F.x0, F.y0, F.x1, F.y1, F.h);
   const cornice = boxFaces(F.x0 - 2, F.y0 - 2, F.x1 + 2, F.y1 + 2, 4, F.h - 2);
   return (
     <g className="hotspot cafe-shell" onClick={onClick} data-hotspot="cafe" style={{ pointerEvents: interactive ? "auto" : "none" }}>
       {/* contact shadow */}
       <polygon points={pts([[F.x0 + 6, F.y0 + 6, 0], [F.x1 + 14, F.y0 + 10, 0], [F.x1 + 14, F.y1 + 14, 0], [F.x0 + 6, F.y1 + 14, 0]])} fill="#6b5a3a" opacity={0.15} />
-      <polygon points={f.left} fill={BRICK} {...stroke} />
-      <polygon points={f.right} fill={shade(BRICK, -0.12)} {...stroke} />
+      <polygon points={f.left} fill={brick} {...stroke} />
+      <polygon points={f.right} fill={shade(brick, -0.12)} {...stroke} />
       <polygon points={f.top} fill="#d8c7a6" {...stroke} />
       <Wash points={f.left} />
       <Wash points={f.right} hatch />
@@ -112,7 +118,7 @@ export default function CafeExterior({
         {/* fascia + oval blade sign (black, like the real one) */}
         <rect x={6} y={-56} width={LEFT_LEN - 12} height={11} rx={1.2} fill="#3a3a3e" {...stroke} />
         <text x={LEFT_LEN / 2} y={-48} textAnchor="middle" fontSize={7.2} fill="#f1e8d6" fontFamily="var(--font-geist-sans), system-ui" letterSpacing={1.4} fontWeight={600}>
-          FOSTER STREET COFFEE
+          {title}
         </text>
       </Face>
 
@@ -138,12 +144,12 @@ export default function CafeExterior({
         </g>
         <rect x={6} y={-56} width={RIGHT_LEN - 12} height={11} rx={1.2} fill="#3a3a3e" {...stroke} />
         <text x={RIGHT_LEN / 2} y={-48} textAnchor="middle" fontSize={7} fill="#f1e8d6" fontFamily="var(--font-geist-sans), system-ui" letterSpacing={1.6} fontWeight={600}>
-          COFFEE · TEA
+          {subtitle}
         </text>
       </Face>
 
       {/* striped awning over storefront */}
-      <Awning x0={F.x0 + 4} x1={F.x1 - 4} y={F.y1} z={43} color="#2d2d30" alt="#55555b" out={13} stripes={22} />
+      <Awning x0={F.x0 + 4} x1={F.x1 - 4} y={F.y1} z={43} color={theme?.awningA ?? "#2d2d30"} alt={theme?.awningB ?? "#55555b"} out={13} stripes={22} />
 
       {/* cornice */}
       <polygon points={cornice.left} fill="#4a4a4f" {...stroke} />
@@ -176,8 +182,8 @@ export default function CafeExterior({
           <g transform={`translate(${p.x} ${p.y})`}>
             <path d="M-8 -4 V0 M8 -4 V0" stroke="#2b2b2e" strokeWidth={0.9} />
             <ellipse cx={0} cy={6} rx={19} ry={7.2} fill="#222226" stroke="#f1e8d6" strokeWidth={0.6} strokeOpacity={0.7} />
-            <text y={5.2} textAnchor="middle" fontSize={4.6} fill="#f1e8d6" fontWeight={700} letterSpacing={0.7} fontFamily="var(--font-geist-sans), system-ui">FOSTER STREET</text>
-            <text y={9.6} textAnchor="middle" fontSize={3.4} fill="#f1e8d6" letterSpacing={1.2} fontFamily="var(--font-geist-sans), system-ui">COFFEE</text>
+            <text y={5.2} textAnchor="middle" fontSize={4.2} fill="#f1e8d6" fontWeight={700} letterSpacing={0.5} fontFamily="var(--font-geist-sans), system-ui">{title.split(" ").slice(0, 2).join(" ")}</text>
+            <text y={9.6} textAnchor="middle" fontSize={3.3} fill="#f1e8d6" letterSpacing={1.1} fontFamily="var(--font-geist-sans), system-ui">{title.split(" ").slice(2).join(" ") || subtitle.split(" ")[0]}</text>
           </g>
         );
       })()}

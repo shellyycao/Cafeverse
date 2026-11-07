@@ -5,6 +5,8 @@ import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
 import { Wash, Bench, PolyBuilding, Car, ParkingMeter, Rail, LampPost, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
 import ExteriorLayer from "./ExteriorLayer";
+import InteriorBase from "./InteriorBase";
+import { SITES, type Site } from "@/data/sites";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
 import { useMapGesture } from "@/components/map/MapViewport";
@@ -70,11 +72,52 @@ function CastShadows({ shapes }: { shapes: Array<{ poly: Array<[number, number]>
 }
 
 
-export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", exterior = false }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean }) {
+/**
+ * A fictional demo café: the same hand-drawn construction as the original, moved to another block and re-themed
+ * (sign, brick, awning, interior accent wall). Everything inside is drawn in Foster-local ground coordinates and
+ * translated, which is exact for the isometric projection.
+ */
+function SiteScene({ site, showInterior, onClick, phase }: { site: Site; showInterior: boolean; onClick: () => void; phase: Phase }) {
+  const [ox, oy] = site.offset;
+  const dx = ox - oy;
+  const dy = (ox + oy) / 2;
+  const [a, b, c, d] = site.paving;
+  const paving = rectPts(a - ox, b - oy, c - ox, d - oy);
+  const lit = phase !== "closed";
+  return (
+    <g transform={`translate(${dx} ${dy})`}>
+      <polygon points={paving} fill="#ecdcbd" />
+      <Wash points={paving} shade={false} o={0.85} />
+      <polyline points={pts([[a - ox, d - oy - 2], [c - ox, d - oy - 2], [c - ox, b - oy]])} stroke="#fff8e8" strokeWidth={2} fill="none" opacity={0.8} />
+      <PolyBuilding poly={[[96, 36], [372, 36], [372, 108], [96, 108]]} h={70} wall="#c3a58a" roof="#d6cbb8" />
+      {showInterior && (
+        <g className="interior-reveal">
+          <g className="paint-group" filter="url(#paint)">
+            <InteriorBase lit={lit} wall={site.theme.wall} fictional />
+          </g>
+        </g>
+      )}
+      <CafeExterior onClick={onClick} interactive theme={site.theme} lit={lit} />
+      <Tree x={184} y={262} s={1.25} kind="bloom" rich />
+      <Tree x={110} y={60} s={1.2} rich />
+      <LampPost x={366} y={262} />
+      <LampPost x={60} y={262} />
+      <Planter x={190} y={266} flowers="#e9a0b4" />
+      <Planter x={336} y={266} flowers="#f1c36b" />
+      <RoundTable x={222} y={266} />
+      <RoundTable x={296} y={266} />
+      <ChalkSign x={262} y={270} />
+    </g>
+  );
+}
+
+export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", exterior = false, focusId = "foster-street-coffee", onSelectSite }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean; focusId?: string; onSelectSite?: (id: string) => void }) {
   const day = phase === "open";
   const { consumeDrag } = useMapGesture();
   const sel = (id: HotspotId) => () => {
-    if (!consumeDrag()) onSelect?.(id);
+    if (consumeDrag()) return;
+    if (id === "cafe" && onSelectSite) onSelectSite("foster-street-coffee");
+    else onSelect?.(id);
   };
   type Item = { d: number; el: ReactNode };
   const items: Item[] = [];
@@ -112,6 +155,11 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     ));
   }
   NEAR_TREES.forEach((t, i) => push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />));
+  // the fictional demo cafés
+  for (const site of SITES) {
+    if (site.real) continue;
+    push(site.zone[0] + site.zone[1] + 120, <SiteScene key={site.id} site={site} showInterior={focusId === site.id && level >= 3} onClick={() => { if (!consumeDrag()) onSelectSite?.(site.id); }} phase={phase} />);
+  }
   // café + its surroundings
   push(196 + 127, <g key="interior" className={exterior ? "interior-reveal" : undefined}><CafeInterior signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} /></g>);
   if (exterior) push(250, <ExteriorLayer key="ext" />);

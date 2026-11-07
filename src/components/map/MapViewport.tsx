@@ -14,7 +14,7 @@ import {
 
 export type Camera = { x: number; y: number; z: number };
 
-export const MIN_ZOOM = 0.42;
+export const MIN_ZOOM = 0.28;
 export const MAX_ZOOM = 18;
 const BOUNDS = { x: 1700, y: 900 };
 

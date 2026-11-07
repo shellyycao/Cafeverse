@@ -1,21 +1,25 @@
 import { P, pts } from "@/lib/iso";
-import { ZONES } from "@/data/durham";
+import { SITES } from "@/data/sites";
+import type { Match } from "@/lib/match";
 
 /**
- * Far-zoom cue that a neighbourhood holds a richer miniature: a faint warm halo and a dashed,
- * hand-drawn boundary around the supported block. It fades as the illustrated miniature takes over.
+ * Far-zoom cue that a block holds a richer miniature: a warm halo and a dashed, hand-drawn boundary around each café
+ * block. After a search the matching blocks glow stronger and the others fade back. Fades as the miniature takes over.
  */
-export default function ZoneHint() {
+export default function ZoneHint({ matches }: { matches?: Match[] | null }) {
   return (
     <g className="zone-hint" style={{ pointerEvents: "none" }}>
-      {ZONES.map((z) => {
-        const c = P(z.cx, z.cy);
-        const ring = pts([[-60, -50], [460, -50], [460, 350], [-60, 350]]);
+      {SITES.map((site) => {
+        const [a, b, c, d] = site.paving;
+        const ring = pts([[a - 24, b - 24], [c + 24, b - 24], [c + 24, d + 24], [a - 24, d + 24]]);
+        const ctr = P((a + c) / 2, (b + d) / 2);
+        const m = matches?.find((x) => x.id === site.id);
+        const k = m ? (m.score >= 70 ? 1.5 : m.score >= 50 ? 0.9 : 0.3) : 1;
         return (
-          <g key={z.id}>
-            <ellipse cx={c.x} cy={c.y} rx={470} ry={270} fill="url(#zoneGlow)" />
-            <polygon points={ring} fill="none" stroke="#b9805a" strokeWidth={3} strokeDasharray="12 9" strokeLinecap="round" opacity={0.75} />
-            <polygon points={ring} fill="#f4c97a" opacity={0.09} />
+          <g key={site.id} opacity={Math.min(1, k)}>
+            <ellipse cx={ctr.x} cy={ctr.y} rx={(c - a + 380) * 0.5} ry={(c - a + 380) * 0.29} fill="url(#zoneGlow)" opacity={Math.min(1, k)} />
+            <polygon points={ring} fill="#f4c97a" opacity={0.09 * k} />
+            <polygon points={ring} fill="none" stroke={m && m.score >= 70 ? "#c4566b" : "#b9805a"} strokeWidth={m && m.score >= 70 ? 4.5 : 3} strokeDasharray="12 9" strokeLinecap="round" opacity={0.8} />
           </g>
         );
       })}

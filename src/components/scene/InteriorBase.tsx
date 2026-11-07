@@ -51,7 +51,7 @@ const NAVY = "#3d5470";
 
 type Item = { d: number; el: ReactNode };
 
-function BackWall() {
+function BackWall({ fictional = false }: { fictional?: boolean }) {
   return (
     <PlaneY x={F.x0} y={F.y0}>
       <rect x={0} y={-H} width={BACK_LEN} height={H} fill={WALL} {...ink} />
@@ -78,9 +78,9 @@ function BackWall() {
       <circle cx={37} cy={-47} r={1.1} fill="#403a36" />
       <circle cx={53} cy={-47} r={1.1} fill="#403a36" />
       {/* menu boards over the counter: EAT / SPECIALS / SIP */}
-      <MenuBoard u={60} w={24} kind="eat" lines={["Caprese", "Ham & Cheese", "Southwest Turkey", "Grilled Cheese"]} />
-      <MenuBoard u={86} w={24} kind="special" lines={["Butter Pecan Latte", "Sweet Potato Chai", "Pear & Cardamom", "Tea Latte"]} />
-      <MenuBoard u={112} w={24} kind="sip" lines={["Americano", "Cold Brew", "Cappuccino", "Latte", "Chai Latte", "Mocha"]} />
+      <MenuBoard u={60} w={24} kind="eat" lines={fictional ? ["Cinnamon Knot", "Seeded Loaf", "Lemon Tart", "Butter Croissant"] : ["Caprese", "Ham & Cheese", "Southwest Turkey", "Grilled Cheese"]} />
+      <MenuBoard u={86} w={24} kind="special" lines={fictional ? ["(demo menu)", "House Honey Latte", "Rye & Plum Bun", "invented items"] : ["Butter Pecan Latte", "Sweet Potato Chai", "Pear & Cardamom", "Tea Latte"]} />
+      <MenuBoard u={112} w={24} kind="sip" lines={fictional ? ["Drip", "Flat White", "Oat Latte", "Cold Brew"] : ["Americano", "Cold Brew", "Cappuccino", "Latte", "Chai Latte", "Mocha"]} />
       <BluePortrait u={138} v={20} />
     </PlaneY>
   );
@@ -173,10 +173,10 @@ const FRAMES: Array<[number, number, number, number, string]> = [
   [133, 44, 7, 9, "portrait"],
 ];
 
-function PhotoWall() {
+function PhotoWall({ navy = NAVY }: { navy?: string }) {
   return (
     <PlaneX x={F.x0} y={F.y1}>
-      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill={NAVY} {...ink} />
+      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill={navy} {...ink} />
       <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="url(#washPat)" opacity={0.7} />
       <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="url(#hatch)" opacity={0.2} />
       <rect x={0} y={-5} width={SIDE_LEN} height={5} fill="#2f4259" {...ink} />
@@ -232,7 +232,7 @@ function Scaled({ x, y, s = FS, children }: { x: number; y: number; s?: number; 
   return <g transform={`translate(${p.x} ${p.y}) scale(${s}) translate(${-p.x} ${-p.y})`}>{children}</g>;
 }
 
-export default function InteriorBase({ lit = true }: { lit?: boolean }) {
+export default function InteriorBase({ lit = true, wall = NAVY, fictional = false }: { lit?: boolean; wall?: string; fictional?: boolean }) {
   const items: Item[] = [];
   const add = (d: number, el: ReactNode) => items.push({ d, el });
 
@@ -335,8 +335,8 @@ export default function InteriorBase({ lit = true }: { lit?: boolean }) {
         return <ellipse key={i} cx={pp.x} cy={pp.y} rx={10 + (i % 3) * 3} ry={4 + (i % 3)} fill="#fff0b8" opacity={lit ? 0.2 : 0} />;
       })}
 
-      <BackWall />
-      <PhotoWall />
+      <BackWall fictional={fictional} />
+      <PhotoWall navy={wall} />
       <polygon points={backCut.top} fill="#e9dfc9" {...ink} />
       <polygon points={backCut.top} fill="url(#hatch)" opacity={0.5} />
       <polygon points={sideCut.top} fill="#e9dfc9" {...ink} />
