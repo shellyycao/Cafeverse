@@ -19,19 +19,45 @@ function Face({ side, children }: { side: "left" | "right"; children: React.Reac
 const stroke = { stroke: INK, strokeOpacity: 0.55, strokeWidth: 0.8, strokeLinejoin: "round" as const };
 
 function Glass({ u0, u1, v0 = 9, v1 = 40, id, dark = false }: { u0: number; u1: number; v0?: number; v1?: number; id: string; dark?: boolean }) {
+  const w = u1 - u0;
+  const h = v1 - v0;
+  const seed = id.charCodeAt(0) + id.charCodeAt(id.length - 1) * 3;
+  const person = (cx: number, hue: string, k: number) => (
+    <g key={k}>
+      <ellipse cx={cx} cy={-v0 - h * 0.46} rx={1.9} ry={2.1} fill="#e8bd9a" />
+      <path d={`M${cx - 3} ${-v0 - h * 0.34} q0 -2.4 3 -2.4 q3 0 3 2.4 v${h * 0.34} h-6z`} fill={hue} />
+    </g>
+  );
   return (
     <g>
-      <rect x={u0 - 2} y={-v1 - 2} width={u1 - u0 + 4} height={v1 - v0 + 4} rx={1} fill={GREEN} {...stroke} />
-      <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} fill={dark ? "url(#glassDark)" : "url(#glassWarm)"} />
-      {/* mullions */}
-      <path d={`M${(u0 + u1) / 2} ${-v1} V${-v0} M${u0} ${-(v0 + v1) / 2 - 3} H${u1}`} stroke={GREEN} strokeWidth={1.1} opacity={0.85} />
-      {/* pendant lamps seen through the glass */}
-      <circle cx={u0 + (u1 - u0) * 0.25} cy={-v1 + 6} r={2.2} fill={dark ? "#8a93a6" : "#fff1c4"} />
-      <circle cx={u0 + (u1 - u0) * 0.75} cy={-v1 + 6} r={2.2} fill={dark ? "#8a93a6" : "#fff1c4"} />
+      <rect x={u0 - 2} y={-v1 - 2} width={w + 4} height={h + 4} rx={1} fill={GREEN} {...stroke} />
       <clipPath id={`clip-${id}`}>
-        <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} />
+        <rect x={u0} y={-v1} width={w} height={h} />
       </clipPath>
-      <rect x={u0} y={-v1} width={u1 - u0} height={v1 - v0} fill="url(#glassSheen)" opacity={0.55} />
+      <rect x={u0} y={-v1} width={w} height={h} fill={dark ? "url(#glassDark)" : "url(#glassWarm)"} />
+      {!dark && (
+        <g clipPath={`url(#clip-${id})`}>
+          {/* back wall, floor, counter and shelves seen through the glass */}
+          <rect x={u0} y={-v1} width={w} height={h * 0.58} fill="#fff3d6" opacity={0.55} />
+          <rect x={u0} y={-v0 - h * 0.2} width={w} height={h * 0.2} fill="#a9774a" opacity={0.55} />
+          <rect x={u0 + w * 0.08} y={-v1 + h * 0.16} width={w * 0.34} height={h * 0.22} fill="#fbf1d8" stroke="#a9794c" strokeWidth={0.7} opacity={0.9} />
+          <path d={`M${u0 + w * 0.12} ${-v1 + h * 0.24} h${w * 0.24} M${u0 + w * 0.12} ${-v1 + h * 0.3} h${w * 0.18}`} stroke="#8a7255" strokeWidth={0.5} opacity={0.8} />
+          <rect x={u0 + w * 0.55} y={-v1 + h * 0.2} width={w * 0.34} height={h * 0.2} fill="#2f3a35" stroke="#a9794c" strokeWidth={0.7} opacity={0.9} />
+          <rect x={u0 + w * 0.5} y={-v0 - h * 0.46} width={w * 0.5} height={h * 0.26} fill="#8d7d69" />
+          <rect x={u0 + w * 0.5} y={-v0 - h * 0.49} width={w * 0.5} height={h * 0.05} fill="#dcb27a" />
+          {seed % 2 === 0 && <path d={`M${u0 + w * 0.2} ${-v0 - h * 0.2} q-3 -10 0 -16 q3 6 0 16 M${u0 + w * 0.2} ${-v0 - h * 0.2} q5 -8 7 -12`} stroke="#4e7a42" strokeWidth={1.8} fill="none" strokeLinecap="round" />}
+          {person(u0 + w * (0.3 + (seed % 3) * 0.1), ["#6d8a64", "#a2574f", "#cfa163"][seed % 3], 1)}
+          {seed % 3 !== 0 && person(u0 + w * 0.72, ["#8aa0b8", "#d9a0a0"][seed % 2], 2)}
+          <circle cx={u0 + w * 0.3} cy={-v1 + 5.5} r={3.2} fill="#fffaf0" />
+          <circle cx={u0 + w * 0.3} cy={-v1 + 5.5} r={7} fill="#fff1c4" opacity={0.3} />
+          <circle cx={u0 + w * 0.72} cy={-v1 + 7} r={2.6} fill="#fffaf0" />
+          <circle cx={u0 + w * 0.72} cy={-v1 + 7} r={6} fill="#fff1c4" opacity={0.3} />
+        </g>
+      )}
+      {/* mullions + reflections */}
+      <path d={`M${(u0 + u1) / 2} ${-v1} V${-v0} M${u0} ${-(v0 + v1) / 2 - 3} H${u1}`} stroke={GREEN} strokeWidth={1.1} opacity={0.85} />
+      <rect x={u0} y={-v1} width={w} height={h} fill="url(#glassSheen)" opacity={0.7} />
+      <path d={`M${u0 + w * 0.15} ${-v0} l${w * 0.3} ${-h} M${u0 + w * 0.3} ${-v0} l${w * 0.3} ${-h}`} stroke="#fff" strokeWidth={1.2} opacity={0.16} />
     </g>
   );
 }
