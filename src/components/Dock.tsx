@@ -15,7 +15,7 @@ export default function Dock({
   onCrowd,
   time,
 }: {
-  time: { minutes: number; weekend: boolean; dayLabel: string; phase: Phase } | null;
+  time: { minutes: number; weekend: boolean; dayLabel: string; phase: Phase; test?: { live: boolean; onScrub: (m: number) => void; onLive: () => void } } | null;
   name: string;
   status: CafeStatus;
   onToggle: (k: keyof CafeStatus) => void;
@@ -36,6 +36,13 @@ export default function Dock({
         <div className="dock-time" title="The scene follows the café's posted hours (Durham time) — a simulation, not a live camera">
           <span className={`phase ${time.phase}`}>{phaseLabel(time.phase, time.minutes, time.weekend)}</span>
           <span>{time.dayLabel} {fmtTime(time.minutes)}</span>
+          {time.test && (
+            <>
+              <span className="test-tag">TEST</span>
+              <input type="range" min={0} max={1439} step={5} value={time.minutes} aria-label="Test: simulated time of day" onChange={(e) => time.test!.onScrub(+e.target.value)} />
+              {time.test.live ? <span style={{ color: "#8a6a1e", fontWeight: 700 }}>Durham now</span> : <button onClick={time.test.onLive}>Back to now</button>}
+            </>
+          )}
         </div>
       )}
       <div className={`dock-seg crowd${time && time.phase !== "open" ? " off" : ""}`} title="Simulated crowd — not live data">

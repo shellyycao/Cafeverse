@@ -56,13 +56,19 @@ export default function CafeverseApp() {
   const hasExterior = useAssetPresent(EXT_IMAGE) === true;
   const [crowd, setCrowd] = useState<Crowd>(1);
   const [now, setNow] = useState<Clock | null>(null);
+  const [simMin, setSimMin] = useState<number | null>(null);
+  // test mode: open the app with ?test=1 to get the time-of-day control (hidden from normal users)
+  const [testMode, setTestMode] = useState(false);
+  useEffect(() => {
+    setTestMode(new URLSearchParams(window.location.search).has("test"));
+  }, []);
   useEffect(() => {
     const tick = () => setNow(durhamNow());
     tick();
     const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
   }, []);
-  const clock = now ? { minutes: now.minutes, weekend: now.weekend, dayLabel: now.label } : null;
+  const clock = now ? { minutes: (testMode ? simMin : null) ?? now.minutes, weekend: now.weekend, dayLabel: now.label } : null;
   const phase = clock ? phaseAt(clock.minutes, clock.weekend) : "open";
   const { status: cafeStatus, toggle: toggleStatus } = useCafeStatus(CAFE.id);
   const [toast, setToast] = useState(false);
@@ -208,7 +214,7 @@ export default function CafeverseApp() {
       </div>
 
       <AiPanel state={ai} onAnalyze={analyze} />
-      {level >= 2 && <Dock name={CAFE.name} status={cafeStatus} onToggle={toggleStatus} crowd={crowd} onCrowd={setCrowd} time={clock ? { ...clock, phase } : null} />}
+      {level >= 2 && <Dock name={CAFE.name} status={cafeStatus} onToggle={toggleStatus} crowd={crowd} onCrowd={setCrowd} time={clock ? { ...clock, phase, test: testMode ? { live: simMin === null, onScrub: setSimMin, onLive: () => setSimMin(null) } : undefined } : null} />}
 
       {level >= 3 && (
         <div className="chrome back-btn">

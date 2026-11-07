@@ -162,3 +162,9 @@ button { font: inherit; color: inherit; }
 
 /* the café-building hole in the authored exterior opens as you zoom inside */
 .cafe-cutout { opacity: clamp(0, calc((var(--z) - 0.5 * var(--zi)) / (0.3 * var(--zi))), 1); }
+
+/* hidden test control (?test=1) */
+.dock-time input[type="range"] { width: 110px; accent-color: var(--wood); }
+.dock-time button { border: 0; background: transparent; color: var(--wood); text-decoration: underline; cursor: pointer; font-size: 12px; padding: 0 2px; }
+.test-tag { font-size: 10px; font-weight: 800; letter-spacing: .06em; color: #fff; background: #c4566b; border-radius: 999px; padding: 3px 7px; }
+@media (max-width: 640px) { .dock-time input[type="range"] { width: 84px; } }

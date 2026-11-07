@@ -1,6 +1,7 @@
 /** Writes docs/exterior-kit/anchors.json + alignment-template.svg. Run: npx tsx scripts/build-exterior-kit.mts */
 import { writeFileSync } from "node:fs";
 import { EXT, EXT_LANDMARKS, EXT_ZONES, groundToExt } from "../src/data/foster-exterior";
+import { boxFaces } from "../src/lib/iso";
 
 const { width: W, height: H } = EXT;
 const pt = (gx: number, gy: number, z = 0) => {
@@ -31,3 +32,24 @@ writeFileSync(
   `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">\n${out.join("\n")}\n<text x="40" y="56" font-size="32" font-family="system-ui" fill="#6a5338" stroke="#fff" stroke-width="6" paint-order="stroke">${W}×${H}px · dashed orange = the café block (paint inside) · grey dashed = road centre-lines (leave roads to the map)</text>\n</svg>`,
 );
 console.log("exterior kit:", anchors.length, "anchors,", `${W}x${H}`);
+
+// ---- massing reference (opaque flat volumes) ----
+import { P as Pp } from "../src/lib/iso";
+const px2 = (gx: number, gy: number, z = 0) => { const p = Pp(gx, gy, z); const c = extPx(p.x, p.y); return `${c.x},${c.y}`; };
+import { extPx } from "../src/data/foster-exterior";
+const faces = (x0: number, y0: number, x1: number, y1: number, h: number) => ({
+  top: [[x0, y0, h], [x1, y0, h], [x1, y1, h], [x0, y1, h]].map(([a, b, c]) => px2(a, b, c)).join(" "),
+  left: [[x0, y1, 0], [x1, y1, 0], [x1, y1, h], [x0, y1, h]].map(([a, b, c]) => px2(a, b, c)).join(" "),
+  right: [[x1, y1, 0], [x1, y0, 0], [x1, y0, h], [x1, y1, h]].map(([a, b, c]) => px2(a, b, c)).join(" "),
+});
+const colors: Record<string, [string, string, string]> = {
+  podium: ["#d3846a", "#a85f49", "#e8cdb2"],
+  "cafe-storefront": ["#e3957a", "#b56c54", "#bcd9a8"],
+  "tower-back": ["#cdb396", "#9c7d63", "#e6dccb"],
+  "tower-left": ["#cdb396", "#9c7d63", "#e6dccb"],
+};
+const vols = EXT_ZONES.filter((z) => z.h)
+  .map((z) => { const xs = z.poly.map((p) => p[0]); const ys = z.poly.map((p) => p[1]); return { z, x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; })
+  .sort((a, b) => a.x0 + a.y0 - (b.x0 + b.y0) || (a.z.h ?? 0) - (b.z.h ?? 0));
+const mass = vols.map((v) => { const f = faces(v.x0, v.y0, v.x1, v.y1, v.z.h!); const [l, r, t] = colors[v.z.id] ?? ["#ccc", "#aaa", "#eee"]; return `<polygon points="${f.left}" fill="${l}" stroke="#5b3a2a" stroke-width="3"/><polygon points="${f.right}" fill="${r}" stroke="#5b3a2a" stroke-width="3"/><polygon points="${f.top}" fill="${t}" stroke="#5b3a2a" stroke-width="3"/>`; });
+writeFileSync("docs/exterior-kit/massing-overlay.svg", `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${mass.join("")}<text x="40" y="104" font-size="30" font-family="system-ui" fill="#4a3626" stroke="#fff" stroke-width="6" paint-order="stroke">MASSING: 2-storey brick podium (café = ground floor, planted roof terrace) · taller volumes behind and at the left end · flat colours, not final art</text></svg>`);

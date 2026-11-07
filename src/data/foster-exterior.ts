@@ -15,27 +15,41 @@ export const groundToExt = (gx: number, gy: number, z = 0) => {
 };
 
 export type ExtLandmark = { id: string; note: string; ground: [number, number, number] };
-/** Where things stand on the café block (ground coords: gx grows west, gy grows north; see scripts/build-durham.mjs). */
+
+/**
+ * The café is the GROUND FLOOR of a long multi-storey brick mixed-use building (see the user's surroundings reference).
+ * Massing used for the template: a two-storey brick podium along W Corporation St (the café storefront is the
+ * gx 184…344 stretch of it, with a roof terrace above), taller residential volumes behind and at the left end,
+ * a garage entrance at the left end (website: "Liberty Warehouse Garage — enter on Corporation Street"),
+ * a small bus shelter at the Foster St corner. Street parking is on the street, not in a lot.
+ */
+export const PODIUM = { x0: 40, x1: 372, y0: 108, y1: 258, h: 70 };
+export const CAFE_SEGMENT = { x0: F.x0, x1: F.x1, y0: F.y0, y1: F.y1 };
+
 export const EXT_LANDMARKS: ExtLandmark[] = [
-  { id: "cafe-door", note: "glass entrance under the black canopy (Corporation St side, left facade)", ground: [272, 258, 0] },
-  { id: "oval-sign", note: "black oval hanging sign beside the door", ground: [268, 267, 38] },
-  { id: "cafe-corner", note: "street corner of the café (Foster × Corporation)", ground: [344, 258, 0] },
-  { id: "bus-stop", note: "illustrative bus shelter on the Foster St sidewalk", ground: [360, 88, 0] },
-  { id: "parking-kiosk-1", note: "pay-by-space kiosk on the Corporation St sidewalk", ground: [120, 271, 0] },
-  { id: "parking-kiosk-2", note: "pay-by-space kiosk", ground: [226, 271, 0] },
-  { id: "parking-kiosk-3", note: "pay-by-space kiosk on Foster St", ground: [369, 150, 0] },
-  { id: "lamp-corner", note: "street lamp at the café corner", ground: [366, 262, 0] },
-  { id: "lot-entrance", note: "small surface lot beside the café", ground: [110, 232, 0] },
+  { id: "cafe-door", note: "glass double door in the café storefront, under the black canopy", ground: [264, 258, 0] },
+  { id: "oval-sign", note: "black oval hanging sign beside the door", ground: [248, 262, 42] },
+  { id: "cafe-corner", note: "east end of the café storefront, toward the Foster St corner", ground: [344, 258, 0] },
+  { id: "roof-terrace", note: "planted roof terrace on top of the podium above the café", ground: [264, 180, 70] },
+  { id: "garage-entrance", note: "Liberty Warehouse Garage entrance (Corporation St side, left end of the building)", ground: [84, 258, 0] },
+  { id: "bus-stop", note: "illustrative bus shelter at the Foster St corner (not a verified stop)", ground: [360, 226, 0] },
+  { id: "pay-kiosk-1", note: "pay-by-space kiosk on the Corporation St sidewalk", ground: [300, 268, 0] },
+  { id: "pay-kiosk-2", note: "pay-by-space kiosk (left)", ground: [150, 268, 0] },
+  { id: "bike-rack", note: "bike rack in front of the café windows", ground: [214, 268, 0] },
+  { id: "street-tree-1", note: "street tree slot (left)", ground: [96, 270, 0] },
+  { id: "street-tree-2", note: "street tree slot (in front of the café, between windows)", ground: [232, 271, 0] },
+  { id: "street-tree-3", note: "street tree slot (near the corner)", ground: [326, 270, 0] },
 ];
 
-/** ground rectangles / polygons for the alignment template */
-export const EXT_ZONES: Array<{ id: string; label: string; poly: Array<[number, number, number?]>; color: string }> = [
-  { id: "block", label: "café block (paving + sidewalk) — everything inside belongs to the image", poly: [[28, 28], [372, 28], [372, 272], [28, 272]], color: "#b9770e" },
-  { id: "cafe", label: "café building (ground floor, brick, black frames)", poly: [[F.x0, F.y0], [F.x1, F.y0], [F.x1, F.y1], [F.x0, F.y1]], color: "#c4566b" },
-  { id: "warehouse", label: "taller brick apartment building behind the café", poly: [[96, 36], [372, 36], [372, 112], [96, 112]], color: "#8a4a3a" },
-  { id: "lot", label: "small surface parking lot (empty, painted bays)", poly: [[42, 196], [176, 196], [176, 268], [42, 268]], color: "#5b6b7a" },
-  { id: "bus", label: "bus stop pad", poly: [[346, 62], [372, 62], [372, 114], [346, 114]], color: "#2f6aa8" },
+/** footprints + heights used for the template and the massing reference (ground units) */
+export const EXT_ZONES: Array<{ id: string; label: string; poly: Array<[number, number, number?]>; color: string; h?: number }> = [
+  { id: "block", label: "café block — paint inside, leave outside transparent", poly: [[28, 28], [372, 28], [372, 272], [28, 272]], color: "#b9770e" },
+  { id: "podium", label: "2-storey brick podium (café is its ground floor)", poly: [[PODIUM.x0, PODIUM.y0], [PODIUM.x1, PODIUM.y0], [PODIUM.x1, PODIUM.y1], [PODIUM.x0, PODIUM.y1]], color: "#8a4a3a", h: PODIUM.h },
+  { id: "cafe-storefront", label: "café storefront + interior cutout area", poly: [[CAFE_SEGMENT.x0, CAFE_SEGMENT.y0], [CAFE_SEGMENT.x1, CAFE_SEGMENT.y0], [CAFE_SEGMENT.x1, CAFE_SEGMENT.y1], [CAFE_SEGMENT.x0, CAFE_SEGMENT.y1]], color: "#c4566b", h: PODIUM.h },
+  { id: "tower-back", label: "taller residential volume behind (4 storeys)", poly: [[96, 36], [372, 36], [372, 108], [96, 108]], color: "#6b4a3a", h: 96 },
+  { id: "tower-left", label: "taller residential volume at the left end", poly: [[40, 108], [128, 108], [128, 200], [40, 200]], color: "#6b4a3a", h: 96 },
+  { id: "bus", label: "bus shelter pad", poly: [[348, 200], [372, 200], [372, 250], [348, 250]], color: "#2f6aa8" },
 ];
 
 /** silhouette of the café building (walls + roof) used to cut a hole when you zoom inside */
-export const CAFE_CUTOUT = pts([[F.x0 - 6, F.y1 + 16, 0], [F.x0 - 6, F.y1 + 16, F.h + 30], [F.x0 - 6, F.y0 - 8, F.h + 30], [F.x1 + 6, F.y0 - 8, F.h + 30], [F.x1 + 6, F.y0 - 8, 0], [F.x1 + 16, F.y1 + 16, 0]]);
+export const CAFE_CUTOUT = pts([[F.x0 - 6, F.y1 + 16, 0], [F.x0 - 6, F.y1 + 16, PODIUM.h + 14], [F.x0 - 6, F.y0 - 8, PODIUM.h + 14], [F.x1 + 6, F.y0 - 8, PODIUM.h + 14], [F.x1 + 6, F.y0 - 8, 0], [F.x1 + 16, F.y1 + 16, 0]]);
