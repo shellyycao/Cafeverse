@@ -19,8 +19,8 @@ export function Pin({
   at: Pt;
   kind: keyof typeof KIND;
   onClick?: () => void;
-  fadeOutAt: number;
-  fadeInAt?: number;
+  fadeOutAt: number | string;
+  fadeInAt?: number | string;
 }) {
   const k = KIND[kind];
   const { consumeDrag } = useMapGesture();
@@ -40,6 +40,26 @@ export function Pin({
       <text y={-17} textAnchor="middle" fontSize={kind === "parking" ? 14 : 12} fontWeight={700} fill="#fff" fontFamily="system-ui">
         {k.glyph}
       </text>
+    </g>
+  );
+}
+
+/** Pulsing dot that hints at a clickable object inside the café. */
+export function HintDot({ at, onClick, label }: { at: Pt; onClick?: () => void; label: string }) {
+  const { consumeDrag } = useMapGesture();
+  return (
+    <g
+      className="hint"
+      aria-label={label}
+      style={{ transform: `translate(${at.x}px, ${at.y}px) scale(calc(1 / var(--z)))` }}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (!consumeDrag()) onClick?.();
+      }}
+    >
+      <circle className="hint-ring" r={9} />
+      <circle r={5} fill="#fff8e8" stroke="#8a5a3a" strokeWidth={1.6} />
+      <circle r={1.8} fill="#8a5a3a" />
     </g>
   );
 }

@@ -37,16 +37,16 @@ function Glass({ u0, u1, v0 = 9, v1 = 40, id }: { u0: number; u1: number; v0?: n
 }
 
 export default function CafeExterior({
-  hasLaptopOutside = false,
   onClick,
+  interactive = true,
 }: {
-  hasLaptopOutside?: boolean;
   onClick?: () => void;
+  interactive?: boolean;
 }) {
   const f = boxFaces(F.x0, F.y0, F.x1, F.y1, F.h);
   const cornice = boxFaces(F.x0 - 2, F.y0 - 2, F.x1 + 2, F.y1 + 2, 4, F.h - 2);
   return (
-    <g className="hotspot" onClick={onClick} data-hotspot="cafe">
+    <g className="hotspot cafe-shell" onClick={onClick} data-hotspot="cafe" style={{ pointerEvents: interactive ? "auto" : "none" }}>
       {/* contact shadow */}
       <polygon points={pts([[F.x0 + 6, F.y0 + 6, 0], [F.x1 + 14, F.y0 + 10, 0], [F.x1 + 14, F.y1 + 14, 0], [F.x0 + 6, F.y1 + 14, 0]])} fill="#6b5a3a" opacity={0.15} />
       <polygon points={f.left} fill={BRICK} {...stroke} />
@@ -156,7 +156,6 @@ export default function CafeExterior({
           );
         })()}
       </g>
-      {hasLaptopOutside && null}
     </g>
   );
 }

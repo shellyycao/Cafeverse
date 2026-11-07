@@ -22,6 +22,8 @@ export type MapHandle = {
   flyTo: (cam: Partial<Camera>, ms?: number) => void;
   zoomBy: (factor: number) => void;
   getCamera: () => Camera;
+  worldToScreen: (x: number, y: number) => { x: number; y: number };
+  size: () => { w: number; h: number };
 };
 
 type Ctx = { consumeDrag: () => boolean };
@@ -37,12 +39,15 @@ export default function MapViewport({
   initial,
   onCamera,
   handleRef,
+  cssVars,
 }: {
   children: ReactNode;
   initial: Camera;
   /** Called (throttled to frames) whenever the camera changes */
   onCamera?: (c: Camera) => void;
   handleRef?: Ref<MapHandle>;
+  /** extra CSS custom properties set on the map root (e.g. --zi) */
+  cssVars?: Record<string, string | number>;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<SVGGElement>(null);
@@ -137,6 +142,12 @@ export default function MapViewport({
         zoomAt(w / 2, h / 2, f);
       },
       getCamera: () => ({ ...cur.current }),
+      worldToScreen: (x, y) => {
+        const { w, h } = size.current;
+        const c = cur.current;
+        return { x: w / 2 + (x - c.x) * c.z, y: h / 2 + (y - c.y) * c.z };
+      },
+      size: () => ({ ...size.current }),
     }),
     [kick, zoomAt],
   );
@@ -246,7 +257,7 @@ export default function MapViewport({
     <div
       ref={rootRef}
       className="map-root"
-      style={{ ["--z" as string]: initial.z, touchAction: "none" }}
+      style={{ ["--z" as string]: initial.z, ...cssVars, touchAction: "none" }}
     >
       <svg className="map-svg" width="100%" height="100%">
         <MapCtx.Provider value={{ consumeDrag }}>

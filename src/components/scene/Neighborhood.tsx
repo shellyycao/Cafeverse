@@ -4,10 +4,20 @@ import { INK } from "@/lib/color";
 import { BUILDINGS, TREES } from "@/data/neighborhood";
 import { Bench, BuildingShape, Car, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
-import { Pin } from "./Pin";
+import { HintDot, Pin } from "./Pin";
+import CafeInterior from "./CafeInterior";
 import { useMapGesture } from "@/components/map/MapViewport";
 
-export type HotspotId = "cafe" | "parking" | "bus";
+export type HotspotId = "cafe" | "parking" | "bus" | "barista" | "pastry" | "bar" | "social";
+export const ANCHORS: Record<HotspotId, [number, number, number]> = {
+  cafe: [268, 236, 44],
+  parking: [150, 292, 14],
+  bus: [360, 88, 36],
+  barista: [250, 136, 34],
+  pastry: [294, 166, 24],
+  bar: [228, 182, 26],
+  social: [268, 206, 22],
+};
 
 const PAVE = "#ecdcbd";
 
@@ -92,7 +102,7 @@ function BusStop({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export default function Neighborhood({ onSelect }: { onSelect?: (id: HotspotId) => void }) {
+export default function Neighborhood({ onSelect, level = 1 }: { onSelect?: (id: HotspotId) => void; level?: number }) {
   const { consumeDrag } = useMapGesture();
   const sel = (id: HotspotId) => () => {
     if (!consumeDrag()) onSelect?.(id);
@@ -111,7 +121,8 @@ export default function Neighborhood({ onSelect }: { onSelect?: (id: HotspotId) 
     if (Math.abs(t.x - 268) < 700 && Math.abs(t.y - 192) < 560) push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />);
   });
   // café + its surroundings
-  push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} />);
+  push(196 + 127, <CafeInterior key="interior" level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
+  push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} />);
   push(450, <BusStop key="bus" onClick={sel("bus")} />);
 
   // big pink blossom tree + trees around the lot
@@ -169,11 +180,23 @@ export default function Neighborhood({ onSelect }: { onSelect?: (id: HotspotId) 
 }
 
 export function ScenePins({ onSelect }: { onSelect?: (id: HotspotId) => void }) {
+  const at = (id: HotspotId) => P(...ANCHORS[id]);
+  const hints: Array<[HotspotId, string]> = [
+    ["barista", "Barista"],
+    ["pastry", "Pastry display"],
+    ["bar", "Window bar"],
+    ["social", "Round table"],
+  ];
   return (
     <g>
-      <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" onClick={() => onSelect?.("cafe")} fadeOutAt={4.2} />
-      <Pin id="parking-pin" at={P(110, 210, 30)} kind="parking" onClick={() => onSelect?.("parking")} fadeOutAt={5} fadeInAt={1.1} />
-      <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt={5} fadeInAt={1.1} />
+      <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" onClick={() => onSelect?.("cafe")} fadeOutAt="calc(0.5 * var(--zi))" />
+      <Pin id="parking-pin" at={P(110, 210, 30)} kind="parking" onClick={() => onSelect?.("parking")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />
+      <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />
+      <g className="hints">
+        {hints.map(([id, label]) => (
+          <HintDot key={id} at={at(id)} label={label} onClick={() => onSelect?.(id)} />
+        ))}
+      </g>
     </g>
   );
 }
