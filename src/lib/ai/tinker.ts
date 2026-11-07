@@ -18,6 +18,12 @@ function extractJson(text: string): unknown {
   return JSON.parse(cleaned.slice(a, b + 1));
 }
 
+/** "0.1" -> 0.1 (a float in [0, 0.99] per the docs); anything else is passed through as a string such as "low". */
+function reasoningEffort(v: string): string | number {
+  const n = Number(v);
+  return v.trim() !== "" && Number.isFinite(n) ? n : v.trim();
+}
+
 export class TinkerProvider implements InferenceProvider {
   readonly name = "tinker";
   constructor(
@@ -35,8 +41,8 @@ export class TinkerProvider implements InferenceProvider {
         messages,
         temperature: 0.2,
         max_tokens: Number(process.env.TINKER_MAX_TOKENS) || 2500,
-        // Hybrid models reason by default; "none" turns that off (not every model accepts it — a 400 means unset it).
-        ...(process.env.TINKER_REASONING_EFFORT ? { reasoning_effort: process.env.TINKER_REASONING_EFFORT } : {}),
+        // Hybrid models reason by default. A small float (e.g. 0.1) lowers it; a 400 means the model does not accept the field — unset it.
+        ...(process.env.TINKER_REASONING_EFFORT ? { reasoning_effort: reasoningEffort(process.env.TINKER_REASONING_EFFORT) } : {}),
       }),
       signal: AbortSignal.timeout(50_000),
     });
