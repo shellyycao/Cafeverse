@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
-import { Bench, PolyBuilding, Car, Dog, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
+import { Bench, PolyBuilding, Car, Dog, ParkingMeter, Rail, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
@@ -103,7 +103,7 @@ function BusStop({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals }) {
+export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1 }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2 }) {
   const { consumeDrag } = useMapGesture();
   const sel = (id: HotspotId) => () => {
     if (!consumeDrag()) onSelect?.(id);
@@ -129,7 +129,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   );
   NEAR_TREES.forEach((t, i) => push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />));
   // café + its surroundings
-  push(196 + 127, <CafeInterior key="interior" signals={signals} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
+  push(196 + 127, <CafeInterior key="interior" signals={signals} crowd={crowd} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
   push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} />);
   if (signals.busStop) push(450, <BusStop key="bus" onClick={sel("bus")} />);
   if (signals.dogOnPatio) push(358 + 224, <Dog key="dog" x={350} y={226} scale={1.2} />);
@@ -158,6 +158,11 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   push(410 + 180, <Car key="mv2" x={408} y={180} dir="y" color="#e7dcc0" />);
 
   // street furniture + people
+  push(205 + 266, <Rail key="rail1" x0={206} y0={266} x1={262} y1={266} />);
+  push(300 + 266, <Rail key="rail2" x0={298} y0={266} x1={336} y1={266} />);
+  push(120 + 271, <ParkingMeter key="pm1" x={120} y={271} />);
+  push(226 + 271, <ParkingMeter key="pm2" x={226} y={271} />);
+  push(369 + 150, <ParkingMeter key="pm3" x={369} y={150} />);
   push(364 + 262, <LampPost key="lamp1" x={366} y={262} />);
   push(60 + 262, <LampPost key="lamp2" x={60} y={262} />);
   push(366 + 126, <LampPost key="lamp3" x={366} y={126} />);
@@ -170,10 +175,16 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   push(300 + 266, <RoundTable key="t2" x={296} y={266} />);
   push(358 + 210, <RoundTable key="t3" x={358} y={212} />);
   push(300 + 266 + 1, <Person key="p1" x={296} y={262} sitting shirt="#9bb08a" laptop />);
-  push(358 + 212 + 1, <Person key="p2" x={362} y={208} sitting shirt="#d9a0a0" />);
+  if (crowd >= 1) push(358 + 212 + 1, <Person key="p2" x={362} y={208} sitting shirt="#d9a0a0" />);
   push(280 + 296, <Person key="w1" x={282} y={284} shirt="#d1a057" scale={1.05} />);
+  if (crowd >= 2) {
+    push(222 + 262, <Person key="p3" x={216} y={268} sitting shirt="#8aa0b8" hair="#2e231c" />);
+    push(330 + 284, <Person key="w3" x={332} y={286} shirt="#c9a27a" hair="#5a3a24" scale={1.05} />);
+    push(200 + 284, <Person key="w4" x={206} y={284} shirt="#9bb08a" hair="#3c2c22" scale={1.05} />);
+    push(370 + 160, <Person key="w5" x={372} y={160} shirt="#d9a0a0" hair="#6a4326" scale={1.05} />);
+  }
   push(240 + 262, <ChalkSign key="chalk" x={262} y={270} />);
-  push(380 + 40, <Person key="w2" x={344} y={44} shirt="#6f8fa8" hair="#2e231c" scale={1.05} />);
+  if (crowd >= 1) push(380 + 40, <Person key="w2" x={344} y={44} shirt="#6f8fa8" hair="#2e231c" scale={1.05} />);
 
   items.sort((a, b) => a.d - b.d);
 
@@ -189,7 +200,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   );
 }
 
-export function ScenePins({ onSelect, busStop = true }: { onSelect?: (id: HotspotId) => void; busStop?: boolean }) {
+export function ScenePins({ onSelect, busStop = true, status = null }: { onSelect?: (id: HotspotId) => void; busStop?: boolean; status?: "saved" | "visited" | null }) {
   const at = (id: HotspotId) => P(...ANCHORS[id]);
   const hints: Array<[HotspotId, string]> = [
     ["barista", "Barista"],
@@ -199,7 +210,7 @@ export function ScenePins({ onSelect, busStop = true }: { onSelect?: (id: Hotspo
   ];
   return (
     <g>
-      <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" onClick={() => onSelect?.("cafe")} fadeOutAt="calc(0.5 * var(--zi))" />
+      <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" status={status} onClick={() => onSelect?.("cafe")} fadeOutAt="calc(0.5 * var(--zi))" />
       <Pin id="parking-pin" at={P(110, 210, 30)} kind="parking" onClick={() => onSelect?.("parking")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />
       {busStop && <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />}
       <g className="hints">

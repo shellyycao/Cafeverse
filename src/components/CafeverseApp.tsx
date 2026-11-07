@@ -6,6 +6,8 @@ import BaseMap from "./map/BaseMap";
 import Neighborhood, { ANCHORS, ScenePins, type HotspotId } from "./scene/Neighborhood";
 import Defs from "./scene/Defs";
 import Popover from "./Popover";
+import Dock, { type Crowd } from "./Dock";
+import { useCafeStatus } from "@/lib/useCafeStatus";
 import AiPanel, { type AiState } from "./AiPanel";
 import { BASELINE_SIGNALS, describeChanges, type SceneSignals } from "@/lib/scene";
 import { CAFE } from "@/data/cafe";
@@ -46,6 +48,8 @@ export default function CafeverseApp() {
   const [signals, setSignals] = useState<SceneSignals>(BASELINE_SIGNALS);
   const signalsRef = useRef(signals);
   const [ai, setAi] = useState<AiState>({ status: "idle", mode: "demo" });
+  const [crowd, setCrowd] = useState<Crowd>(1);
+  const { status: cafeStatus, toggle: toggleStatus } = useCafeStatus(CAFE.id);
   const [toast, setToast] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onZoomBlocked = useCallback(() => {
@@ -162,10 +166,10 @@ export default function CafeverseApp() {
         <BaseMap />
         <g className="mini" mask="url(#revealMask)">
           <g filter="url(#wobble)">
-            <Neighborhood onSelect={onSelect} level={level} signals={signals} />
+            <Neighborhood onSelect={onSelect} level={level} signals={signals} crowd={crowd} />
           </g>
         </g>
-        <ScenePins onSelect={onSelect} busStop={signals.busStop} />
+        <ScenePins onSelect={onSelect} busStop={signals.busStop} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />
       </MapViewport>
       <div className="paper" />
       <div className="vignette" />
@@ -184,6 +188,7 @@ export default function CafeverseApp() {
       </div>
 
       <AiPanel state={ai} onAnalyze={analyze} />
+      {level >= 2 && <Dock name={CAFE.name} status={cafeStatus} onToggle={toggleStatus} crowd={crowd} onCrowd={setCrowd} />}
 
       {level >= 3 && (
         <div className="chrome back-btn">

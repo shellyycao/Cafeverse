@@ -2,12 +2,15 @@ import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
 import { CAFE_FOOTPRINT as F } from "@/data/durham";
-import { Bubble, Dog, Person, RoundTable } from "./primitives";
+import { Armchair, Bubble, Dog, Person, RoundTable } from "./primitives";
 import type { SceneSignals } from "@/lib/scene";
 
 const stroke = { stroke: INK, strokeOpacity: 0.5, strokeWidth: 0.7, strokeLinejoin: "round" as const };
 const WOOD = "#b98456";
-const WALL = "#f2e4c8";
+const COUNTER = "#8d7d69"; // grey-brown wood panelling (from reference photos)
+const TOPWOOD = "#dcb27a"; // butcher-block counter top
+const BARWOOD = "#dcc08e"; // light wood window bar
+const WALL = "#f6f2ea"; // white walls
 
 /** plane facing +gy (like the café's left/front face) — u along +gx, y negative = up */
 function PlaneY({ x, y, z = 0, children }: { x: number; y: number; z?: number; children: ReactNode }) {
@@ -28,36 +31,36 @@ function BackWall() {
   return (
     <PlaneY x={F.x0} y={F.y0}>
       <rect x={0} y={-H} width={BACK_LEN} height={H} fill={WALL} {...stroke} />
-      <rect x={0} y={-17} width={BACK_LEN} height={17} fill={WOOD} {...stroke} />
-      {[24, 48, 72, 96, 120].map((u) => (
-        <path key={u} d={`M${u} -17 V0`} stroke={INK} strokeOpacity={0.25} strokeWidth={0.6} />
+      <rect x={0} y={-17} width={BACK_LEN} height={17} fill="#dcd5c8" {...stroke} />
+      {/* black track light with spots */}
+      <path d={`M6 ${-H + 3} H${BACK_LEN - 6}`} stroke="#2b2b2e" strokeWidth={1.2} />
+      {[22, 52, 82, 112].map((u) => (
+        <path key={u} d={`M${u} ${-H + 3} l1.6 4.4 h-3.2z`} fill="#2b2b2e" />
       ))}
-      {/* chalkboard menu */}
-      <rect x={14} y={-50} width={36} height={24} rx={1.2} fill="#3d4741" stroke="#a77a52" strokeWidth={1.6} />
-      {[-44, -39, -34, -30].map((y, i) => (
-        <path key={y} d={`M19 ${y} h${[22, 17, 24, 14][i]}`} stroke="#f1e7cf" strokeWidth={0.9} strokeLinecap="round" opacity={0.85} />
+      {/* three menu boards: Eat / Specials (chalkboard) / Sip */}
+      {[
+        [10, 26, "#f6ecd6"],
+        [40, 26, "#2f3a35"],
+        [70, 26, "#f6ecd6"],
+      ].map(([u, w, fill], i) => (
+        <g key={i}>
+          <rect x={u as number} y={-52} width={w as number} height={25} rx={1} fill={fill as string} stroke="#a9794c" strokeWidth={1.4} />
+          {[-46, -41.5, -37, -33, -29.6].map((y, k) => (
+            <path key={y} d={`M${(u as number) + 3.4} ${y} h${[16, 12, 17, 11, 14][k]}`} stroke={i === 1 ? "#f1e7cf" : "#8a7255"} strokeWidth={0.8} strokeLinecap="round" opacity={0.85} />
+          ))}
+        </g>
       ))}
-      {/* bread shelves */}
-      <g>
-        <rect x={62} y={-52} width={40} height={30} fill="#9b6c43" opacity={0.25} />
-        {[-50, -40, -30].map((y, r) => (
-          <g key={y}>
-            <rect x={62} y={y + 8} width={40} height={2.2} fill="#a77a52" {...stroke} />
-            {[0, 1, 2].map((k) => (
-              <ellipse key={k} cx={70 + k * 12} cy={y + 4.8} rx={5.2} ry={3.2} fill={["#d9944f", "#c9833f", "#e0a35e"][(k + r) % 3]} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
-            ))}
-          </g>
-        ))}
-      </g>
-      {/* jars + plant shelf */}
-      <rect x={112} y={-40} width={26} height={2.2} fill="#a77a52" {...stroke} />
+      {/* floating wood shelves with plants and coffee bags */}
+      <rect x={104} y={-42} width={34} height={2.2} fill="#d3a56d" {...stroke} />
+      <rect x={104} y={-26} width={34} height={2.2} fill="#d3a56d" {...stroke} />
+      <circle cx={112} cy={-47} r={4} fill="#7fa354" />
+      <circle cx={117} cy={-48.5} r={3.4} fill="#8fae5a" />
+      <rect x={109} y={-44} width={9} height={2.8} fill="#e8e1d2" {...stroke} />
       {[0, 1, 2].map((k) => (
-        <rect key={k} x={115 + k * 8} y={-48} width={6} height={8} rx={1.4} fill={["#cfe0d0", "#f0d9a0", "#e7c3bd"][k]} {...stroke} />
+        <rect key={k} x={122 + k * 5} y={-34} width={4.4} height={8} rx={0.8} fill={["#c9a27a", "#e6d9c2", "#b8946b"][k]} {...stroke} />
       ))}
-      <rect x={112} y={-24} width={26} height={2.2} fill="#a77a52" {...stroke} />
-      <circle cx={122} cy={-28} r={3.6} fill="#7fa354" />
-      <circle cx={127} cy={-29} r={3} fill="#8fae5a" />
-      <rect x={120} y={-26} width={9} height={3} fill="#c27d5a" {...stroke} />
+      <rect x={126} y={-52} width={11} height={9} fill="#fffaf0" stroke="#3a3a3e" strokeWidth={1.1} />
+      <path d="M128 -44 l3 -5 l3 3 l2 -2" stroke="#8a7255" strokeWidth={0.7} fill="none" />
     </PlaneY>
   );
 }
@@ -66,16 +69,19 @@ function SideWall({ restroom }: { restroom: boolean }) {
   const H = F.h;
   return (
     <PlaneX x={F.x0} y={F.y1}>
-      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill={shade(WALL, -0.07)} {...stroke} />
-      <rect x={0} y={-17} width={SIDE_LEN} height={17} fill={shade(WOOD, -0.1)} {...stroke} />
-      {[16, 66].map((u) => (
-        <g key={u}>
-          <rect x={u - 2} y={-49} width={42} height={31} fill="#587a58" {...stroke} />
-          <rect x={u} y={-47} width={38} height={27} fill="#d9ead6" />
-          <circle cx={u + 12} cy={-34} r={9} fill="#a9bf6a" opacity={0.85} />
-          <circle cx={u + 26} cy={-31} r={8} fill="#8fae5a" opacity={0.85} />
-          <path d={`M${u + 19} -47 V-20 M${u} -33 H${u + 38}`} stroke="#587a58" strokeWidth={1.2} />
-          <rect x={u} y={-47} width={38} height={27} fill="url(#glassSheen)" opacity={0.5} />
+      <rect x={0} y={-H} width={SIDE_LEN} height={H} fill="#34475d" {...stroke} />
+      <rect x={0} y={-17} width={SIDE_LEN} height={17} fill="#2b3b4e" {...stroke} />
+      {/* framed seascapes */}
+      {[
+        [14, 30, "#9cc3c9"],
+        [52, 30, "#b8d3d6"],
+        [90, 24, "#d9e6e4"],
+      ].map(([u, w, c], i) => (
+        <g key={i}>
+          <rect x={u as number} y={-50} width={w as number} height={24} fill="#f4efe4" stroke="#ece4d2" strokeWidth={1} />
+          <rect x={(u as number) + 2} y={-48} width={(w as number) - 4} height={20} fill={c as string} />
+          <path d={`M${(u as number) + 2} -36 q${(w as number) / 4} -5 ${(w as number) / 2 - 2} 0 t${(w as number) / 2 - 2} 0`} stroke="#fff" strokeWidth={1.1} fill="none" opacity={0.8} />
+          <rect x={(u as number) + 2} y={-34} width={(w as number) - 4} height={6} fill="#5f8a98" opacity={0.55} />
         </g>
       ))}
       {restroom && (
@@ -85,10 +91,6 @@ function SideWall({ restroom }: { restroom: boolean }) {
           <text x={112} y={-42.4} textAnchor="middle" fontSize={4.6} fontWeight={700} fill="#6a4a30">WC</text>
         </g>
       )}
-      {/* hanging plant */}
-      <path d="M116 -58 V-48" stroke="#6a4a30" strokeWidth={0.8} />
-      <circle cx={116} cy={-44} r={5} fill="#7fa354" />
-      <path d="M112 -42 q-4 8 -2 14 M120 -42 q3 8 1 12" stroke="#7fa354" strokeWidth={1.4} fill="none" />
     </PlaneX>
   );
 }
@@ -98,10 +100,10 @@ function Pendant({ x, y, z = 56, drop = 12 }: { x: number; y: number; z?: number
   const lamp = P(x, y, z - drop);
   return (
     <g>
-      <line x1={top.x} y1={top.y} x2={lamp.x} y2={lamp.y} stroke="#3f3a36" strokeWidth={0.7} />
-      <circle cx={lamp.x} cy={lamp.y + 3} r={14} fill="#ffe3a0" opacity={0.2} />
-      <path d={`M${lamp.x - 5} ${lamp.y + 4} a5 4.4 0 0 1 10 0z`} fill="#4b4a47" />
-      <circle cx={lamp.x} cy={lamp.y + 5} r={1.6} fill="#fff1c4" />
+      <line x1={top.x} y1={top.y} x2={lamp.x} y2={lamp.y} stroke="#3f3a36" strokeWidth={0.6} />
+      <circle cx={lamp.x} cy={lamp.y + 5} r={15} fill="#fff1c4" opacity={0.2} />
+      <circle cx={lamp.x} cy={lamp.y + 5} r={5.6} fill="#fffaf0" stroke={INK} strokeOpacity={0.45} strokeWidth={0.7} />
+      <path d={`M${lamp.x - 5} ${lamp.y + 5} q5 3 10 0 M${lamp.x - 4} ${lamp.y + 2.4} q4 2.4 8 0`} stroke="#d8cdb6" strokeWidth={0.5} fill="none" />
     </g>
   );
 }
@@ -111,8 +113,8 @@ function Stool({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${b.x} ${b.y})`}>
       <ellipse cx={1} cy={1} rx={5.5} ry={2.4} fill="#6b5a3a" opacity={0.2} />
-      <path d="M-3.4 -1 L-2.4 -11 M3.4 -1 L2.4 -11" stroke="#6a4a30" strokeWidth={1.2} />
-      <ellipse cx={0} cy={-11.6} rx={5} ry={2.4} fill="#c79264" {...stroke} />
+      <path d="M-3.4 -1 L-2.4 -11 M3.4 -1 L2.4 -11" stroke="#2b2724" strokeWidth={1.2} />
+      <ellipse cx={0} cy={-11.6} rx={5} ry={2.4} fill="#e2d2b2" {...stroke} />
     </g>
   );
 }
@@ -132,7 +134,7 @@ function PastryCase({ per }: { per: number }) {
     <g>
       <PlaneY x={x0} y={y1} z={0}>
         <rect x={0} y={-zt} width={x1 - x0} height={zt} fill="#e9f1ee" opacity={0.5} {...stroke} />
-        <rect x={0} y={-zb} width={x1 - x0} height={zb} fill={WOOD} {...stroke} />
+        <rect x={0} y={-zb} width={x1 - x0} height={zb} fill="#f1eee6" {...stroke} />
         {[0, 1].map((r) => {
           const base = zb + 4 + r * 5.6;
           return (
@@ -158,8 +160,10 @@ export default function CafeInterior({
   onSelect,
   guard,
   signals,
+  crowd = 1,
 }: {
   signals: SceneSignals;
+  crowd?: 0 | 1 | 2;
   level: number;
   onSelect?: (id: "barista" | "pastry" | "bar" | "social") => void;
   guard: (fn: () => void) => () => void;
@@ -178,11 +182,10 @@ export default function CafeInterior({
       {/* floor slab + wood floor */}
       <polygon points={slab.left} fill="#b9a58a" {...stroke} />
       <polygon points={slab.right} fill="#a8967a" {...stroke} />
-      <polygon points={rectPts(F.x0, F.y0, F.x1, F.y1)} fill="#dcb98a" {...stroke} />
+      <polygon points={rectPts(F.x0, F.y0, F.x1, F.y1)} fill="#dad3c6" {...stroke} />
       {Array.from({ length: 13 }).map((_, k) => (
-        <polyline key={k} points={pts([[F.x0 + 4, F.y0 + k * 10], [F.x1, F.y0 + k * 10]])} stroke="#b88f62" strokeWidth={0.6} opacity={0.6} />
+        <polyline key={k} points={pts([[F.x0 + 4, F.y0 + k * 10], [F.x1, F.y0 + k * 10]])} stroke="#bdb5a6" strokeWidth={0.6} opacity={0.6} />
       ))}
-      <polygon points={pts(Array.from({ length: 28 }, (_, k) => [262 + Math.cos((k / 28) * 6.283) * 44, 212 + Math.sin((k / 28) * 6.283) * 26] as [number, number]))} fill="#e3b4ac" opacity={0.6} />
 
       <BackWall />
       <SideWall restroom={signals.restroomSign} />
@@ -214,16 +217,16 @@ export default function CafeInterior({
       </g>
 
       {/* ----- counter ----- */}
-      <polygon points={counter.left} fill={WOOD} {...stroke} />
-      <polygon points={counter.right} fill={shade(WOOD, -0.14)} {...stroke} />
+      <polygon points={counter.left} fill={COUNTER} {...stroke} />
+      <polygon points={counter.right} fill={shade(COUNTER, -0.14)} {...stroke} />
       <PlaneY x={232} y={166}>
         {[0, 1, 2, 3].map((k) => (
           <path key={k} d={`M${10 + k * 7} -17 V0`} stroke={INK} strokeOpacity={0.22} strokeWidth={0.6} />
         ))}
       </PlaneY>
-      <polygon points={counterTop.top} fill="#d1a06d" {...stroke} />
-      <polygon points={counterTop.left} fill="#c28e5c" {...stroke} />
-      <polygon points={counterTop.right} fill="#a97a4b" {...stroke} />
+      <polygon points={counterTop.top} fill={TOPWOOD} {...stroke} />
+      <polygon points={counterTop.left} fill={shade(TOPWOOD, -0.1)} {...stroke} />
+      <polygon points={counterTop.right} fill={shade(TOPWOOD, -0.22)} {...stroke} />
       {/* espresso machine + register on the wood section */}
       {(() => {
         const m = boxFaces(238, 146, 254, 158, 12, 19);
@@ -256,15 +259,15 @@ export default function CafeInterior({
       </g>
 
       {/* ----- window bar + stools + study person ----- */}
-      <polygon points={bar.left} fill={WOOD} {...stroke} />
-      <polygon points={bar.right} fill={shade(WOOD, -0.14)} {...stroke} />
-      <polygon points={boxFaces(200, 146, 216, 230, 2, 19).top} fill="#d1a06d" {...stroke} />
+      <polygon points={bar.left} fill={BARWOOD} {...stroke} />
+      <polygon points={bar.right} fill={shade(BARWOOD, -0.14)} {...stroke} />
+      <polygon points={boxFaces(200, 146, 216, 230, 2, 19).top} fill="#e6cda0" {...stroke} />
       {[162, 182, 202, 218].map((y) => (
         <Stool key={y} x={228} y={y} />
       ))}
       <g className={active ? "hotspot" : undefined} data-hotspot="bar" onClick={click("bar")} style={{ pointerEvents: active ? "auto" : "none" }}>
         {signals.laptopWorkers === 0 ? (
-          <Person x={228} y={218} z={11} sitting shirt="#c9a27a" hair="#5a3a24" scale={1.3} />
+          crowd >= 1 && <Person x={228} y={218} z={11} sitting shirt="#c9a27a" hair="#5a3a24" scale={1.3} />
         ) : (
           [
             [182, "#9bb08a", "#2e231c"],
@@ -301,8 +304,19 @@ export default function CafeInterior({
         </g>
         <polygon points={rectPts(250, 192, 290, 222)} fill="transparent" />
       </g>
-      <RoundTableScaled x={310} y={228} />
-      <Person x={302} y={234} z={4} sitting shirt="#cfa163" hair="#3c2c22" scale={1.3} />
+      <Armchair x={332} y={234} />
+      <Armchair x={304} y={248} />
+      <g transform="scale(0.8)" style={{ transformOrigin: `${P(318, 240).x}px ${P(318, 240).y}px` }}>
+        <RoundTable x={318} y={240} chairs={0} />
+      </g>
+      {crowd >= 1 && <Person x={302} y={234} z={4} sitting shirt="#cfa163" hair="#3c2c22" scale={1.3} />}
+      {crowd >= 2 && signals.chattingGroups < 2 && <Person x={320} y={222} z={4} sitting shirt="#7d9aa6" hair="#2e231c" scale={1.3} />}
+      {crowd >= 2 && (
+        <>
+          <Person x={286} y={178} shirt="#b66d6a" hair="#3c2c22" scale={1.3} />
+          <Person x={304} y={182} shirt="#6d8a64" hair="#7a4a2c" scale={1.3} />
+        </>
+      )}
       {signals.chattingGroups >= 2 && (
         <>
           <Person x={320} y={222} z={4} sitting shirt="#8aa0b8" hair="#2e231c" scale={1.3} />
@@ -345,6 +359,19 @@ export default function CafeInterior({
             <polygon points={pil.left} fill="#c58f6c" {...stroke} />
             <polygon points={pil.right} fill="#a97555" {...stroke} />
             <polygon points={pil.top} fill="#e3d4b3" {...stroke} />
+            {/* glass storefront ghost: black mullions + faint sheen so the windows still read */}
+            <polygon points={pts([[F.x0, F.y1, 8], [F.x1, F.y1, 8], [F.x1, F.y1, F.h], [F.x0, F.y1, F.h]])} fill="#cfe3e6" opacity={0.1} style={{ pointerEvents: "none" }} />
+            <polygon points={pts([[F.x1, F.y1, 8], [F.x1, F.y0, 8], [F.x1, F.y0, F.h], [F.x1, F.y1, F.h]])} fill="#cfe3e6" opacity={0.1} style={{ pointerEvents: "none" }} />
+            {[0, 1, 2, 3].map((i) => {
+              const a = P(F.x0 + i * 48, F.y1, 8);
+              const b = P(F.x0 + i * 48, F.y1, F.h);
+              return <line key={`pl${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#2b2b2e" strokeWidth={1.4} />;
+            })}
+            {[1, 2, 3].map((i) => {
+              const a = P(F.x1, F.y1 - i * 32, 8);
+              const b = P(F.x1, F.y1 - i * 32, F.h);
+              return <line key={`pr${i}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#2b2b2e" strokeWidth={1.4} />;
+            })}
           </g>
         );
       })()}

@@ -14,6 +14,7 @@ export function Pin({
   onClick,
   fadeOutAt,
   fadeInAt = 0,
+  status = null,
 }: {
   id: string;
   at: Pt;
@@ -21,6 +22,7 @@ export function Pin({
   onClick?: () => void;
   fadeOutAt: number | string;
   fadeInAt?: number | string;
+  status?: "saved" | "visited" | null;
 }) {
   const k = KIND[kind];
   const { consumeDrag } = useMapGesture();
@@ -40,6 +42,14 @@ export function Pin({
       <text y={-17} textAnchor="middle" fontSize={kind === "parking" ? 14 : 12} fontWeight={700} fill="#fff" fontFamily="system-ui">
         {k.glyph}
       </text>
+      {status && (
+        <g transform="translate(11 -34)">
+          <circle r={8} fill={status === "saved" ? "#c4566b" : "#5f8f55"} stroke="#fff" strokeWidth={1.8} />
+          <text y={3.6} textAnchor="middle" fontSize={10} fontWeight={700} fill="#fff" fontFamily="system-ui">
+            {status === "saved" ? "♥" : "✓"}
+          </text>
+        </g>
+      )}
     </g>
   );
 }

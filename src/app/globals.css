@@ -118,3 +118,15 @@ button { font: inherit; color: inherit; }
 .ai-note { background: #f6e3b3; border-radius: 8px; padding: 5px 8px; font-size: 11.5px; }
 .ai-again { margin-top: 8px; border: 1px solid #c9a27a; background: transparent; border-radius: 999px; padding: 4px 11px; font-size: 12px; cursor: pointer; color: #7a5a3a; }
 @media (max-width: 640px) { .ai-wrap { top: 62px; } }
+
+/* dock */
+.dock { left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 150px); }
+.dock-seg { display: inline-flex; align-items: center; background: rgba(252,247,236,.95); border: 1px solid rgba(160,125,80,.28); border-radius: 999px; box-shadow: var(--shadow); padding: 3px; gap: 2px; }
+.dock-seg button { border: 0; background: transparent; padding: 7px 12px; border-radius: 999px; font-size: 12.5px; cursor: pointer; color: var(--ink); white-space: nowrap; }
+.dock-seg button:hover { background: rgba(185,128,90,.14); }
+.dock-seg button.on { background: var(--wood); color: #fff7e6; }
+.dock-seg button.on.save { background: #c4566b; }
+.dock-seg button.on.visited { background: #5f8f55; }
+.dock-label { font-size: 10.5px; color: #8a6a1e; background: #f6e3b3; border-radius: 999px; padding: 5px 9px; margin-right: 2px; font-weight: 700; white-space: nowrap; }
+@media (max-width: 900px) { .dock { bottom: 52px; max-width: calc(100vw - 28px); } }
+@media (max-width: 640px) { .dock { bottom: 88px; } .dock-label { display: none; } .dock-seg.crowd::before { content: "Demo crowd"; font-size: 10.5px; color: #8a6a1e; background: #f6e3b3; border-radius: 999px; padding: 5px 8px; font-weight: 700; } }

@@ -85,6 +85,7 @@ export function Awning({
   color,
   out = 11,
   stripes = 7,
+  alt = "#f4ead2",
 }: {
   x0: number;
   x1: number;
@@ -93,6 +94,7 @@ export function Awning({
   color: string;
   out?: number;
   stripes?: number;
+  alt?: string;
 }) {
   const step = (x1 - x0) / stripes;
   return (
@@ -106,7 +108,7 @@ export function Awning({
             [x0 + step * (i + 1), y + out, z - 8],
             [x0 + step * i, y + out, z - 8],
           ])}
-          fill={i % 2 ? "#f4ead2" : color}
+          fill={i % 2 ? alt : color}
           stroke={INK}
           strokeOpacity={0.5}
           strokeWidth={0.6}
@@ -277,8 +279,8 @@ export function RoundTable({ x, y, chairs = 2 }: { x: number; y: number; chairs?
       <ellipse cx={0} cy={1} rx={10} ry={4.6} fill="#6b5a3a" opacity={0.16} />
       {chairs >= 1 && <Chair dx={-11} dy={-1} />}
       {chairs >= 2 && <Chair dx={11} dy={-1} flip />}
-      <path d="M0 0 L0 -8" stroke="#6a4a30" strokeWidth={1.8} />
-      <ellipse cx={0} cy={-8.6} rx={8.4} ry={4.2} fill="#c79b6c" stroke={INK} strokeOpacity={0.55} strokeWidth={0.8} />
+      <path d="M0 0 L0 -8" stroke="#2b2724" strokeWidth={1.8} />
+      <ellipse cx={0} cy={-8.6} rx={8.4} ry={4.2} fill="#dcb987" stroke={INK} strokeOpacity={0.55} strokeWidth={0.8} />
       <ellipse cx={-1.5} cy={-9} rx={1.8} ry={0.9} fill="#fff8ea" />
       <circle cx={2.5} cy={-9.4} r={1} fill="#8a4b34" />
     </g>
@@ -288,9 +290,9 @@ export function RoundTable({ x, y, chairs = 2 }: { x: number; y: number; chairs?
 function Chair({ dx, dy, flip }: { dx: number; dy: number; flip?: boolean }) {
   return (
     <g transform={`translate(${dx} ${dy}) ${flip ? "scale(-1 1)" : ""}`}>
-      <path d="M-3 -1 L-3 -5 M3 -1 L3 -5" stroke="#6a4a30" strokeWidth={1.2} />
-      <ellipse cx={0} cy={-5.5} rx={4} ry={2} fill="#b0804f" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
-      <path d="M-3.6 -6 L-3.6 -12" stroke="#8c6340" strokeWidth={1.5} strokeLinecap="round" />
+      <path d="M-3 -1 L-3 -5 M3 -1 L3 -5" stroke="#2b2724" strokeWidth={1.2} />
+      <ellipse cx={0} cy={-5.5} rx={4} ry={2} fill="#3a3532" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
+      <path d="M-3.6 -6 L-3.6 -12 M-3.6 -10 h3" stroke="#2b2724" strokeWidth={1.5} strokeLinecap="round" />
     </g>
   );
 }
@@ -322,6 +324,51 @@ export function Bubble({ x, y, z = 26 }: { x: number; y: number; z?: number }) {
       <circle cx={-2.6} cy={0} r={0.8} fill="#8a7255" />
       <circle cx={0} cy={0} r={0.8} fill="#8a7255" />
       <circle cx={2.6} cy={0} r={0.8} fill="#8a7255" />
+    </g>
+  );
+}
+
+/* ---------- Foster-Street-specific street furniture (from user-supplied reference photos) ---------- */
+export function ParkingMeter({ x, y }: { x: number; y: number }) {
+  const b = P(x, y);
+  return (
+    <g transform={`translate(${b.x} ${b.y})`}>
+      <ellipse cx={1} cy={0.5} rx={4} ry={1.6} fill="#6b5a3a" opacity={0.25} />
+      <rect x={-2.6} y={-17} width={5.2} height={17} rx={1.2} fill="#2f2c2a" stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
+      <rect x={-2} y={-14.5} width={4} height={4.6} rx={1.2} fill="#4b6ea5" />
+      <text y={-10.8} textAnchor="middle" fontSize={3.8} fontWeight={700} fill="#fff" fontFamily="system-ui">P</text>
+    </g>
+  );
+}
+
+/** thin black metal handrail along the sidewalk */
+export function Rail({ x0, y0, x1, y1 }: { x0: number; y0: number; x1: number; y1: number }) {
+  const a = P(x0, y0, 9);
+  const b = P(x1, y1, 9);
+  const n = Math.max(2, Math.round(Math.hypot(x1 - x0, y1 - y0) / 18));
+  return (
+    <g stroke="#2b2b2e" strokeLinecap="round">
+      <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} strokeWidth={1.3} />
+      {Array.from({ length: n + 1 }).map((_, i) => {
+        const gx = x0 + ((x1 - x0) * i) / n;
+        const gy = y0 + ((y1 - y0) * i) / n;
+        const t = P(gx, gy, 9);
+        const f = P(gx, gy, 0);
+        return <line key={i} x1={t.x} y1={t.y} x2={f.x} y2={f.y} strokeWidth={1} />;
+      })}
+    </g>
+  );
+}
+
+export function Armchair({ x, y }: { x: number; y: number }) {
+  const b = P(x, y);
+  return (
+    <g transform={`translate(${b.x} ${b.y})`}>
+      <ellipse cx={1} cy={1} rx={11} ry={4.4} fill="#6b5a3a" opacity={0.2} />
+      <path d="M-9 -2 q0 -10 3 -12 h12 q3 2 3 12 z" fill="#7a4a30" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
+      <rect x={-11} y={-9} width={5} height={9} rx={2.4} fill="#6a3f29" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
+      <rect x={6} y={-9} width={5} height={9} rx={2.4} fill="#6a3f29" stroke={INK} strokeOpacity={0.5} strokeWidth={0.6} />
+      <rect x={-6.5} y={-8} width={13} height={7} rx={2.6} fill="#8a5a3c" stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
     </g>
   );
 }
