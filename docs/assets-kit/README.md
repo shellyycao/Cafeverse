@@ -35,17 +35,25 @@ public/assets/foster/interior-base.png
 
 | 锚点 | x | y | 像素 (x, y) | 说明 |
 |---|---|---|---|---|
-| barista | 0.7176 | 0.5148 | 1464, 834 | 柜台后面，面向房间 |
-| pastry-case | 0.6118 | 0.5556 | 1248, 900 | 玻璃糕点展示柜中心 |
-| lounge-1 | 0.3294 | 0.4519 | 672, 732 | 照片墙前的棕色皮沙发（靠里） |
-| lounge-2 | 0.2588 | 0.4963 | 528, 804 | 照片墙前的棕色皮沙发（靠外） |
-| window-seat-1 | 0.1971 | 0.5648 | 402, 915 | 窗边吧台凳 1（最左） |
-| window-seat-2 | 0.2676 | 0.6093 | 546, 987 | 窗边吧台凳 2 |
-| window-seat-3 | 0.3382 | 0.6537 | 690, 1059 | 窗边吧台凳 3 |
-| window-seat-4 | 0.4088 | 0.6981 | 834, 1131 | 窗边吧台凳 4 |
-| door | 0.5735 | 0.8574 | 1170, 1389 | 临 Foster St 的玻璃门 |
+| barista | 0.6868 | 0.5136 | 1401, 832 | behind the service counter, near the espresso machine |
+| counter-front | 0.6598 | 0.579 | 1346, 938 | where a customer stands at the counter |
+| pastry-case | 0.6034 | 0.516 | 1231, 836 | centre of the glass pastry display |
+| lounge-1 | 0.3466 | 0.4364 | 707, 707 | leather armchair (right) |
+| lounge-2 | 0.2784 | 0.4599 | 568, 745 | leather armchair (left) |
+| window-seat-1 | 0.1534 | 0.6481 | 313, 1050 | window-bar stool 1 (left end) |
+| window-seat-2 | 0.2069 | 0.6784 | 422, 1099 | window-bar stool 2 |
+| window-seat-3 | 0.2632 | 0.7093 | 537, 1149 | window-bar stool 3 |
+| window-seat-4 | 0.3118 | 0.7389 | 636, 1197 | window-bar stool 4 |
+| window-seat-5 | 0.3701 | 0.7765 | 755, 1258 | window-bar stool 5 (door end) |
+| tableA-back | 0.2034 | 0.5975 | 415, 968 | left table, back chair |
+| tableA-front | 0.2632 | 0.6111 | 537, 990 | left table, front chair |
+| tableB-back | 0.3868 | 0.6062 | 789, 982 | middle table, back chair |
+| tableB-front | 0.4368 | 0.621 | 891, 1006 | middle table, front chair |
+| tableC-back | 0.3833 | 0.7179 | 782, 1163 | front table, back chair |
+| tableC-front | 0.4333 | 0.7302 | 884, 1183 | front table, front chair |
+| door | 0.5735 | 0.7889 | 1170, 1278 | glass entrance |
 
-（完整列表以 `anchors.json` 为准，人物脚底为锚点。）
+（锚点是在**已采用的插画 `interior-base.png`** 上量出来的，约略值；Gate 2 放人物时再微调。人物脚底 / 臀部为锚点。）
 
 ## 4. 画面内容（只画这些，保持"空"）
 

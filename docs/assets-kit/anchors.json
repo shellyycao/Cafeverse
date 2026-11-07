@@ -10,27 +10,14 @@
     {
       "id": "barista",
       "kind": "stand",
-      "note": "behind the service counter, facing the room",
+      "note": "behind the service counter, near the espresso machine",
       "px": {
-        "x": 1464,
-        "y": 834
+        "x": 1401,
+        "y": 832
       },
       "normalized": {
-        "x": 0.7176,
-        "y": 0.5148
-      }
-    },
-    {
-      "id": "pastry-case",
-      "kind": "prop",
-      "note": "centre of the glass grab-and-go / pastry display",
-      "px": {
-        "x": 1248,
-        "y": 900
-      },
-      "normalized": {
-        "x": 0.6118,
-        "y": 0.5556
+        "x": 0.6868,
+        "y": 0.5136
       }
     },
     {
@@ -38,194 +25,207 @@
       "kind": "stand",
       "note": "where a customer stands at the counter",
       "px": {
-        "x": 1284,
-        "y": 924
+        "x": 1346,
+        "y": 938
       },
       "normalized": {
-        "x": 0.6294,
-        "y": 0.5704
+        "x": 0.6598,
+        "y": 0.579
+      }
+    },
+    {
+      "id": "pastry-case",
+      "kind": "prop",
+      "note": "centre of the glass pastry display",
+      "px": {
+        "x": 1231,
+        "y": 836
+      },
+      "normalized": {
+        "x": 0.6034,
+        "y": 0.516
       }
     },
     {
       "id": "lounge-1",
       "kind": "seat",
-      "note": "leather armchair by the photo wall (back)",
+      "note": "leather armchair (right)",
       "px": {
-        "x": 672,
-        "y": 732
+        "x": 707,
+        "y": 707
       },
       "normalized": {
-        "x": 0.3294,
-        "y": 0.4519
+        "x": 0.3466,
+        "y": 0.4364
       }
     },
     {
       "id": "lounge-2",
       "kind": "seat",
-      "note": "leather armchair by the photo wall (front)",
+      "note": "leather armchair (left)",
       "px": {
-        "x": 528,
-        "y": 804
+        "x": 568,
+        "y": 745
       },
       "normalized": {
-        "x": 0.2588,
-        "y": 0.4963
+        "x": 0.2784,
+        "y": 0.4599
       }
     },
     {
       "id": "window-seat-1",
       "kind": "seat",
-      "note": "window-bar stool, seated, facing the street glass",
+      "note": "window-bar stool 1 (left end)",
       "px": {
-        "x": 402,
-        "y": 915
+        "x": 313,
+        "y": 1050
       },
       "normalized": {
-        "x": 0.1971,
-        "y": 0.5648
+        "x": 0.1534,
+        "y": 0.6481
       }
     },
     {
       "id": "window-seat-2",
       "kind": "seat",
-      "note": "window-bar stool, seated, facing the street glass",
+      "note": "window-bar stool 2",
       "px": {
-        "x": 546,
-        "y": 987
+        "x": 422,
+        "y": 1099
       },
       "normalized": {
-        "x": 0.2676,
-        "y": 0.6093
+        "x": 0.2069,
+        "y": 0.6784
       }
     },
     {
       "id": "window-seat-3",
       "kind": "seat",
-      "note": "window-bar stool, seated, facing the street glass",
+      "note": "window-bar stool 3",
       "px": {
-        "x": 690,
-        "y": 1059
+        "x": 537,
+        "y": 1149
       },
       "normalized": {
-        "x": 0.3382,
-        "y": 0.6537
+        "x": 0.2632,
+        "y": 0.7093
       }
     },
     {
       "id": "window-seat-4",
       "kind": "seat",
-      "note": "window-bar stool, seated, facing the street glass",
+      "note": "window-bar stool 4",
       "px": {
-        "x": 834,
-        "y": 1131
+        "x": 636,
+        "y": 1197
       },
       "normalized": {
-        "x": 0.4088,
-        "y": 0.6981
+        "x": 0.3118,
+        "y": 0.7389
       }
     },
     {
-      "id": "table1-back",
+      "id": "window-seat-5",
       "kind": "seat",
-      "note": "table 1, back chair",
+      "note": "window-bar stool 5 (door end)",
       "px": {
-        "x": 1152,
+        "x": 755,
+        "y": 1258
+      },
+      "normalized": {
+        "x": 0.3701,
+        "y": 0.7765
+      }
+    },
+    {
+      "id": "tableA-back",
+      "kind": "seat",
+      "note": "left table, back chair",
+      "px": {
+        "x": 415,
+        "y": 968
+      },
+      "normalized": {
+        "x": 0.2034,
+        "y": 0.5975
+      }
+    },
+    {
+      "id": "tableA-front",
+      "kind": "seat",
+      "note": "left table, front chair",
+      "px": {
+        "x": 537,
         "y": 990
       },
       "normalized": {
-        "x": 0.5647,
+        "x": 0.2632,
         "y": 0.6111
       }
     },
     {
-      "id": "table1-front",
+      "id": "tableB-back",
       "kind": "seat",
-      "note": "table 1, front chair",
+      "note": "middle table, back chair",
       "px": {
-        "x": 960,
-        "y": 1086
+        "x": 789,
+        "y": 982
       },
       "normalized": {
-        "x": 0.4706,
-        "y": 0.6704
+        "x": 0.3868,
+        "y": 0.6062
       }
     },
     {
-      "id": "table1-right",
+      "id": "tableB-front",
       "kind": "seat",
-      "note": "table 1, right chair",
+      "note": "middle table, front chair",
       "px": {
-        "x": 1152,
-        "y": 1086
+        "x": 891,
+        "y": 1006
       },
       "normalized": {
-        "x": 0.5647,
-        "y": 0.6704
+        "x": 0.4368,
+        "y": 0.621
       }
     },
     {
-      "id": "table2-back",
+      "id": "tableC-back",
       "kind": "seat",
-      "note": "table 2, back chair",
+      "note": "front table, back chair",
       "px": {
-        "x": 1272,
-        "y": 1146
+        "x": 782,
+        "y": 1163
       },
       "normalized": {
-        "x": 0.6235,
-        "y": 0.7074
+        "x": 0.3833,
+        "y": 0.7179
       }
     },
     {
-      "id": "table2-front",
+      "id": "tableC-front",
       "kind": "seat",
-      "note": "table 2, front chair",
+      "note": "front table, front chair",
       "px": {
-        "x": 1080,
-        "y": 1242
+        "x": 884,
+        "y": 1183
       },
       "normalized": {
-        "x": 0.5294,
-        "y": 0.7667
-      }
-    },
-    {
-      "id": "table3-front",
-      "kind": "seat",
-      "note": "table 3, front chair",
-      "px": {
-        "x": 708,
-        "y": 1068
-      },
-      "normalized": {
-        "x": 0.3471,
-        "y": 0.6593
-      }
-    },
-    {
-      "id": "table3-right",
-      "kind": "seat",
-      "note": "table 3, right chair",
-      "px": {
-        "x": 900,
-        "y": 1068
-      },
-      "normalized": {
-        "x": 0.4412,
-        "y": 0.6593
+        "x": 0.4333,
+        "y": 0.7302
       }
     },
     {
       "id": "door",
       "kind": "door",
-      "note": "glass entrance on the Foster St side",
+      "note": "glass entrance",
       "px": {
         "x": 1170,
-        "y": 1389
+        "y": 1278
       },
       "normalized": {
         "x": 0.5735,
-        "y": 0.8574
+        "y": 0.7889
       }
     }
   ]
