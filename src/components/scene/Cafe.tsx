@@ -1,6 +1,6 @@
 import { P, boxFaces, pts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
-import { CAFE_FOOTPRINT as F } from "@/data/neighborhood";
+import { CAFE_FOOTPRINT as F } from "@/data/durham";
 import { Awning } from "./primitives";
 
 const BRICK = "#c58f6c";
@@ -73,8 +73,8 @@ export default function CafeExterior({
         <circle cx={87.5} cy={-18} r={1.1} fill="#d9b25f" />
         {/* sign band */}
         <rect x={6} y={-56} width={LEFT_LEN - 12} height={13} rx={1.5} fill={CREAM} {...stroke} />
-        <text x={LEFT_LEN / 2} y={-46.2} textAnchor="middle" fontSize={11.5} fill="#6a4a30" fontFamily="var(--font-hand), cursive" fontWeight={700}>
-          ☕ Cafeverse
+        <text x={LEFT_LEN / 2} y={-46.2} textAnchor="middle" fontSize={11} fill="#6a4a30" fontFamily="var(--font-hand), cursive" fontWeight={700}>
+          Foster Street Coffee
         </text>
       </Face>
 
@@ -99,8 +99,8 @@ export default function CafeExterior({
           <rect x={10} y={-16} width={108} height={3} fill="#a77a52" opacity={0.7} />
         </g>
         <rect x={6} y={-56} width={RIGHT_LEN - 12} height={13} rx={1.5} fill={shade(CREAM, -0.08)} {...stroke} />
-        <text x={RIGHT_LEN / 2} y={-46.6} textAnchor="middle" fontSize={9.5} fill="#7b5a3c" fontFamily="var(--font-hand), cursive" fontWeight={700}>
-          coffee · pastry · study
+        <text x={RIGHT_LEN / 2} y={-46.6} textAnchor="middle" fontSize={9} fill="#7b5a3c" fontFamily="var(--font-hand), cursive" fontWeight={700}>
+          Study · Work · Meet · Relax
         </text>
       </Face>
 

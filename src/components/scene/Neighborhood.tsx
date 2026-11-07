@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK } from "@/lib/color";
-import { BUILDINGS, TREES } from "@/data/neighborhood";
-import { Bench, BuildingShape, Car, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
+import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
+import { Bench, PolyBuilding, Car, LampPost, Person, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
@@ -111,15 +111,22 @@ export default function Neighborhood({ onSelect, level = 1 }: { onSelect?: (id: 
   const items: Item[] = [];
   const push = (d: number, el: ReactNode) => items.push({ d, el });
 
-  // neighbouring detailed buildings
-  for (const b of BUILDINGS) {
-    if (b.id === "cafe") continue;
-    if (b.detail) push(b.x0 + b.y0, <BuildingShape key={b.id} b={b} detail />);
+  // real neighbouring footprints (OpenStreetMap), extruded in the same illustrated style
+  const WALLS = ["#ecdcc0", "#e8cdb4", "#dfd2b4", "#e6c7b8", "#d9d3b6", "#efe0c8", "#d8bfa0"];
+  const ROOFS = ["#d8c7a6", "#cdb995", "#d9bfae", "#c9c4a4", "#d4c2a0"];
+  for (const b of NEAR_BUILDINGS) {
+    const h = b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17);
+    push(
+      b.c[0] + b.c[1],
+      <PolyBuilding key={`nb${b.id}`} poly={b.p} h={h} wall={WALLS[b.id % WALLS.length]} roof={ROOFS[(b.id * 3) % ROOFS.length]} shop={b.id % 3 === 0} />,
+    );
   }
-  // trees (rich) near the café
-  TREES.forEach((t, i) => {
-    if (Math.abs(t.x - 268) < 700 && Math.abs(t.y - 192) < 560) push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />);
-  });
+  // Liberty Warehouse apartments: the café sits at the foot of this brick building (per the café's website)
+  push(
+    110,
+    <PolyBuilding key="liberty" poly={[[96, 36], [372, 36], [372, 112], [96, 112]]} h={86} wall="#b98c6a" roof="#c8b898" />,
+  );
+  NEAR_TREES.forEach((t, i) => push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />));
   // café + its surroundings
   push(196 + 127, <CafeInterior key="interior" level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
   push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} />);
@@ -127,9 +134,7 @@ export default function Neighborhood({ onSelect, level = 1 }: { onSelect?: (id: 
 
   // big pink blossom tree + trees around the lot
   push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
-  push(372 + 270, <Tree key="rt" x={376} y={42} s={1.2} rich />);
-  push(120 + 50, <Tree key="bt1" x={120} y={52} s={1.35} rich />);
-  push(240 + 40, <Tree key="bt2" x={250} y={30} s={1.3} rich />);
+  push(372 + 270, <Tree key="rt" x={380} y={150} s={1.1} rich />);
 
   // parked cars in the lot
   [

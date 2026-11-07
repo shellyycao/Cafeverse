@@ -1,36 +1,36 @@
 /**
- * Local fixture for the demo café. Everything here is ILLUSTRATIVE demo data —
- * not verified, not live. Real data sources replace this later.
+ * Foster Street Coffee — facts come ONLY from the café's own website (fosterstreetcoffee.com).
+ * Anything the site does not state is `null` and is shown as "not stated", never invented.
+ * AI-derived attributes (from permitted reviews/descriptions) are layered on top in Milestone D.
  */
 export const CAFE = {
-  id: "cafeverse-demo",
-  name: "Cafeverse",
-  area: "Maple Ave · fictional neighborhood",
-  baristaName: "Mina",
-  tags: ["bakery-forward", "window bar", "round tables", "patio"],
-  description:
-    "A corner café with a long window bar, a handful of round tables and a pastry case that does most of the talking. Small patio out front.",
-  specialties: [
-    { id: "bun", name: "Brown-butter cardamom bun", note: "Baked in the morning; sells out early.", color: "#d99a5b" },
-    { id: "tart", name: "Strawberry cream tart", note: "Seasonal fruit, vanilla custard.", color: "#e58b8b" },
-    { id: "loaf", name: "Sourdough miche", note: "Slow-fermented, sliced to order.", color: "#c98f55" },
-    { id: "latte", name: "Oat-milk honey latte", note: "House drink, pairs with the bun.", color: "#c9a27a" },
-  ],
-  recommendation: {
-    headline: "Try the cardamom bun with an oat honey latte.",
-    why: "It's the first thing in the pastry case and the house drink listed with it.",
-  },
+  id: "foster-street-coffee",
+  name: "Foster Street Coffee",
+  address: "530 Foster Street, Durham, NC 27701",
+  area: "Central Park District · Downtown Durham",
+  website: "https://www.fosterstreetcoffee.com/",
+  tagline: "Study, Work, Meet, or Relax in Durham's Central Park District",
+  hours: { weekdays: "7a–6p", weekends: "8a–6p" },
+  location: "Just north of Durham Central Park, next to the Durham Food Hall in the Liberty Warehouse Apartment Building.",
   parking: {
-    title: "Street parking",
-    lines: ["Metered spaces along the front, a small lot beside the café.", "Rules and rates are placeholders in this demo."],
+    title: "Parking",
+    lines: [
+      "Street parking on Foster and surrounding streets.",
+      "Also the Liberty Warehouse Garage — enter on Corporation Street.",
+    ],
+    source: "café website",
   },
   transit: {
     title: "Bus stop",
-    lines: ["A shelter sits just past the café on the corner.", "Routes and times are placeholders in this demo."],
+    lines: ["Stop location, routes and times are not verified in this demo."],
+    source: "illustrative",
   },
-  hotspots: {
-    study: "Window bar with outlets near the seats. Quiet before noon (illustrative).",
-    social: "Round tables for 2–4; the middle table is the chatty one (illustrative).",
-  },
+  services: ["Online ordering", "Catering: boxed or bagged pastry selections, coffee/tea carafes, boxed breakfasts and lunches"],
+  // Not stated on the café's site — kept null until reviews/other permitted sources provide evidence.
+  menu: null as null | string[],
+  petPolicy: null as null | string,
+  wifi: null as null | string,
+  restrooms: null as null | string,
+  patio: null as null | string,
 };
 export type CafeData = typeof CAFE;

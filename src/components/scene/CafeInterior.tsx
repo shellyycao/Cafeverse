@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { P, boxFaces, pts, rectPts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
-import { CAFE_FOOTPRINT as F } from "@/data/neighborhood";
+import { CAFE_FOOTPRINT as F } from "@/data/durham";
 import { Person, RoundTable } from "./primitives";
 
 const stroke = { stroke: INK, strokeOpacity: 0.5, strokeWidth: 0.7, strokeLinejoin: "round" as const };

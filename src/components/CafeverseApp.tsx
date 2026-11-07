@@ -7,6 +7,7 @@ import Neighborhood, { ANCHORS, ScenePins, type HotspotId } from "./scene/Neighb
 import Defs from "./scene/Defs";
 import Popover from "./Popover";
 import { P } from "@/lib/iso";
+import { ZONES } from "@/data/durham";
 
 type Level = 1 | 2 | 3 | 4;
 const LEVELS = ["City map", "Neighborhood", "Café exterior", "Inside"];
@@ -16,7 +17,19 @@ const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const interiorZoom = (vw: number) => clamp((vw * 0.9) / 272, 2.6, 4.6);
 const levelOf = (z: number, zi: number): Level => (z < 1.2 ? 1 : z < 0.45 * zi ? 2 : z < 0.9 * zi ? 3 : 4);
 
-const START: Camera = { x: P(268, 192).x, y: P(268, 192).y, z: 0.55 };
+const START: Camera = { x: P(268, 192).x, y: P(268, 192).y, z: 0.6 };
+
+/**
+ * Only café zones can zoom into the miniature; the rest of the map stops at street level.
+ * Rule: the zone must stay in view — allowed zoom ≈ R / distance-to-zone, floored at street level.
+ */
+const OUTSIDE_CAP = 1.05;
+const ZONE_PTS = ZONES.map((z) => P(z.cx, z.cy));
+function maxZoomAt(x: number, y: number) {
+  const R = typeof window === "undefined" ? 600 : Math.max(330, Math.min(window.innerWidth, 1200) * 0.45);
+  const d = Math.min(...ZONE_PTS.map((p) => Math.hypot(p.x - x, p.y - y)));
+  return Math.min(18, Math.max(OUTSIDE_CAP, R / Math.max(d, 1)));
+}
 
 export default function CafeverseApp() {
   const map = useRef<MapHandle>(null);
@@ -27,6 +40,13 @@ export default function CafeverseApp() {
   const [pop, setPop] = useState<{ id: HotspotId } | null>(null);
   const popEl = useRef<HTMLDivElement>(null);
   const popWorld = useRef<{ x: number; y: number } | null>(null);
+  const [toast, setToast] = useState(false);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onZoomBlocked = useCallback(() => {
+    setToast(true);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(false), 2600);
+  }, []);
 
   useEffect(() => {
     const set = () => {
@@ -102,7 +122,7 @@ export default function CafeverseApp() {
         if (pop && !(e.target as Element).closest("[data-hotspot], .hint, .pin, .popover, .chrome")) setPop(null);
       }}
     >
-      <MapViewport initial={START} onCamera={onCamera} handleRef={map} cssVars={{ "--zi": zi }}>
+      <MapViewport initial={START} onCamera={onCamera} handleRef={map} cssVars={{ "--zi": zi }} maxZoomAt={maxZoomAt} onZoomBlocked={onZoomBlocked}>
         <Defs />
         <BaseMap />
         <g className="mini" mask="url(#revealMask)">
@@ -120,7 +140,7 @@ export default function CafeverseApp() {
         <label className="pill search">
           <span aria-hidden>🔍</span>
           <input
-            placeholder="Search cafés, neighborhoods, or tags…"
+            placeholder="Search cafés in downtown Durham…"
             onKeyDown={(e) => {
               if (e.key === "Enter") fly("exterior");
             }}
@@ -147,7 +167,8 @@ export default function CafeverseApp() {
           </button>
         ))}
       </div>
-      <div className="chrome credit">Demo map · fictional neighborhood · illustrative data</div>
+      <div className="chrome credit">Map data © OpenStreetMap contributors · illustrated demo</div>
+      {toast && <div className="chrome toast">Only café neighborhoods zoom in closer — more coming soon</div>}
 
       {pop && <Popover ref={popEl} id={pop.id} onClose={() => setPop(null)} />}
     </div>

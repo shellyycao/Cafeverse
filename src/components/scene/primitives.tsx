@@ -1,6 +1,6 @@
 import { P, boxFaces, pts } from "@/lib/iso";
 import { INK, shade } from "@/lib/color";
-import type { Building } from "@/data/neighborhood";
+import { polyArea, type Poly } from "@/data/durham";
 
 const OUT = { stroke: INK, strokeWidth: 0.9, strokeOpacity: 0.55, strokeLinejoin: "round" as const };
 
@@ -20,73 +20,59 @@ export const rightQuad = (x1: number, y1: number, u0: number, u1: number, v0: nu
     [x, y1 - u0, v1],
   ]);
 
-/* ---------- Building ---------- */
-export function BuildingShape({ b, detail }: { b: Building; detail: boolean }) {
-  const f = boxFaces(b.x0, b.y0, b.x1, b.y1, b.h);
-  const lenL = b.x1 - b.x0;
-  const lenR = b.y1 - b.y0;
-  const floors = Math.max(1, Math.round(b.h / 17));
-  const win = (len: number) => Math.max(1, Math.floor(len / 26));
+/* ---------- Extruded polygon building (real OSM footprint) ---------- */
+export function PolyBuilding({ poly, h, wall, roof, shop = false }: { poly: Poly; h: number; wall: string; roof: string; shop?: boolean }) {
+  const n = poly.length;
+  const cx = poly.reduce((a, p) => a + p[0], 0) / n;
+  const cy = poly.reduce((a, p) => a + p[1], 0) / n;
+  const edges: Array<{ a: [number, number]; b: [number, number]; L: number; nx: number; ny: number; d: number }> = [];
+  for (let i = 0; i < n; i++) {
+    const a = poly[i];
+    const b = poly[(i + 1) % n];
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (L < 1) continue;
+    let nx = (b[1] - a[1]) / L;
+    let ny = -(b[0] - a[0]) / L;
+    if (((a[0] + b[0]) / 2 - cx) * nx + ((a[1] + b[1]) / 2 - cy) * ny < 0) {
+      nx = -nx;
+      ny = -ny;
+    }
+    if (nx + ny > 0.05) edges.push({ a, b, L, nx, ny, d: a[0] + a[1] + b[0] + b[1] });
+  }
+  edges.sort((e1, e2) => e1.d - e2.d);
+  const floors = Math.max(1, Math.floor((h - 4) / 15));
   return (
     <g>
-      <polygon points={f.left} fill={b.wall} {...OUT} />
-      <polygon points={f.right} fill={shade(b.wall, -0.14)} {...OUT} />
-      <polygon points={f.top} fill={b.roof} {...OUT} />
-      {detail && (
-        <g>
-          {/* roof parapet inset */}
-          <polygon
-            points={pts([
-              [b.x0 + 4, b.y0 + 4, b.h],
-              [b.x1 - 4, b.y0 + 4, b.h],
-              [b.x1 - 4, b.y1 - 4, b.h],
-              [b.x0 + 4, b.y1 - 4, b.h],
-            ])}
-            fill={shade(b.roof, 0.18)}
-            stroke={INK}
-            strokeOpacity={0.25}
-            strokeWidth={0.6}
-          />
-          {Array.from({ length: floors }).map((_, fl) => {
-            const v0 = 5 + fl * 17 + (fl === 0 && b.kind === "shop" ? 2 : 0);
-            const v1 = v0 + (fl === 0 && b.kind === "shop" ? 14 : 9);
-            if (v1 > b.h - 3) return null;
-            const nL = win(lenL);
-            const nR = win(lenR);
-            return (
-              <g key={fl}>
-                {Array.from({ length: nL }).map((_, k) => {
-                  const cell = lenL / nL;
-                  return (
-                    <polygon
-                      key={`l${k}`}
-                      points={leftQuad(b.x0, b.y1, cell * k + 6, cell * (k + 1) - 6, v0, v1)}
-                      fill={b.kind === "shop" && fl === 0 ? "#f6dca0" : "#cbd9d4"}
-                      stroke={INK}
-                      strokeOpacity={0.45}
-                      strokeWidth={0.6}
-                    />
-                  );
-                })}
-                {Array.from({ length: nR }).map((_, k) => {
-                  const cell = lenR / nR;
-                  return (
-                    <polygon
-                      key={`r${k}`}
-                      points={rightQuad(b.x1, b.y1, cell * k + 6, cell * (k + 1) - 6, v0, v1)}
-                      fill={b.kind === "shop" && fl === 0 ? "#e7c887" : "#b4c5c0"}
-                      stroke={INK}
-                      strokeOpacity={0.45}
-                      strokeWidth={0.6}
-                    />
-                  );
-                })}
+      {edges.map((e, i) => {
+        const pa = P(e.a[0], e.a[1]);
+        const pb = P(e.b[0], e.b[1]);
+        const side = e.nx > e.ny;
+        const col = side ? shade(wall, -0.14) : wall;
+        const ux = (pb.x - pa.x) / e.L;
+        const uy = (pb.y - pa.y) / e.L;
+        const cells = e.L >= 22 ? Math.floor(e.L / 20) : 0;
+        return (
+          <g key={i}>
+            <polygon points={`${pa.x},${pa.y} ${pb.x},${pb.y} ${pb.x},${pb.y - h} ${pa.x},${pa.y - h}`} fill={col} {...OUT} />
+            {cells > 0 && (
+              <g transform={`matrix(${ux} ${uy} 0 1 ${pa.x} ${pa.y})`}>
+                {Array.from({ length: floors }).map((_, fl) =>
+                  Array.from({ length: cells }).map((_, k) => {
+                    const cell = e.L / cells;
+                    const v0 = 4 + fl * 15 + (fl === 0 && shop ? 1 : 0);
+                    const v1 = v0 + (fl === 0 && shop ? 11 : 8);
+                    return v1 > h - 3 ? null : (
+                      <rect key={`${fl}-${k}`} x={cell * k + 5} y={-v1} width={cell - 10} height={v1 - v0} fill={fl === 0 && shop ? (side ? "#e7c887" : "#f6dca0") : side ? "#b4c5c0" : "#cbd9d4"} stroke={INK} strokeOpacity={0.4} strokeWidth={0.5} />
+                    );
+                  }),
+                )}
               </g>
-            );
-          })}
-          {b.kind === "shop" && <Awning x0={b.x0 + 6} x1={b.x1 - 6} y={b.y1} z={Math.min(b.h - 6, 24)} color="#d9a3a0" />}
-        </g>
-      )}
+            )}
+          </g>
+        );
+      })}
+      <polygon points={poly.map(([x, y]) => { const q = P(x, y, h); return `${q.x},${q.y}`; }).join(" ")} fill={roof} {...OUT} />
+      {polyArea(poly) === 0 && null}
     </g>
   );
 }

@@ -15,44 +15,39 @@ const Popover = forwardRef<HTMLDivElement, { id: HotspotId; onClose: () => void 
   if (id === "barista")
     body = (
       <>
-        <h4>{CAFE.baristaName} suggests</h4>
-        <p>{CAFE.recommendation.headline}</p>
-        <p style={{ fontSize: 11.5, color: "#8a7255" }}>{CAFE.recommendation.why}</p>
-        <span className="tag">Demo data</span>
+        <h4>Behind the counter</h4>
+        <p>
+          Open weekdays {CAFE.hours.weekdays}, weekends {CAFE.hours.weekends}. You can order online or stop in.
+        </p>
+        <p style={{ fontSize: 11.5, color: "#8a7255" }}>Drink and pastry picks will come from review analysis — the café's site doesn&apos;t list a menu.</p>
+        <span className="tag">From café website</span>
       </>
     );
   if (id === "pastry")
     body = (
       <>
-        <h4>Pastry case — specialties</h4>
-        <ul>
-          {CAFE.specialties.map((s) => (
-            <li key={s.id}>
-              <i style={{ background: s.color }} />
-              <span>
-                {s.name}
-                <small>{s.note}</small>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <span className="tag">Demo data</span>
+        <h4>Pastry case</h4>
+        <p>Catering offers boxed or individually bagged pastry selections.</p>
+        <p style={{ fontSize: 11.5, color: "#8a7255" }}>Specific pastries aren&apos;t named on the café&apos;s website — not shown here to avoid guessing.</p>
+        <span className="tag">From café website</span>
       </>
     );
   if (id === "bar")
     body = (
       <>
-        <h4>Window bar</h4>
-        <p>{CAFE.hotspots.study}</p>
-        <span className="tag">Illustrative</span>
+        <h4>Work &amp; study</h4>
+        <p>&ldquo;{CAFE.tagline}&rdquo;</p>
+        <p style={{ fontSize: 11.5, color: "#8a7255" }}>Wi-Fi and outlets are not stated by the café.</p>
+        <span className="tag">From café website</span>
       </>
     );
   if (id === "social")
     body = (
       <>
-        <h4>Round tables</h4>
-        <p>{CAFE.hotspots.social}</p>
-        <span className="tag">Illustrative</span>
+        <h4>Meet &amp; relax</h4>
+        <p>The café describes itself as a place to meet or relax.</p>
+        <p style={{ fontSize: 11.5, color: "#8a7255" }}>Seating layout here is illustrative.</p>
+        <span className="tag">Illustrative layout</span>
       </>
     );
   if (id === "parking")
@@ -62,7 +57,7 @@ const Popover = forwardRef<HTMLDivElement, { id: HotspotId; onClose: () => void 
         {CAFE.parking.lines.map((l) => (
           <p key={l}>{l}</p>
         ))}
-        <span className="tag">Illustrative</span>
+        <span className="tag">From café website</span>
       </>
     );
   if (id === "bus")

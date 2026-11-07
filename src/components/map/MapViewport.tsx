@@ -14,9 +14,9 @@ import {
 
 export type Camera = { x: number; y: number; z: number };
 
-export const MIN_ZOOM = 0.3;
+export const MIN_ZOOM = 0.42;
 export const MAX_ZOOM = 18;
-const BOUNDS = { x: 1900, y: 1100 };
+const BOUNDS = { x: 1700, y: 900 };
 
 export type MapHandle = {
   flyTo: (cam: Partial<Camera>, ms?: number) => void;
@@ -40,6 +40,8 @@ export default function MapViewport({
   onCamera,
   handleRef,
   cssVars,
+  maxZoomAt,
+  onZoomBlocked,
 }: {
   children: ReactNode;
   initial: Camera;
@@ -48,6 +50,10 @@ export default function MapViewport({
   handleRef?: Ref<MapHandle>;
   /** extra CSS custom properties set on the map root (e.g. --zi) */
   cssVars?: Record<string, string | number>;
+  /** per-location zoom ceiling: only supported zones may zoom in close */
+  maxZoomAt?: (x: number, y: number) => number;
+  /** fired (throttled by caller) when a zoom/pan request hit the ceiling */
+  onZoomBlocked?: () => void;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const worldRef = useRef<SVGGElement>(null);
@@ -107,11 +113,18 @@ export default function MapViewport({
     if (raf.current == null) raf.current = requestAnimationFrame(loop);
   }, [loop]);
 
-  const constrain = (c: Camera): Camera => ({
-    z: clamp(c.z, MIN_ZOOM, MAX_ZOOM),
-    x: clamp(c.x, -BOUNDS.x, BOUNDS.x),
-    y: clamp(c.y, -BOUNDS.y, BOUNDS.y),
-  });
+  const maxRef = useRef(maxZoomAt);
+  maxRef.current = maxZoomAt;
+  const blockedRef = useRef(onZoomBlocked);
+  blockedRef.current = onZoomBlocked;
+  const constrain = (c: Camera): Camera => {
+    const x = clamp(c.x, -BOUNDS.x, BOUNDS.x);
+    const y = clamp(c.y, -BOUNDS.y, BOUNDS.y);
+    const cap = maxRef.current ? maxRef.current(x, y) : MAX_ZOOM;
+    const wanted = clamp(c.z, MIN_ZOOM, MAX_ZOOM);
+    if (wanted > cap + 0.001) blockedRef.current?.();
+    return { x, y, z: Math.min(wanted, cap) };
+  };
 
   /** Zoom keeping the world point under screen (sx, sy) fixed. */
   const zoomAt = useCallback(
