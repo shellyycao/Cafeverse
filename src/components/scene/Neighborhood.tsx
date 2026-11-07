@@ -4,7 +4,6 @@ import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
 import { Wash, Bench, PolyBuilding, Car, ParkingMeter, Rail, LampPost, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
-import ExteriorLayer from "./ExteriorLayer";
 import InteriorBase from "./InteriorBase";
 import { SITES, type Site } from "@/data/sites";
 import { HintDot, Pin } from "./Pin";
@@ -111,7 +110,8 @@ function SiteScene({ site, showInterior, onClick, phase }: { site: Site; showInt
   );
 }
 
-export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", exterior = false, focusId = "foster-street-coffee", onSelectSite }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean; focusId?: string; onSelectSite?: (id: string) => void }) {
+export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", focusId = "foster-street-coffee", onSelectSite }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean; focusId?: string; onSelectSite?: (id: string) => void }) {
+  const exterior = false; // the authored mid-shot illustration was removed: the built-in streetscape is always used
   const day = phase === "open";
   const { consumeDrag } = useMapGesture();
   const sel = (id: HotspotId) => () => {
@@ -161,9 +161,8 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     push(site.zone[0] + site.zone[1] + 120, <SiteScene key={site.id} site={site} showInterior={focusId === site.id && level >= 3} onClick={() => { if (!consumeDrag()) onSelectSite?.(site.id); }} phase={phase} />);
   }
   // café + its surroundings
-  push(196 + 127, <g key="interior" className={exterior ? "interior-reveal" : undefined}><CafeInterior signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} /></g>);
-  if (exterior) push(250, <ExteriorLayer key="ext" />);
-  if (!exterior) push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
+  push(196 + 127, <g key="interior"><CafeInterior signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} /></g>);
+  push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
 
   // big pink blossom tree + trees around the lot
   if (!exterior) push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
@@ -176,7 +175,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     { d: 380 + 70, el: <Car key="sp3" x={378} y={150} dir="y" color="#8fa7b3" /> },
     { d: 150 + 278, el: <Car key="sp4" x={146} y={278} dir="x" color="#a7b88d" /> },
   ];
-  const streetCars = exterior ? [] : allStreetCars.slice(0, signals.streetParkedCars);
+  const streetCars = allStreetCars.slice(0, signals.streetParkedCars);
   // cars driving past (not part of the parking signal)
   if (!exterior) push(280 + 308, <Car key="mv1" x={240} y={304} dir="x" color="#a9c4d6" />);
   if (!exterior) push(410 + 180, <Car key="mv2" x={408} y={180} dir="y" color="#e7dcc0" />);

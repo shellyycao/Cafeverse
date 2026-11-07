@@ -15,7 +15,7 @@ A working demo of the big direction:
 
 | Café | Status | Art |
 |---|---|---|
-| Foster Street Coffee | **Real** (530 Foster St). Facts only from its website, your listing screenshots, review digests. | Your authored illustrations (`exterior-base.png`, `interior-base.png`) |
+| Foster Street Coffee | **Real** (530 Foster St). Facts only from its website, your listing screenshots, review digests. | Your authored interior (`interior-base.png`); the authored exterior/mid-shot was removed — the built-in streetscape is used |
 | Lantern & Loaf | **Fictional**, labelled as such | Older hand-built SVG café, themed |
 | Quiet Hour Coffee | **Fictional**, labelled as such | Older hand-built SVG café, themed |
 
@@ -43,16 +43,14 @@ The fictional interiors use the older SVG style, so they look different from Fos
 ## Dropping in new art
 
 - `public/assets/foster/interior-base.png` — 2040×1620.
-- `public/assets/foster/exterior-base.png` — 2400×1425. `scripts/fit_exterior.py` fits it to the street grid.
 - Auto-detected; no config. SVG fallback if the file is missing.
-- Specs and prompts: `docs/assets-kit/`, `docs/exterior-kit/`.
+- Specs and prompts: `docs/assets-kit/`.
 
 ## Known issues / limits
 
 - Dev overlay may show 404s for actor sprites that don't exist yet. Harmless.
 - Fixed tonight: hydration mismatch (server vs client viewport width in the initial camera).
 - No people/actors yet (Gate 2 not started; environment first, per the plan).
-- Foster's exterior was fitted by shear; the building appears slightly smaller than its block.
 - Mobile works (checked at 390 px); Foster's label can touch the right edge at the default overview.
 - Crowd numbers are labelled demo; nothing live.
 - A DB-backed API (Neon, review import, analysis cache) is parked on branch `wip/backend-and-prop-pass`, not in `main`.

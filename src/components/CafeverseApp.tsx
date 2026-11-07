@@ -14,8 +14,6 @@ import ZoneHint from "./scene/ZoneHint";
 import Popover from "./Popover";
 import Dock, { type Crowd } from "./Dock";
 import { useCafeStatus } from "@/lib/useCafeStatus";
-import { useAssetPresent } from "@/lib/useAssetPresent";
-import { EXT_IMAGE } from "@/data/foster-exterior";
 import AiPanel, { type AiState } from "./AiPanel";
 import { durhamNow, phaseAt, type Clock } from "@/lib/hours";
 import { BASELINE_SIGNALS, describeChanges, type SceneSignals } from "@/lib/scene";
@@ -70,7 +68,6 @@ export default function CafeverseApp() {
   const [signals, setSignals] = useState<SceneSignals>(BASELINE_SIGNALS);
   const signalsRef = useRef(signals);
   const [ai, setAi] = useState<AiState>({ status: "idle", mode: "demo" });
-  const hasExterior = useAssetPresent(EXT_IMAGE) === true;
   const [crowd, setCrowd] = useState<Crowd>(1);
   // search / boot
   const [focusId, setFocusId] = useState(FOSTER_ID);
@@ -184,7 +181,6 @@ export default function CafeverseApp() {
 
   const fly = (to: "map" | "hood" | "exterior" | "inside", ms = 1500, siteId = focusId) => {
     setPop(null);
-    const site = siteById(siteId);
     if (to === "map") map.current?.flyTo(overviewCam(), ms);
     if (to === "hood") {
       const c = sitePt(siteId, 264, 186);
@@ -192,7 +188,7 @@ export default function CafeverseApp() {
     }
     if (to === "exterior") {
       // with the authored illustration the Foster building sits left of the old SVG box: centre on it
-      const c = site.real && hasExterior ? { x: -117, y: -154 } : sitePt(siteId, 290, 215, 10);
+      const c = sitePt(siteId, 290, 215, 10);
       map.current?.flyTo({ x: c.x, y: c.y, z: 0.6 * ziRef.current }, ms);
     }
     if (to === "inside") {
@@ -269,7 +265,7 @@ export default function CafeverseApp() {
         <ZoneHint matches={matches} />
         <g className="mini" mask="url(#revealMask)">
           <g className="wobble-group" filter="url(#wobble)">
-            <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} exterior={hasExterior} focusId={focusId} onSelectSite={selectSite} />
+            <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} focusId={focusId} onSelectSite={selectSite} />
           </g>
         </g>
         <CafePins matches={matches} focusId={focusId} statusFor={statusFor} onSelect={selectSite} />

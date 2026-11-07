@@ -160,10 +160,6 @@ button { font: inherit; color: inherit; }
 
 .map-root[data-moving="1"] .wobble-group, .map-root[data-moving="1"] .paint-group { filter: none; }
 
-/* the café-building hole in the authored exterior opens as you zoom inside */
-.cafe-cutout { opacity: clamp(0, calc((var(--z) - 0.78 * var(--zi)) / (0.17 * var(--zi))), 1); }
-/* with the authored exterior the interior stays hidden until you step in, then fades up */
-.interior-reveal { opacity: clamp(0, calc((var(--z) - 0.78 * var(--zi)) / (0.17 * var(--zi))), 1); }
 
 /* hidden test control (?test=1) */
 .dock-time input[type="range"] { width: 110px; accent-color: var(--wood); }
