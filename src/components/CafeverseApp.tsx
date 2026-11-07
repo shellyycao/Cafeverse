@@ -195,7 +195,7 @@ export default function CafeverseApp() {
             <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} exterior={hasExterior} />
           </g>
         </g>
-        <ScenePins onSelect={onSelect} staff={phase !== "closed"} busStop={signals.busStop} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />
+        <ScenePins onSelect={onSelect} staff={phase !== "closed"} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />
       </MapViewport>
       <div className="paper" />
       <div className="vignette" />

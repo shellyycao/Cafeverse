@@ -68,18 +68,6 @@
       }
     },
     {
-      "id": "bus-stop",
-      "note": "illustrative bus shelter at the Foster St corner (not a verified stop)",
-      "px": {
-        "x": 1515,
-        "y": 1249
-      },
-      "normalized": {
-        "x": 0.6312,
-        "y": 0.8765
-      }
-    },
-    {
       "id": "pay-kiosk-1",
       "note": "pay-by-space kiosk on the Corporation St sidewalk",
       "px": {

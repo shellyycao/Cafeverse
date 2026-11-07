@@ -20,11 +20,6 @@ export const CAFE = {
     ],
     source: "café website",
   },
-  transit: {
-    title: "Bus stop",
-    lines: ["Stop location, routes and times are not verified in this demo."],
-    source: "illustrative",
-  },
   services: ["Online ordering", "Catering: boxed or bagged pastry selections, coffee/tea carafes, boxed breakfasts and lunches"],
   // Not stated on the café's site — kept null until reviews/other permitted sources provide evidence.
   menu: null as null | string[],

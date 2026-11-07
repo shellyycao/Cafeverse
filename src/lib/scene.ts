@@ -12,7 +12,6 @@ export const BASELINE_SIGNALS: SceneSignals = {
   pastryProminence: "low",
   restroomSign: false,
   streetParkedCars: 2,
-  busStop: true,
   plants: "some",
   lighting: "warm",
 };

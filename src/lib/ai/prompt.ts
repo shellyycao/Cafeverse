@@ -14,10 +14,10 @@ export const SCHEMA_HINT = `{
  "socialSuitability": {"level": "high"|"medium"|"low"|"unknown", "notes": string},
  "petPolicy": {"status": "allowed_indoors"|"patio_only"|"not_allowed"|"unknown", "notes": string},
  "specialtyProducts": [{"name": string, "kind": "pastry"|"drink"|"food"|"other", "evidence": string}],
- "amenities": {"wifi","outlets","restrooms","parking","transit","patio": "yes"|"no"|"unknown"},
+ "amenities": {"wifi","outlets","restrooms","parking","patio": "yes"|"no"|"unknown"},
  "evidence": [{"claim": string, "source": "website"|"review"|"description"|"metadata", "confidence": "high"|"medium"|"low"}],
  "uncertainty": string[],
- "visualSignals": {"laptopWorkers": 0-4, "chattingGroups": 0-2, "dogOnPatio": boolean, "dogInside": boolean, "pastryProminence": "low"|"medium"|"high", "restroomSign": boolean, "streetParkedCars": 0-4, "busStop": boolean, "plants": "few"|"some"|"many", "lighting": "bright"|"warm"|"dim"}
+ "visualSignals": {"laptopWorkers": 0-4, "chattingGroups": 0-2, "dogOnPatio": boolean, "dogInside": boolean, "pastryProminence": "low"|"medium"|"high", "restroomSign": boolean, "streetParkedCars": 0-4, "plants": "few"|"some"|"many", "lighting": "bright"|"warm"|"dim"}
 }`;
 
 export function buildUserPrompt(req: AnalyzeRequest): string {

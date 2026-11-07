@@ -18,7 +18,7 @@ export const AnalysisSchema = z.object({
   socialSuitability: z.object({ level, notes: str(180) }),
   petPolicy: z.object({ status: z.enum(["allowed_indoors", "patio_only", "not_allowed", "unknown"]), notes: str(180) }),
   specialtyProducts: arr(z.object({ name: str(60), kind: z.enum(["pastry", "drink", "food", "other"]), evidence: str(140) }), 6),
-  amenities: z.object({ wifi: tri, outlets: tri, restrooms: tri, parking: tri, transit: tri, patio: tri }),
+  amenities: z.object({ wifi: tri, outlets: tri, restrooms: tri, parking: tri, patio: tri }),
   evidence: arr(z.object({ claim: str(140), source: z.enum(["website", "review", "description", "metadata"]), confidence: z.enum(["high", "medium", "low"]) }), 10),
   uncertainty: arr(str(160), 6),
   visualSignals: z.object({
@@ -29,7 +29,6 @@ export const AnalysisSchema = z.object({
     pastryProminence: z.enum(["low", "medium", "high"]),
     restroomSign: z.boolean(),
     streetParkedCars: clampInt(0, 4),
-    busStop: z.boolean(),
     plants: z.enum(["few", "some", "many"]),
     lighting: z.enum(["bright", "warm", "dim"]),
   }),
@@ -55,13 +54,12 @@ export function groundSignals(a: CafeAnalysis): CafeAnalysis {
   const pet = a.petPolicy.status;
   v.dogOnPatio = v.dogOnPatio && (pet === "patio_only" || pet === "allowed_indoors") && a.amenities.patio !== "no";
   v.dogInside = v.dogInside && pet === "allowed_indoors";
-  // visuals follow the facts: a confirmed restroom always gets its sign; an explicit "no transit" hides the stop
+  // visuals follow the facts: a confirmed restroom always gets its sign
   v.restroomSign = a.amenities.restrooms === "yes";
   if (a.studySuitability.level === "low" || a.studySuitability.level === "unknown") v.laptopWorkers = Math.min(v.laptopWorkers, a.studySuitability.level === "unknown" ? 1 : 0);
   if (a.socialSuitability.level === "low") v.chattingGroups = 0;
   if (a.socialSuitability.level === "unknown") v.chattingGroups = Math.min(v.chattingGroups, 1);
   if (a.amenities.parking === "no") v.streetParkedCars = 0;
-  v.busStop = a.amenities.transit !== "no";
   if (a.specialtyProducts.filter((p) => p.kind === "pastry").length === 0) v.pastryProminence = v.pastryProminence === "high" ? "medium" : v.pastryProminence;
   return { ...a, visualSignals: v };
 }

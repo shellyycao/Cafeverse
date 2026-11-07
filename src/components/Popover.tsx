@@ -93,16 +93,6 @@ const Popover = forwardRef<HTMLDivElement, { id: HotspotId; analysis?: CafeAnaly
         <span className="tag">From café website</span>
       </>
     );
-  if (id === "bus")
-    body = (
-      <>
-        <h4>{CAFE.transit.title}</h4>
-        {CAFE.transit.lines.map((l) => (
-          <p key={l}>{l}</p>
-        ))}
-        <span className="tag">Illustrative</span>
-      </>
-    );
 
   return (
     <div className="popover" ref={ref} onClick={(e) => e.stopPropagation()}>

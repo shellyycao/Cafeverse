@@ -23,7 +23,7 @@ public/assets/foster/exterior-base.png
 |---|---|
 | `massing-reference.png` | **体块参考图**（同一尺寸）：真实街道 + 建筑应有的体块：2 层砖红裙楼（咖啡馆是底层，屋顶有露台）、后面和左端更高的住宅体量。**用这张当构图参考** |
 | `reference-layout.png` | 现有 SVG 占位画面（同尺寸）。⚠ 它是旧的"独立小盒子 + 停车场"，**不要照它的建筑体量画**，只看风格和街道位置 |
-| `alignment-template.png` | **透明**对位模板：街区边界（橙色虚线）、咖啡馆/后楼/停车场/公交站轮廓、道路中心线、锚点 |
+| `alignment-template.png` | **透明**对位模板：街区边界（橙色虚线）、裙楼/咖啡馆橱窗段/高体量轮廓、道路中心线、锚点 |
 | `alignment-preview.png` | 模板叠在参考图上的预览 |
 | `anchors.json` | 锚点（像素 + 归一化） |
 
@@ -33,7 +33,7 @@ public/assets/foster/exterior-base.png
 - **高体量：** 后面一栋 4 层住宅楼，左端也有一段更高的住宅体量。**咖啡馆正上方只有露台，不要盖高楼**（否则放大进室内时会被挡住）。
 - **车库入口：** 在建筑左端（官网写 "Liberty Warehouse Garage — enter on Corporation Street"）。
 - **停车：** 只有路边停车，**不要画地面停车场**（之前的版本里那块停车场是我编的，已去掉）。
-- **公交站：** 街角（Foster St 一侧）一个小亭，仅为示意，并非已核实的站点。
+- **没有公交站：** 咖啡馆旁边没有公交站，**不要画**（也不要画公交站牌、候车亭）。街角只是普通的转角人行道。
 
 ## 3b. 画什么、不画什么
 
@@ -43,7 +43,6 @@ public/assets/foster/exterior-base.png
 
 **必须有：**
 - **一栋多层红砖混合用途建筑，咖啡馆在它的底层**（不是独立的小盒子）：长长的临街立面，底层是黑色窗框的大玻璃、黑色金属百叶雨篷、玻璃门、黑色椭圆吊牌（FOSTER STREET COFFEE）、露天座椅位置、人行道扶手；上面几层是住宅（阳台、白色和红砖相间的体块），屋顶有空调设备。
-- 街角（Foster St × W Corporation St）一侧是一个小公交站亭。
 - 人行道铺装、街树、自行车架、街边计费桩、少量路灯和花盆。
 - 少量街树，笔触和室内插画一致。
 
@@ -52,7 +51,7 @@ public/assets/foster/exterior-base.png
 ## 4. 风格
 暖色水彩 + 彩铅的故事书风格，和 `interior-base.png` 保持一致：轻微不规则的轮廓、柔和投影、纸张颗粒、克制的奶油/赤陶/鼠尾草绿配色。不要光滑 3D，不要扁平矢量。
 
-> **参考图：** 你发来的两张图都很合适——**正对街面的红砖立面图**，以及**斜俯视的"周围景物"图**（多层红砖混合建筑、底层咖啡馆、街树、公交站）。它们可以当"建筑长相和风格"的参考，**但不能直接用**：斜俯视那张是透视图、不透明、画了道路和车，和我们的**严格 2:1 等距 + 透明背景 + 只画街区**不一样。生成时请把它们作为风格参考，再附上 `reference-layout.png`（构图）和 `alignment-template.png`（位置）。
+> **参考图：** 你发来的两张图都很合适——**正对街面的红砖立面图**，以及**斜俯视的"周围景物"图**（多层红砖混合建筑、底层咖啡馆、街树）。它们可以当"建筑长相和风格"的参考，**但不能直接用**。⚠ 注意：斜俯视那张图里画了**公交站、车和道路**，这些**都不要**（咖啡馆旁边没有公交站，不能编）。另外它还有这些不同：斜俯视那张是透视图、不透明、画了道路和车，和我们的**严格 2:1 等距 + 透明背景 + 只画街区**不一样。生成时请把它们作为风格参考，再附上 `reference-layout.png`（构图）和 `alignment-template.png`（位置）。
 
 ## 5. 推荐提示词（英文）
 
@@ -64,7 +63,7 @@ A multi-storey red-brick mixed-use building on the street corner whose GROUND FL
 black-framed glass windows glowing warm inside, black metal slatted canopies, a black oval hanging sign reading
 "FOSTER STREET COFFEE", glass double doors, black metal railings and small outdoor tables on the sidewalk;
 four storeys of apartments above with balconies, white and brick volumes, rooftop air-conditioning units.
-Paved sidewalk with street trees, bike racks, a pay-by-space kiosk, a small bus shelter at the corner,
+Paved sidewalk with street trees, bike racks, a pay-by-space kiosk, no bus stop or bus shelter anywhere,
 a garage entrance at the left end of the building. No surface parking lot. Only the block itself: no roads, no cars, no people, no animals, no text other than the sign,
 no UI. Transparent background outside the block, the block edge ending in a neat curb.
 ```
@@ -83,7 +82,6 @@ no UI. Transparent background outside the block, the block edge ending in a neat
 | cafe-corner | 0.5563 | 0.8975 | 1335, 1279 | east end of the café storefront, toward the Foster St corner |
 | roof-terrace | 0.5533 | 0.5053 | 1328, 720 | planted roof terrace on top of the podium above the café |
 | garage-entrance | 0.15 | 0.5551 | 360, 791 | Liberty Warehouse Garage entrance (Corporation St side, left end of the building) |
-| bus-stop | 0.6312 | 0.8765 | 1515, 1249 | illustrative bus shelter at the Foster St corner (not a verified stop) |
 | pay-kiosk-1 | 0.4721 | 0.8526 | 1133, 1215 | pay-by-space kiosk on the Corporation St sidewalk |
 | pay-kiosk-2 | 0.2375 | 0.6554 | 570, 934 | pay-by-space kiosk (left) |
 | bike-rack | 0.3375 | 0.7396 | 810, 1054 | bike rack in front of the café windows |

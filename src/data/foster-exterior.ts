@@ -21,7 +21,7 @@ export type ExtLandmark = { id: string; note: string; ground: [number, number, n
  * Massing used for the template: a two-storey brick podium along W Corporation St (the café storefront is the
  * gx 184…344 stretch of it, with a roof terrace above), taller residential volumes behind and at the left end,
  * a garage entrance at the left end (website: "Liberty Warehouse Garage — enter on Corporation Street"),
- * a small bus shelter at the Foster St corner. Street parking is on the street, not in a lot.
+ * No bus stop: there is none next to the café (it must not be invented). Street parking is on the street, not in a lot.
  */
 export const PODIUM = { x0: 40, x1: 372, y0: 108, y1: 258, h: 70 };
 export const CAFE_SEGMENT = { x0: F.x0, x1: F.x1, y0: F.y0, y1: F.y1 };
@@ -32,7 +32,6 @@ export const EXT_LANDMARKS: ExtLandmark[] = [
   { id: "cafe-corner", note: "east end of the café storefront, toward the Foster St corner", ground: [344, 258, 0] },
   { id: "roof-terrace", note: "planted roof terrace on top of the podium above the café", ground: [264, 180, 70] },
   { id: "garage-entrance", note: "Liberty Warehouse Garage entrance (Corporation St side, left end of the building)", ground: [84, 258, 0] },
-  { id: "bus-stop", note: "illustrative bus shelter at the Foster St corner (not a verified stop)", ground: [360, 226, 0] },
   { id: "pay-kiosk-1", note: "pay-by-space kiosk on the Corporation St sidewalk", ground: [300, 268, 0] },
   { id: "pay-kiosk-2", note: "pay-by-space kiosk (left)", ground: [150, 268, 0] },
   { id: "bike-rack", note: "bike rack in front of the café windows", ground: [214, 268, 0] },
@@ -48,7 +47,6 @@ export const EXT_ZONES: Array<{ id: string; label: string; poly: Array<[number, 
   { id: "cafe-storefront", label: "café storefront + interior cutout area", poly: [[CAFE_SEGMENT.x0, CAFE_SEGMENT.y0], [CAFE_SEGMENT.x1, CAFE_SEGMENT.y0], [CAFE_SEGMENT.x1, CAFE_SEGMENT.y1], [CAFE_SEGMENT.x0, CAFE_SEGMENT.y1]], color: "#c4566b", h: PODIUM.h },
   { id: "tower-back", label: "taller residential volume behind (4 storeys)", poly: [[96, 36], [372, 36], [372, 108], [96, 108]], color: "#6b4a3a", h: 96 },
   { id: "tower-left", label: "taller residential volume at the left end", poly: [[40, 108], [128, 108], [128, 200], [40, 200]], color: "#6b4a3a", h: 96 },
-  { id: "bus", label: "bus shelter pad", poly: [[348, 200], [372, 200], [372, 250], [348, 250]], color: "#2f6aa8" },
 ];
 
 /** silhouette of the café building (walls + roof) used to cut a hole when you zoom inside */

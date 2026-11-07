@@ -11,11 +11,10 @@ import { useMapGesture } from "@/components/map/MapViewport";
 import { BASELINE_SIGNALS, type SceneSignals } from "@/lib/scene";
 import type { Phase } from "@/lib/hours";
 
-export type HotspotId = "cafe" | "parking" | "bus" | "barista" | "pastry" | "bar" | "social";
+export type HotspotId = "cafe" | "parking" | "barista" | "pastry" | "bar" | "social";
 export const ANCHORS: Record<HotspotId, [number, number, number]> = {
   cafe: [268, 236, 44],
   parking: [150, 292, 14],
-  bus: [360, 88, 36],
   barista: [250, 136, 34],
   pastry: [289, 180, 34],
   bar: [228, 182, 26],
@@ -65,9 +64,6 @@ function GroundPatch() {
       {[60, 110, 160, 210].map((y) => (
         <polyline key={y} points={pts([[375, y], [393, y]])} stroke="#fffaf0" strokeWidth={1.2} opacity={0.9} />
       ))}
-      {/* bus stop pad + yellow curb */}
-      <polygon points={rectPts(346, 62, 372, 114)} fill="#e3d2ae" />
-      <polyline points={pts([[372, 56], [372, 120]])} stroke="#e0b94f" strokeWidth={2.4} />
     </g>
   );
 }
@@ -82,38 +78,6 @@ function CastShadows({ shapes }: { shapes: Array<{ poly: Array<[number, number]>
   return <path d={d} fill="#5a3f22" opacity={0.15} style={{ pointerEvents: "none" }} />;
 }
 
-function BusStop({ onClick }: { onClick?: () => void }) {
-  const roof = boxFaces(348, 64, 370, 110, 2, 30);
-  const post = (x: number, y: number) => {
-    const a = P(x, y, 0);
-    const b = P(x, y, 30);
-    return <line key={`${x}${y}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#4b4a52" strokeWidth={1.8} />;
-  };
-  return (
-    <g className="hotspot" onClick={onClick} data-hotspot="bus">
-      <polygon points={pts([[349, 65, 2], [349, 109, 2], [349, 109, 28], [349, 65, 28]])} fill="#cfe3e6" opacity={0.55} stroke="#8aa5ab" strokeWidth={0.7} />
-      <Bench x={351} y={74} dir="y" />
-      {post(369, 65)}
-      {post(369, 109)}
-      <polygon points={roof.left} fill="#4f6670" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
-      <polygon points={roof.right} fill="#3f535c" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
-      <polygon points={roof.top} fill="#6f8c96" stroke={INK} strokeOpacity={0.5} strokeWidth={0.7} />
-      {/* bus sign */}
-      {(() => {
-        const p = P(370, 118, 0);
-        return (
-          <g transform={`translate(${p.x} ${p.y})`}>
-            <path d="M0 0 V-34" stroke="#4b4a52" strokeWidth={1.6} />
-            <rect x={-6} y={-42} width={12} height={12} rx={2.4} fill="#4b6ea5" stroke="#fff" strokeWidth={1} />
-            <rect x={-3.6} y={-39.6} width={7.2} height={4.4} rx={1} fill="#fff" />
-            <circle cx={-2} cy={-32.8} r={0.9} fill="#fff" />
-            <circle cx={2} cy={-32.8} r={0.9} fill="#fff" />
-          </g>
-        );
-      })()}
-    </g>
-  );
-}
 
 export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", exterior = false }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean }) {
   const day = phase === "open";
@@ -145,7 +109,6 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   push(196 + 127, <CafeInterior key="interior" signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
   if (exterior) push(250, <ExteriorLayer key="ext" />);
   if (!exterior) push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
-  if (!exterior && signals.busStop) push(450, <BusStop key="bus" onClick={sel("bus")} />);
 
   // big pink blossom tree + trees around the lot
   if (!exterior) push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
@@ -209,7 +172,7 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   );
 }
 
-export function ScenePins({ onSelect, busStop = true, status = null, staff = true }: { onSelect?: (id: HotspotId) => void; busStop?: boolean; status?: "saved" | "visited" | null; staff?: boolean }) {
+export function ScenePins({ onSelect, status = null, staff = true }: { onSelect?: (id: HotspotId) => void; status?: "saved" | "visited" | null; staff?: boolean }) {
   const at = (id: HotspotId) => P(...ANCHORS[id]);
   const hints: Array<[HotspotId, string]> = [
     ["barista", "Barista"],
@@ -221,7 +184,6 @@ export function ScenePins({ onSelect, busStop = true, status = null, staff = tru
     <g>
       <Pin id="cafe-pin" at={P(268, 192, 84)} kind="cafe" status={status} onClick={() => onSelect?.("cafe")} fadeOutAt="calc(0.5 * var(--zi))" />
       <Pin id="parking-pin" at={P(110, 210, 30)} kind="parking" onClick={() => onSelect?.("parking")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />
-      {busStop && <Pin id="bus-pin" at={P(362, 90, 48)} kind="bus" onClick={() => onSelect?.("bus")} fadeOutAt="calc(0.8 * var(--zi))" fadeInAt={1.0} />}
       <CafeLabel at={P(268, 192, 84)} name="Foster Street Coffee" />
       <g className="hints">
         {hints.filter(([id]) => false && (staff || id !== "barista")).map(([id, label]) => (

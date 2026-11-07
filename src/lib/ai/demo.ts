@@ -90,7 +90,7 @@ export class DemoProvider implements InferenceProvider {
         kind: PASTRY.test(p.name) ? ("pastry" as const) : /sandwich/i.test(p.name) ? ("food" as const) : ("drink" as const),
         evidence: `Named in ${p.n} source${p.n === 1 ? "" : "s"}.`,
       })),
-      amenities: { wifi: tri(has(text, "wi-fi", "wifi")), outlets: tri(has(text, "outlet")), restrooms: tri(restrooms), parking: tri(parking), transit: "unknown", patio: tri(patio) },
+      amenities: { wifi: tri(has(text, "wi-fi", "wifi")), outlets: tri(has(text, "outlet")), restrooms: tri(restrooms), parking: tri(parking), patio: tri(patio) },
       evidence,
       uncertainty: [
         "Demo mode: keyword matching over supplied text, not model inference.",
@@ -105,7 +105,6 @@ export class DemoProvider implements InferenceProvider {
         pastryProminence: pastries.length >= 3 ? "high" : pastries.length ? "medium" : "low",
         restroomSign: restrooms,
         streetParkedCars: parking ? (has(text, "free street parking") && has(text, "paid street parking") ? 4 : 3) : 1,
-        busStop: true,
         plants: cozy ? "many" : "some",
         lighting: bright ? "bright" : cozy ? "warm" : "warm",
       },
