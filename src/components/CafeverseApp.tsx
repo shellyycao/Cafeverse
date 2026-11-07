@@ -9,6 +9,8 @@ import ZoneHint from "./scene/ZoneHint";
 import Popover from "./Popover";
 import Dock, { type Crowd } from "./Dock";
 import { useCafeStatus } from "@/lib/useCafeStatus";
+import { useAssetPresent } from "@/lib/useAssetPresent";
+import { EXT_IMAGE } from "@/data/foster-exterior";
 import AiPanel, { type AiState } from "./AiPanel";
 import { durhamNow, phaseAt, type Clock } from "@/lib/hours";
 import { BASELINE_SIGNALS, describeChanges, type SceneSignals } from "@/lib/scene";
@@ -51,6 +53,7 @@ export default function CafeverseApp() {
   const [signals, setSignals] = useState<SceneSignals>(BASELINE_SIGNALS);
   const signalsRef = useRef(signals);
   const [ai, setAi] = useState<AiState>({ status: "idle", mode: "demo" });
+  const hasExterior = useAssetPresent(EXT_IMAGE) === true;
   const [crowd, setCrowd] = useState<Crowd>(1);
   const [now, setNow] = useState<Clock | null>(null);
   const [simMin, setSimMin] = useState<number | null>(null);
@@ -184,7 +187,7 @@ export default function CafeverseApp() {
         <ZoneHint />
         <g className="mini" mask="url(#revealMask)">
           <g className="wobble-group" filter="url(#wobble)">
-            <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} />
+            <Neighborhood onSelect={onSelect} level={level} signals={sceneSignals} crowd={sceneCrowd} phase={phase} exterior={hasExterior} />
           </g>
         </g>
         <ScenePins onSelect={onSelect} staff={phase !== "closed"} busStop={signals.busStop} status={cafeStatus.visited ? "visited" : cafeStatus.saved ? "saved" : null} />

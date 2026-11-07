@@ -1,0 +1,119 @@
+{
+  "canvas": {
+    "width": 2400,
+    "height": 1425,
+    "aspect": "2400:1425 (1.684)",
+    "worldUnitsToPx": 3.75
+  },
+  "note": "normalized = px / canvas size, origin top-left",
+  "anchors": [
+    {
+      "id": "cafe-door",
+      "note": "glass entrance under the black canopy (Corporation St side, left facade)",
+      "px": {
+        "x": 1065,
+        "y": 1144
+      },
+      "normalized": {
+        "x": 0.4437,
+        "y": 0.8028
+      }
+    },
+    {
+      "id": "oval-sign",
+      "note": "black oval hanging sign beside the door",
+      "px": {
+        "x": 1016,
+        "y": 1011
+      },
+      "normalized": {
+        "x": 0.4233,
+        "y": 0.7095
+      }
+    },
+    {
+      "id": "cafe-corner",
+      "note": "street corner of the café (Foster × Corporation)",
+      "px": {
+        "x": 1335,
+        "y": 1279
+      },
+      "normalized": {
+        "x": 0.5563,
+        "y": 0.8975
+      }
+    },
+    {
+      "id": "bus-stop",
+      "note": "illustrative bus shelter on the Foster St sidewalk",
+      "px": {
+        "x": 2033,
+        "y": 990
+      },
+      "normalized": {
+        "x": 0.8471,
+        "y": 0.6947
+      }
+    },
+    {
+      "id": "parking-kiosk-1",
+      "note": "pay-by-space kiosk on the Corporation St sidewalk",
+      "px": {
+        "x": 446,
+        "y": 883
+      },
+      "normalized": {
+        "x": 0.1858,
+        "y": 0.6196
+      }
+    },
+    {
+      "id": "parking-kiosk-2",
+      "note": "pay-by-space kiosk",
+      "px": {
+        "x": 844,
+        "y": 1082
+      },
+      "normalized": {
+        "x": 0.3517,
+        "y": 0.7593
+      }
+    },
+    {
+      "id": "parking-kiosk-3",
+      "note": "pay-by-space kiosk on Foster St",
+      "px": {
+        "x": 1834,
+        "y": 1123
+      },
+      "normalized": {
+        "x": 0.7642,
+        "y": 0.7881
+      }
+    },
+    {
+      "id": "lamp-corner",
+      "note": "street lamp at the café corner",
+      "px": {
+        "x": 1403,
+        "y": 1328
+      },
+      "normalized": {
+        "x": 0.5846,
+        "y": 0.9319
+      }
+    },
+    {
+      "id": "lot-entrance",
+      "note": "small surface lot beside the café",
+      "px": {
+        "x": 555,
+        "y": 791
+      },
+      "normalized": {
+        "x": 0.2313,
+        "y": 0.5551
+      }
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
 import { Wash, Bench, PolyBuilding, Car, ParkingMeter, Rail, LampPost, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
+import ExteriorLayer from "./ExteriorLayer";
 import { HintDot, Pin } from "./Pin";
 import CafeInterior from "./CafeInterior";
 import { useMapGesture } from "@/components/map/MapViewport";
@@ -114,7 +115,7 @@ function BusStop({ onClick }: { onClick?: () => void }) {
   );
 }
 
-export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open" }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase }) {
+export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_SIGNALS, crowd = 1, phase = "open", exterior = false }: { onSelect?: (id: HotspotId) => void; level?: number; signals?: SceneSignals; crowd?: 0 | 1 | 2; phase?: Phase; exterior?: boolean }) {
   const day = phase === "open";
   const { consumeDrag } = useMapGesture();
   const sel = (id: HotspotId) => () => {
@@ -135,26 +136,27 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     );
   }
   // Liberty Warehouse apartments: the café sits at the foot of this brick building (per the café's website)
-  push(
+  if (!exterior) push(
     110,
     <PolyBuilding key="liberty" poly={[[96, 36], [372, 36], [372, 112], [96, 112]]} h={86} wall="#b98c6a" roof="#c8b898" />,
   );
   NEAR_TREES.forEach((t, i) => push(t.x + t.y, <Tree key={`mt${i}`} {...t} rich />));
   // café + its surroundings
   push(196 + 127, <CafeInterior key="interior" signals={signals} crowd={crowd} phase={phase} level={level} onSelect={(id) => onSelect?.(id)} guard={(fn) => () => { if (!consumeDrag()) fn(); }} />);
-  push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
-  if (signals.busStop) push(450, <BusStop key="bus" onClick={sel("bus")} />);
+  if (exterior) push(250, <ExteriorLayer key="ext" />);
+  if (!exterior) push(196 + 128, <CafeExterior key="cafe" onClick={sel("cafe")} interactive={level < 4} lit={phase !== "closed"} />);
+  if (!exterior && signals.busStop) push(450, <BusStop key="bus" onClick={sel("bus")} />);
 
   // big pink blossom tree + trees around the lot
-  push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
-  push(372 + 270, <Tree key="rt" x={380} y={150} s={1.1} rich />);
+  if (!exterior) push(186 + 262, <Tree key="pink" x={184} y={262} s={1.35} kind="bloom" rich />);
+  if (!exterior) push(372 + 270, <Tree key="rt" x={380} y={150} s={1.1} rich />);
 
   // parked cars in the lot
   [
     [50, "#8fa7b3"],
     [90, "#efe6cf"],
     [130, "#a7b88d"],
-  ].forEach(([x, c], i) => push((x as number) + 230, <Car key={`lc${i}`} x={(x as number) + 1} y={229} dir="y" color={c as string} />));
+  ].forEach(([x, c], i) => !exterior && push((x as number) + 230, <Car key={`lc${i}`} x={(x as number) + 1} y={229} dir="y" color={c as string} />));
 
   // street parking (clickable group)
   const allStreetCars: Item[] = [
@@ -163,39 +165,38 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
     { d: 380 + 70, el: <Car key="sp3" x={378} y={150} dir="y" color="#8fa7b3" /> },
     { d: 150 + 278, el: <Car key="sp4" x={146} y={278} dir="x" color="#a7b88d" /> },
   ];
-  const streetCars = allStreetCars.slice(0, signals.streetParkedCars);
+  const streetCars = exterior ? [] : allStreetCars.slice(0, signals.streetParkedCars);
   // cars driving past (not part of the parking signal)
-  push(280 + 308, <Car key="mv1" x={240} y={304} dir="x" color="#a9c4d6" />);
-  push(410 + 180, <Car key="mv2" x={408} y={180} dir="y" color="#e7dcc0" />);
+  if (!exterior) push(280 + 308, <Car key="mv1" x={240} y={304} dir="x" color="#a9c4d6" />);
+  if (!exterior) push(410 + 180, <Car key="mv2" x={408} y={180} dir="y" color="#e7dcc0" />);
 
   // street furniture + people
-  push(205 + 266, <Rail key="rail1" x0={206} y0={266} x1={262} y1={266} />);
-  push(300 + 266, <Rail key="rail2" x0={298} y0={266} x1={336} y1={266} />);
-  push(120 + 271, <ParkingMeter key="pm1" x={120} y={271} />);
-  push(226 + 271, <ParkingMeter key="pm2" x={226} y={271} />);
-  push(369 + 150, <ParkingMeter key="pm3" x={369} y={150} />);
-  push(364 + 262, <LampPost key="lamp1" x={366} y={262} />);
-  push(60 + 262, <LampPost key="lamp2" x={60} y={262} />);
-  push(366 + 126, <LampPost key="lamp3" x={366} y={126} />);
-  push(60 + 160, <Bench key="bench" x={66} y={176} dir="x" />);
-  push(180 + 266, <Planter key="pl1" x={190} y={266} flowers="#e9a0b4" />);
-  push(260 + 264, <Planter key="pl2" x={252} y={266} flowers="#f1c36b" size={0.9} />);
-  push(330 + 266, <Planter key="pl3" x={336} y={266} flowers="#e9a0b4" />);
-  push(356 + 176, <Planter key="pl4" x={358} y={176} flowers="#f4ede0" size={0.95} />);
-  push(216 + 266, <RoundTable key="t1" x={222} y={266} />);
-  push(300 + 266, <RoundTable key="t2" x={296} y={266} />);
-  push(358 + 210, <RoundTable key="t3" x={358} y={212} />);
-  push(240 + 262, <ChalkSign key="chalk" x={262} y={270} />);
+  if (!exterior) push(205 + 266, <Rail key="rail1" x0={206} y0={266} x1={262} y1={266} />);
+  if (!exterior) push(300 + 266, <Rail key="rail2" x0={298} y0={266} x1={336} y1={266} />);
+  if (!exterior) push(120 + 271, <ParkingMeter key="pm1" x={120} y={271} />);
+  if (!exterior) push(226 + 271, <ParkingMeter key="pm2" x={226} y={271} />);
+  if (!exterior) push(369 + 150, <ParkingMeter key="pm3" x={369} y={150} />);
+  if (!exterior) push(364 + 262, <LampPost key="lamp1" x={366} y={262} />);
+  if (!exterior) push(60 + 262, <LampPost key="lamp2" x={60} y={262} />);
+  if (!exterior) push(366 + 126, <LampPost key="lamp3" x={366} y={126} />);
+  if (!exterior) push(60 + 160, <Bench key="bench" x={66} y={176} dir="x" />);
+  if (!exterior) push(180 + 266, <Planter key="pl1" x={190} y={266} flowers="#e9a0b4" />);
+  if (!exterior) push(260 + 264, <Planter key="pl2" x={252} y={266} flowers="#f1c36b" size={0.9} />);
+  if (!exterior) push(330 + 266, <Planter key="pl3" x={336} y={266} flowers="#e9a0b4" />);
+  if (!exterior) push(356 + 176, <Planter key="pl4" x={358} y={176} flowers="#f4ede0" size={0.95} />);
+  if (!exterior) push(216 + 266, <RoundTable key="t1" x={222} y={266} />);
+  if (!exterior) push(300 + 266, <RoundTable key="t2" x={296} y={266} />);
+  if (!exterior) push(358 + 210, <RoundTable key="t3" x={358} y={212} />);
+  if (!exterior) push(240 + 262, <ChalkSign key="chalk" x={262} y={270} />);
 
   items.sort((a, b) => a.d - b.d);
 
   return (
     <g>
-      <GroundPatch />
+      {!exterior && <GroundPatch />}
       <CastShadows
         shapes={[
-          { poly: [[184, 114], [344, 114], [344, 258], [184, 258]], h: 60 },
-          { poly: [[96, 36], [372, 36], [372, 112], [96, 112]], h: 86 },
+          ...(exterior ? [] : [{ poly: [[184, 114], [344, 114], [344, 258], [184, 258]] as Array<[number, number]>, h: 60 }, { poly: [[96, 36], [372, 36], [372, 112], [96, 112]] as Array<[number, number]>, h: 86 }]),
           ...NEAR_BUILDINGS.map((b) => ({ poly: b.p, h: b.l ? Math.min(78, 12 + b.l * 13) : 14 + ((b.id * 7) % 17) })),
         ]}
       />

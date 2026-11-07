@@ -162,3 +162,6 @@ button { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) { .bob, .steam, .beam, .mote { animation: none; } .steam, .mote { opacity: 0; } }
 
 .map-root[data-moving="1"] .wobble-group, .map-root[data-moving="1"] .paint-group { filter: none; }
+
+/* the café-building hole in the authored exterior opens as you zoom inside */
+.cafe-cutout { opacity: clamp(0, calc((var(--z) - 0.5 * var(--zi)) / (0.3 * var(--zi))), 1); }
