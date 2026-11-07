@@ -1,34 +1,34 @@
 import { z } from "zod";
 
-const tri = z.enum(["yes", "no", "unknown"]);
-const level = z.enum(["high", "medium", "low", "unknown"]);
+/** Lenient on size: models often overshoot limits, so long strings/arrays are trimmed rather than rejected. */
+const str = (n: number) => z.string().transform((v) => v.slice(0, n));
+const arr = <T extends z.ZodTypeAny>(item: T, n: number) => z.array(item).transform((a) => a.slice(0, n));
+const clampInt = (lo: number, hi: number) => z.number().transform((v) => Math.max(lo, Math.min(hi, Math.round(v))));
+const tri = z.enum(["yes", "no", "unknown"]).catch("unknown");
+const level = z.enum(["high", "medium", "low", "unknown"]).catch("unknown");
 
 export const AnalysisSchema = z.object({
   atmosphere: z.object({
-    tags: z.array(z.string().max(30)).max(6),
-    summary: z.string().max(240),
+    tags: arr(str(30), 6),
+    summary: str(240),
     lighting: z.enum(["bright", "warm", "dim", "unknown"]),
     noise: z.enum(["quiet", "moderate", "lively", "unknown"]),
   }),
-  studySuitability: z.object({ level, notes: z.string().max(180) }),
-  socialSuitability: z.object({ level, notes: z.string().max(180) }),
-  petPolicy: z.object({ status: z.enum(["allowed_indoors", "patio_only", "not_allowed", "unknown"]), notes: z.string().max(180) }),
-  specialtyProducts: z
-    .array(z.object({ name: z.string().max(60), kind: z.enum(["pastry", "drink", "food", "other"]), evidence: z.string().max(140) }))
-    .max(6),
+  studySuitability: z.object({ level, notes: str(180) }),
+  socialSuitability: z.object({ level, notes: str(180) }),
+  petPolicy: z.object({ status: z.enum(["allowed_indoors", "patio_only", "not_allowed", "unknown"]), notes: str(180) }),
+  specialtyProducts: arr(z.object({ name: str(60), kind: z.enum(["pastry", "drink", "food", "other"]), evidence: str(140) }), 6),
   amenities: z.object({ wifi: tri, outlets: tri, restrooms: tri, parking: tri, transit: tri, patio: tri }),
-  evidence: z
-    .array(z.object({ claim: z.string().max(140), source: z.enum(["website", "review", "description", "metadata"]), confidence: z.enum(["high", "medium", "low"]) }))
-    .max(10),
-  uncertainty: z.array(z.string().max(160)).max(6),
+  evidence: arr(z.object({ claim: str(140), source: z.enum(["website", "review", "description", "metadata"]), confidence: z.enum(["high", "medium", "low"]) }), 10),
+  uncertainty: arr(str(160), 6),
   visualSignals: z.object({
-    laptopWorkers: z.number().int().min(0).max(4),
-    chattingGroups: z.number().int().min(0).max(2),
+    laptopWorkers: clampInt(0, 4),
+    chattingGroups: clampInt(0, 2),
     dogOnPatio: z.boolean(),
     dogInside: z.boolean(),
     pastryProminence: z.enum(["low", "medium", "high"]),
     restroomSign: z.boolean(),
-    streetParkedCars: z.number().int().min(0).max(4),
+    streetParkedCars: clampInt(0, 4),
     busStop: z.boolean(),
     plants: z.enum(["few", "some", "many"]),
     lighting: z.enum(["bright", "warm", "dim"]),
@@ -55,12 +55,13 @@ export function groundSignals(a: CafeAnalysis): CafeAnalysis {
   const pet = a.petPolicy.status;
   v.dogOnPatio = v.dogOnPatio && (pet === "patio_only" || pet === "allowed_indoors") && a.amenities.patio !== "no";
   v.dogInside = v.dogInside && pet === "allowed_indoors";
-  v.restroomSign = v.restroomSign && a.amenities.restrooms === "yes";
+  // visuals follow the facts: a confirmed restroom always gets its sign; an explicit "no transit" hides the stop
+  v.restroomSign = a.amenities.restrooms === "yes";
   if (a.studySuitability.level === "low" || a.studySuitability.level === "unknown") v.laptopWorkers = Math.min(v.laptopWorkers, a.studySuitability.level === "unknown" ? 1 : 0);
   if (a.socialSuitability.level === "low") v.chattingGroups = 0;
   if (a.socialSuitability.level === "unknown") v.chattingGroups = Math.min(v.chattingGroups, 1);
   if (a.amenities.parking === "no") v.streetParkedCars = 0;
-  if (a.amenities.transit === "no") v.busStop = false;
+  v.busStop = a.amenities.transit !== "no";
   if (a.specialtyProducts.filter((p) => p.kind === "pastry").length === 0) v.pastryProminence = v.pastryProminence === "high" ? "medium" : v.pastryProminence;
   return { ...a, visualSignals: v };
 }

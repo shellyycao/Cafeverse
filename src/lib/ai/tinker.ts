@@ -18,10 +18,16 @@ function extractJson(text: string): unknown {
   return JSON.parse(cleaned.slice(a, b + 1));
 }
 
-/** "0.1" -> 0.1 (a float in [0, 0.99] per the docs); anything else is passed through as a string such as "low". */
-function reasoningEffort(v: string): string | number {
-  const n = Number(v);
-  return v.trim() !== "" && Number.isFinite(n) ? n : v.trim();
+/**
+ * Models differ in what they accept (verified against the live endpoint): Qwen3.5-9B takes a boolean,
+ * others take a float in [0, 0.99] or a string such as "low". "false"/"true" -> boolean, "0.1" -> number.
+ */
+function reasoningEffort(v: string): string | number | boolean {
+  const t = v.trim();
+  if (t === "false") return false;
+  if (t === "true") return true;
+  const n = Number(t);
+  return t !== "" && Number.isFinite(n) ? n : t;
 }
 
 export class TinkerProvider implements InferenceProvider {
@@ -41,7 +47,7 @@ export class TinkerProvider implements InferenceProvider {
         messages,
         temperature: 0.2,
         max_tokens: Number(process.env.TINKER_MAX_TOKENS) || 2500,
-        // Hybrid models reason by default. A small float (e.g. 0.1) lowers it; a 400 means the model does not accept the field — unset it.
+        // Hybrid models reason by default; false (or a low value) turns it down. A 400 names what the model accepts.
         ...(process.env.TINKER_REASONING_EFFORT ? { reasoning_effort: reasoningEffort(process.env.TINKER_REASONING_EFFORT) } : {}),
       }),
       signal: AbortSignal.timeout(50_000),
