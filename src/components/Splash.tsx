@@ -7,8 +7,8 @@ const EXAMPLES = [
   "Catch up with friends over pastries",
   "Bring my dog and relax",
   "A great coffee to go",
-  "想安静地学习，要有插座",
-  "带狗和朋友聊天，想吃甜点",
+  "A quick stop to read a book",
+  "A big table and sofas to work for hours",
 ];
 
 /** Boot screen: a warm hand-drawn welcome whose only job is to ask "what do you want to do at a café?" */
