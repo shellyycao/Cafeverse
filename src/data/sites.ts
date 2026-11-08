@@ -25,6 +25,8 @@ export type Theme = {
   awningB: string;
   trim: string;
   wall: string; // interior accent wall
+  /** painted-mural corner building with a string-light canopy (Cocoa-style) */
+  mural?: boolean;
 };
 
 export type Site = {
@@ -80,7 +82,7 @@ export const SITES: Site[] = [
     offset: [-420, 0],
     paving: [-490, 28, -28, 272],
     zone: [-259, 150],
-    theme: { title: "LANTERN & LOAF", subtitle: "BAKERY · CAFÉ", brick: "#c4775a", awningA: "#d98a8a", awningB: "#f4e6d0", trim: "#6b3f34", wall: "#7a8f72" },
+    theme: { title: "LANTERN & LOAF", subtitle: "BAKERY · CAFÉ", brick: "#c4775a", awningA: "#d98a8a", awningB: "#f4e6d0", trim: "#6b3f34", wall: "#7a8f72" , mural: true },
     attrs: { study: 0.3, social: 0.92, quiet: 0.15, lively: 0.9, pastry: 0.97, coffee: 0.6, pets: "patio", patio: true, wifi: true, outlets: false, takeout: true, breakfast: true },
     evidence: Object.fromEntries(["study", "social", "quiet", "lively", "pastry", "coffee", "pets", "patio", "wifi", "outlets", "takeout", "breakfast"].map((k) => [k, DEMO])),
   },

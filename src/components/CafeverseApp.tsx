@@ -81,7 +81,10 @@ export default function CafeverseApp() {
   const [matchMode, setMatchMode] = useState<"live" | "demo">("demo");
   useEffect(() => {
     if (new URLSearchParams(window.location.search).has("nosplash")) setSplash(false);
-    map.current?.flyTo(overviewCam(), 30);
+    // ?cam=x,y,z opens the camera at an exact spot (handy for sharing / checking a view)
+    const cam = new URLSearchParams(window.location.search).get("cam")?.split(",").map(Number);
+    if (cam && cam.length === 3 && cam.every(Number.isFinite)) map.current?.flyTo({ x: cam[0], y: cam[1], z: cam[2] }, 30);
+    else map.current?.flyTo(overviewCam(), 30);
   }, []);
   const [now, setNow] = useState<Clock | null>(null);
   const [simMin, setSimMin] = useState<number | null>(null);
@@ -310,7 +313,7 @@ export default function CafeverseApp() {
           </button>
         ))}
       </div>
-      <div className="chrome credit">Map data © OpenStreetMap contributors · Foster Street Coffee is real · the other two cafés are fictional demos</div>
+      <div className="chrome credit">Map data © OpenStreetMap contributors · all three cafés are demos</div>
       {toast && <div className="chrome toast">Only café neighborhoods zoom in closer — more coming soon</div>}
 
       {splash && (

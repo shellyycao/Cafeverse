@@ -38,7 +38,7 @@ export default function ResultsBar({
               <span className="rank">{m.rank}</span>
               <span className="meta">
                 <span className="nm">
-                  {s.name} {!s.real && <i className="demo-tag">fictional demo</i>}
+                  {s.name} <i className="demo-tag">demo</i>
                 </span>
                 <span className="why">{(m.reasons[0] ?? m.caveats[0] ?? "").replace(/^[^:]+:\s*/, "")}</span>
               </span>

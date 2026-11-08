@@ -64,7 +64,7 @@ export default function Splash({ onSubmit, onSkip, busy, error }: { onSubmit: (p
         <button className="splash-skip" type="button" onClick={onSkip}>
           or just explore the map
         </button>
-        <p className="splash-foot">Downtown Durham, NC · Foster Street Coffee is real; the other two cafés are fictional demos.</p>
+        <p className="splash-foot">Downtown Durham, NC · all three cafés are demos</p>
       </div>
     </div>
   );

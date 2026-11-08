@@ -4,6 +4,7 @@ import { INK } from "@/lib/color";
 import { NEAR_BUILDINGS, NEAR_TREES } from "@/data/durham";
 import { Wash, Bench, PolyBuilding, Car, ParkingMeter, Rail, LampPost, Planter, RoundTable, Tree } from "./primitives";
 import CafeExterior from "./Cafe";
+import MuralCafe from "./MuralCafe";
 import InteriorBase from "./InteriorBase";
 import { SITES, type Site } from "@/data/sites";
 import { HintDot, Pin } from "./Pin";
@@ -96,7 +97,7 @@ function SiteScene({ site, showInterior, onClick, phase }: { site: Site; showInt
           </g>
         </g>
       )}
-      <CafeExterior onClick={onClick} interactive theme={site.theme} lit={lit} />
+      {site.theme.mural ? <MuralCafe onClick={onClick} interactive theme={site.theme} lit={lit} /> : <CafeExterior onClick={onClick} interactive theme={site.theme} lit={lit} />}
       <Tree x={184} y={262} s={1.25} kind="bloom" rich />
       <Tree x={110} y={60} s={1.2} rich />
       <LampPost x={366} y={262} />
@@ -138,11 +139,11 @@ export default function Neighborhood({ onSelect, level = 1, signals = BASELINE_S
   if (!exterior) {
     const brick = "#b4604a";
     const roofC = "#cdbb99";
-    push(100, <PolyBuilding key="tower-back" poly={[[96, 36], [372, 36], [372, 108], [96, 108]]} h={96} wall="#c3a58a" roof="#d6cbb8" />);
-    push(160, <PolyBuilding key="tower-left" poly={[[40, 108], [128, 108], [128, 200], [40, 200]]} h={96} wall="#c3a58a" roof="#d6cbb8" />);
-    push(220, <PolyBuilding key="wing-left" poly={[[40, 200], [184, 200], [184, 258], [40, 258]]} h={70} wall={brick} roof={roofC} shop />);
-    push(352, <PolyBuilding key="wing-left-b" poly={[[128, 108], [184, 108], [184, 200], [128, 200]]} h={70} wall={brick} roof={roofC} />);
-    push(400, <PolyBuilding key="wing-right" poly={[[344, 108], [372, 108], [372, 258], [344, 258]]} h={70} wall={brick} roof={roofC} />);
+    push(100, <g key="tower-back" className="cafe-shell"><PolyBuilding poly={[[96, 36], [372, 36], [372, 108], [96, 108]]} h={96} wall="#c3a58a" roof="#d6cbb8" /></g>);
+    push(160, <g key="tower-left" className="cafe-shell"><PolyBuilding poly={[[40, 108], [128, 108], [128, 200], [40, 200]]} h={96} wall="#c3a58a" roof="#d6cbb8" /></g>);
+    push(220, <g key="wing-left" className="cafe-shell"><PolyBuilding poly={[[40, 200], [184, 200], [184, 258], [40, 258]]} h={70} wall={brick} roof={roofC} shop /></g>);
+    push(352, <g key="wing-left-b" className="cafe-shell"><PolyBuilding poly={[[128, 108], [184, 108], [184, 200], [128, 200]]} h={70} wall={brick} roof={roofC} /></g>);
+    push(400, <g key="wing-right" className="cafe-shell"><PolyBuilding poly={[[344, 108], [372, 108], [372, 258], [344, 258]]} h={70} wall={brick} roof={roofC} /></g>);
     // garage entrance at the left end (website: "Liberty Warehouse Garage — enter on Corporation Street")
     push(300, (
       <g key="garage">

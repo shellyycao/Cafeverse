@@ -11,7 +11,7 @@ const LEFT_LEN = F.x1 - F.x0; // 144
 const RIGHT_LEN = F.y1 - F.y0; // 128
 
 /** Draw in wall-plane coordinates: u along the wall, y negative = up. */
-function Face({ side, children }: { side: "left" | "right"; children: React.ReactNode }) {
+export function Face({ side, children }: { side: "left" | "right"; children: React.ReactNode }) {
   const o = side === "left" ? P(F.x0, F.y1, 0) : P(F.x1, F.y1, 0);
   const m = side === "left" ? "1 .5 0 1" : "1 -.5 0 1";
   return <g transform={`matrix(${m} ${o.x} ${o.y})`}>{children}</g>;
@@ -19,7 +19,7 @@ function Face({ side, children }: { side: "left" | "right"; children: React.Reac
 
 const stroke = { stroke: INK, strokeOpacity: 0.55, strokeWidth: 0.8, strokeLinejoin: "round" as const };
 
-function Glass({ u0, u1, v0 = 9, v1 = 40, id, dark = false }: { u0: number; u1: number; v0?: number; v1?: number; id: string; dark?: boolean }) {
+export function Glass({ u0, u1, v0 = 9, v1 = 40, id, dark = false }: { u0: number; u1: number; v0?: number; v1?: number; id: string; dark?: boolean }) {
   const w = u1 - u0;
   const h = v1 - v0;
   const seed = id.charCodeAt(0) + id.charCodeAt(id.length - 1) * 3;

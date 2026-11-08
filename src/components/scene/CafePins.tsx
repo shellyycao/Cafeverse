@@ -74,11 +74,11 @@ export default function CafePins({
               </text>
               {m ? (
                 <text x={0} y={-6} fontSize={12} fontWeight={700} fill={hot ? "#9a2f48" : "#7a6048"} stroke="#fffaf0" strokeWidth={3.5} paintOrder="stroke" fontFamily="var(--font-geist-sans), system-ui">
-                  {m.score}% match{site.real ? "" : " · fictional demo"}
+                  {m.score}% match · demo
                 </text>
               ) : (
                 <text x={0} y={-6} fontSize={11} fontWeight={600} fill="#7a6048" stroke="#fffaf0" strokeWidth={3.5} paintOrder="stroke" fontFamily="var(--font-geist-sans), system-ui">
-                  {site.real ? "zoom in to step inside" : "fictional demo café"}
+                  demo café · tap to look inside
                 </text>
               )}
             </g>
